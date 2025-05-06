@@ -1,7 +1,7 @@
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",
-  version = "false", -- Using latest version to get the most recent fixes
+  version = false, -- Using latest version to get the most recent fixes
   -- Explicitly checking for Neovim 0.10.1+ compatibility
   cond = function()
     if vim.fn.has("nvim-0.10.1") == 0 then
@@ -185,12 +185,12 @@ return {
     -- Default configuration
     local config = {
       -- Gemini configuration
-      provider = "gemini", 
-      model = "gemini-2.5-pro-preview-03-25",
+      -- provider = "gemini", 
+      -- model = "gemini-2.5-pro-preview-03-25",
       -- Claude configuration
-      -- provider = "claude",
-      -- model = "claude-3-5-sonnet-20241022",
-      -- endpoint = "https://api.anthropic.com",
+      provider = "claude",
+      model = "claude-3-5-sonnet-20241022",
+      endpoint = "https://api.anthropic.com",
       -- Claude configuration
       -- provider = "claude",
       -- endpoint = "https://api.anthropic.com",

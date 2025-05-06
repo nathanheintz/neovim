@@ -1,0 +1,39 @@
+# Plugin/Package Management
+lazy-lock.json
+plugin/
+
+# Compiled Lua sources
+luac.out
+
+# Neovim session files
+.netrwhist
+*/.netrwhist
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# LSP data
+.language-servers/
+
+# Cache directories
+.cache/
+
+# Local history
+.history/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore any local configuration overrides
+lua/local.lua

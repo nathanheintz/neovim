@@ -4,6 +4,7 @@ return {
   -- Use both markdown and lectic.markdown filetypes
   ft = { "markdown", "lectic.markdown" },
   build = "npm install", -- Install dependencies
+  version = false,  -- Added this line to prevent Lazy from looking for versions and crashing
   -- Use the conditional directory trick to point to the neovim plugin
   cond = function(plugin)
     plugin.dir = plugin.dir .. '/extra/lectic.nvim'
