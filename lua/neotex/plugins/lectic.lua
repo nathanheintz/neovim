@@ -1,6 +1,6 @@
 return {
   "gleachkr/lectic",
-  lazy = true,
+  lazy = false,
   -- Use both markdown and lectic.markdown filetypes
   ft = { "markdown", "lectic.markdown" },
   build = "npm install", -- Install dependencies
