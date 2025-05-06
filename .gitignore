@@ -1,5 +1,4 @@
 # Plugin/Package Management
-lazy-lock.json
 plugin/
 
 # Compiled Lua sources
