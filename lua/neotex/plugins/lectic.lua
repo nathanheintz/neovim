@@ -1,14 +1,44 @@
+-- return {
+--   "gleachkr/lectic",
+--   lazy = true,
+--   -- Use both markdown and lectic.markdown filetypes
+--   ft = { "markdown", "lectic.markdown" },
+--   build = "npm install", -- Install dependencies
+--   -- Use the conditional directory trick to point to the neovim plugin
+--   cond = function(plugin)
+--     plugin.dir = plugin.dir .. '/extra/lectic.nvim'
+--     return true
+--   end,
+--   init = function()
+--     -- Create the autocmd group early
+--     vim.api.nvim_create_augroup("Lectic", { clear = true })
+--
+--     -- Keymappings are now defined in which-key.lua to centralize all mappings
+--
+--     -- Add filetype detection for .lec files if not already defined
+--     vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+--       group = "Lectic",
+--       pattern = "*.lec",
+--       callback = function()
+--         vim.bo.filetype = "lectic.markdown"
+--       end
+--     })
+--   end,
+--   config = function()
+    -- Create a global function to submit current lectic section
+    
+    -- New config beginning created by Claude: 
+
 return {
-  "gleachkr/lectic",
-  lazy = false,
-  -- Use both markdown and lectic.markdown filetypes
+  "gleachkr/Lectic",
+  name = "lectic",
+  version = false,
+  lazy = true,
   ft = { "markdown", "lectic.markdown" },
-  build = "npm install", -- Install dependencies
-  version = false,  -- Added this line to prevent Lazy from looking for versions and crashing
-  -- Use the conditional directory trick to point to the neovim plugin
-  cond = function(plugin)
-    plugin.dir = plugin.dir .. '/extra/lectic.nvim'
-    return true
+  build = function() 
+    -- Change to the correct directory before running npm install
+    local install_dir = vim.fn.stdpath('data') .. '/lazy/lectic'
+    vim.fn.system('cd ' .. install_dir .. '/extra/lectic.nvim && npm install')
   end,
   init = function()
     -- Create the autocmd group early
@@ -25,8 +55,13 @@ return {
       end
     })
   end,
+  
   config = function()
     -- Create a global function to submit current lectic section
+    -- Make sure the runtime path includes the correct subdirectory
+    local plugin_dir = vim.fn.stdpath('data') .. '/lazy/lectic/extra/lectic.nvim'
+    vim.opt.rtp:append(plugin_dir)
+
     -- (to be used by which-key.lua)
     function _G.SubmitLecticSelection()
       -- Only run if we're in a lectic markdown buffer
@@ -154,8 +189,8 @@ return {
       local template = "---\n" ..
           "interlocutor:\n" ..
           "  # Required fields\n" ..
-          "  name: Computer Scientist\n" ..
-          "  prompt: You are an expert logician and computer scientist specializing in RL and agentic reasoning in AI.\n\n" ..
+          "  name: Homie\n" ..
+          " prompt: You are an expert logician, philosopher, political theorist, neuroscientist, psychotherapist, psychonaut and pedagogist. You are here to help me as a writing tutor to create accessible and helpful nonfiction about internal arts practice (meditation, taiji, qigong), personal development, leadership, productivity, politics and philosophy. \n\n" ..
           "  # Optional model configuration\n" ..
           "  provider: anthropic           # Optional, default anthropic\n" ..
           "  # model: claude-3-7-sonnet    # Model selection\n" ..
@@ -322,3 +357,4 @@ return {
     "nvim-treesitter/nvim-treesitter" -- For better folding support
   }
 }
+
