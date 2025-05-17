@@ -1,23 +1,23 @@
 return {
   "williamboman/mason.nvim",
-  ft ={ "py", "html", "js", "ts", "lua" },
+  ft = { "py", "html", "handlebars", "hbs", "js", "ts", "lua", "css", "scss", "sass", "json" },
   dependencies = {
     "williamboman/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
   },
-
   config = function()
-    -- import mason
-    local mason = require("mason")
-
-    -- import mason-lspconfig
-    local mason_lspconfig = require("mason-lspconfig")
-
-    -- import mason-tool-installer
-    local mason_tool_installer = require("mason-tool-installer")
-
-    -- enable mason and configure icons
-    mason.setup({
+    -- Define a replacement for the missing vim.lsp.enable function
+    -- Use a more silent replacement that doesn't show popups
+    if not vim.lsp.enable then
+      vim.lsp.enable = function(server_name)
+        -- This is a no-op replacement that doesn't cause errors
+        -- Using the lowest notification level to avoid popup spam
+        -- vim.notify("Ignoring call to missing vim.lsp.enable for " .. server_name, vim.log.levels.TRACE)
+      end
+    end
+    
+    -- Basic mason setup
+    require("mason").setup({
       ui = {
         icons = {
           package_installed = "✓",
@@ -26,33 +26,26 @@ return {
         },
       },
     })
-
-    mason_lspconfig.setup({
-      -- list of servers for mason to install
+    
+    -- Simple mason-lspconfig setup
+    require("mason-lspconfig").setup({
       ensure_installed = {
-        -- "html",
-        -- "emmet_ls",
         "pyright",
-        -- "tsserver",
-        -- "lua_ls",   -- seems to cause trouble
-        -- "cssls",
-        -- "tailwindcss",
-        -- "svelte"
-        -- "graphql",
-        -- "prismals",
+        "html",
+        "cssls",
+        "jsonls",
+        "emmet_ls",
       },
-      -- auto-install configured servers (with lspconfig)
-      automatic_installation = true, -- not the same as ensure_installed
+      automatic_installation = true,
     })
-
-    mason_tool_installer.setup({
+    
+    -- Set up formatters and linters
+    require("mason-tool-installer").setup({
       ensure_installed = {
-        -- "prettier", -- prettier formatter seems to be required
-        "stylua",   -- lua formatter
-        "isort",    -- python formatter
-        "black",    -- python formatter
-        "pylint",   -- python linter
-        -- "eslint_d", -- js linter
+        "stylua",
+        "isort",
+        "black",
+        "pylint",
       },
     })
   end,

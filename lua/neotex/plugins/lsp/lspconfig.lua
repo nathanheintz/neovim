@@ -86,5 +86,45 @@ return {
         },
       },
     })
+    -- configure html server with enhanced handlebars support
+    lspconfig["html"].setup({
+      capabilities = default,
+      filetypes = { "html", "handlebars", "hbs" },
+      init_options = {
+        configurationSection = { "html", "css", "javascript" },
+        embeddedLanguages = {
+          css = true,
+          javascript = true
+        },
+        provideFormatter = true,
+      },
+      settings = {
+        html = {
+          format = {
+            templating = true,
+            wrapLineLength = 120,
+            wrapAttributes = 'auto',
+          },
+          hover = {
+            documentation = true,
+            references = true
+          },
+        }
+      }
+    })
+
+    -- configure emmet_ls for enhanced HTML/Handlebars editing
+    lspconfig["emmet_ls"].setup({
+      capabilities = default,
+      filetypes = { "html", "handlebars", "hbs", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      init_options = {
+        html = {
+          options = {
+            -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+            ["bem.enabled"] = true,
+          },
+        },
+      }
+    })
   end,
 }

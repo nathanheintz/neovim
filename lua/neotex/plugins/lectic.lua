@@ -190,7 +190,7 @@ return {
           "interlocutor:\n" ..
           "  # Required fields\n" ..
           "  name: Homie\n" ..
-          " prompt: You are an expert logician, philosopher, political theorist, neuroscientist, psychotherapist, psychonaut and pedagogist. You are here to help me as a writing tutor to create accessible and helpful nonfiction about internal arts practice (meditation, taiji, qigong), personal development, leadership, productivity, politics and philosophy. \n\n" ..
+          "  prompt: You are an expert logician, philosopher, political theorist, neuroscientist, psychotherapist, psychonaut and pedagogist. You are here to help me as a writing tutor to create accessible and helpful nonfiction about internal arts practice (meditation, taiji, qigong), personal development, leadership, productivity, politics and philosophy. \n\n" ..
           "  # Optional model configuration\n" ..
           "  provider: anthropic           # Optional, default anthropic\n" ..
           "  # model: claude-3-7-sonnet    # Model selection\n" ..

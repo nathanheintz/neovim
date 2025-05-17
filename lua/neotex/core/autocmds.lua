@@ -36,3 +36,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre", "BufNewFile" }, {
   pattern = { "*.md" },
   command = "lua set_markdown_keymaps()",
 })
+
+-- Ensure .hbs files are detected as handlebars
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.hbs", "*.handlebars" },
+  callback = function()
+    vim.bo.filetype = "handlebars"
+    -- Manually start LSP if not already started
+    vim.cmd("LspStart html")
+    vim.cmd("LspStart emmet_ls")
+  end,
+})
