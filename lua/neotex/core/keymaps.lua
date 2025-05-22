@@ -284,3 +284,7 @@ map("n", "J", "gj", {}, "Move down display line")
 map("n", "K", "gk", {}, "Move up display line")
 map("v", "J", "gj", {}, "Move down display line")
 map("v", "K", "gk", {}, "Move up display line")
+
+-- Character Insertion
+map("i", "<M-Right>", "→", {}, "Insert right arrow")
+map("i", "<M-Left>", "←", {}, "Insert left arrow")

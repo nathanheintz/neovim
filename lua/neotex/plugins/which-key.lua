@@ -420,11 +420,16 @@ return {
         p = { "<cmd>MarkdownPreviewToggle <CR>", "markdown preview" },
         u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
 
+        -- AUTOCOMPLETION TOGGLES
+        c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
+        o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
+
         -- FOLDING
         a = { "<cmd>lua ToggleAllFolds()<CR>", "toggle all folds" },
         f = { "za", "toggle fold under cursor" },
         t = { "<cmd>lua ToggleFoldingMethod()<CR>", "toggle folding method" },
       },
+
       S = {
         name = "SESSIONS",
         s = { "<cmd>SessionManager save_current_session<CR>", "save" },

@@ -15,10 +15,78 @@ return {
     -- "aspeddro/cmp-pandoc.nvim",
   },
   config = function()
-
     local cmp = require("cmp")
-
     local luasnip = require("luasnip")
+
+
+-- Variables for tracking completion source state
+vim.g.spell_completion_enabled = false  -- Spell completion disabled by default for markdown
+vim.g.obsidian_completion_enabled = true -- Obsidian completion enabled by default for markdown
+
+-- Helper function to update completion sources
+local function setup_completion_sources()
+  local cmp = require("cmp")
+  
+  -- Only modify sources for markdown files
+  if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+    cmp.setup.buffer({
+      sources = {
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "vimtex" },
+        { name = "buffer", keyword_length = 3 },
+        { name = "path" },
+        -- Add Obsidian conditionally
+        vim.g.obsidian_completion_enabled and { name = "obsidian" } or nil,
+        -- Add Spell conditionally
+        vim.g.spell_completion_enabled and { 
+          name = "spell",
+          keyword_length = 4,
+          option = {
+            keep_all_entries = false,
+            enable_in_context = function() return true end
+          }
+        } or nil,
+      }
+    })
+  end
+end
+
+-- Create toggle functions
+function _G.toggle_spell_completion()
+  if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+    vim.g.spell_completion_enabled = not vim.g.spell_completion_enabled
+    setup_completion_sources()
+    
+    if vim.g.spell_completion_enabled then
+      vim.notify("Spell completion enabled")
+    else
+      vim.notify("Spell completion disabled")
+    end
+  end
+end
+
+function _G.toggle_obsidian_completion()
+  if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+    vim.g.obsidian_completion_enabled = not vim.g.obsidian_completion_enabled
+    setup_completion_sources()
+    
+    if vim.g.obsidian_completion_enabled then
+      vim.notify("Obsidian completion enabled")
+    else
+      vim.notify("Obsidian completion disabled")
+    end
+  end
+end
+
+-- Create autocommand to set up sources when opening markdown files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {"markdown", "lectic.markdown"},
+  callback = function()
+    setup_completion_sources()
+  end
+})
+
 
     local kind_icons = {
       article = "󰧮",
@@ -57,6 +125,13 @@ return {
     -- find more here: https://www.nerdfonts.com/cheat-sheet
 
     cmp.setup({
+      
+      enabled = function()
+        -- For markdown files, enable completion all the time (we'll control sources instead)
+        -- For other file types, always enable completion
+        return true
+      end,      
+
       completion = {
         completeopt = "menu,noselect",
         -- completeopt = "menuone,preview,noinsert,noselect",
@@ -67,6 +142,7 @@ return {
           luasnip.lsp_expand(args.body)
         end,
       },
+
       mapping = cmp.mapping.preset.insert({
         ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
         ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),

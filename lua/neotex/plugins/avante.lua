@@ -388,12 +388,14 @@ return {
         },
       },
     },
-    {
-      'MeanderingProgrammer/render-markdown.nvim',
-      opts = {
-        file_types = { "markdown", "Avante" },
-      },
-      ft = { "markdown", "Avante" },
-    },
+    
+    -- Optional add-on - Renders Pretty Markdown in the Avante chat thread
+    -- {
+    --   'MeanderingProgrammer/render-markdown.nvim',
+    --   opts = {
+    --     file_types = { "markdown", "Avante" },
+    --   },
+    --   ft = { "markdown", "Avante" },
+    -- },
   },
 }
