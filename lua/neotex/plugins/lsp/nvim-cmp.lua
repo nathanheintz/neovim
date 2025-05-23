@@ -22,6 +22,7 @@ return {
 -- Variables for tracking completion source state
 vim.g.spell_completion_enabled = false  -- Spell completion disabled by default for markdown
 vim.g.obsidian_completion_enabled = true -- Obsidian completion enabled by default for markdown
+vim.g.buffer_completion_enabled = true -- Buffer completion enabled by default for markdown
 
 -- Helper function to update completion sources
 local function setup_completion_sources()
@@ -30,24 +31,31 @@ local function setup_completion_sources()
   -- Only modify sources for markdown files
   if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
     cmp.setup.buffer({
-      sources = {
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "vimtex" },
-        { name = "buffer", keyword_length = 3 },
-        { name = "path" },
-        -- Add Obsidian conditionally
-        vim.g.obsidian_completion_enabled and { name = "obsidian" } or nil,
-        -- Add Spell conditionally
-        vim.g.spell_completion_enabled and { 
-          name = "spell",
-          keyword_length = 4,
-          option = {
-            keep_all_entries = false,
-            enable_in_context = function() return true end
+      sources = cmp.config.sources(
+        -- Create a table of sources, filtering out nil values
+        vim.tbl_filter(
+          function(source) return source ~= nil end,
+          {
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+            { name = "vimtex" },
+            -- Add Buffer conditionally
+            vim.g.buffer_completion_enabled and { name = "buffer", keyword_length = 3 } or nil,
+            { name = "path", option = { trailing_slash = true } },
+            -- Add Obsidian conditionally
+            vim.g.obsidian_completion_enabled and { name = "obsidian" } or nil,
+            -- Add Spell conditionally
+            vim.g.spell_completion_enabled and { 
+              name = "spell",
+              keyword_length = 4,
+              option = {
+                keep_all_entries = false,
+                enable_in_context = function() return true end
+              }
+            } or nil,
           }
-        } or nil,
-      }
+        )
+      )
     })
   end
 end
@@ -75,6 +83,19 @@ function _G.toggle_obsidian_completion()
       vim.notify("Obsidian completion enabled")
     else
       vim.notify("Obsidian completion disabled")
+    end
+  end
+end
+
+function _G.toggle_buffer_completion()
+  if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+    vim.g.buffer_completion_enabled = not vim.g.buffer_completion_enabled
+    setup_completion_sources()
+    
+    if vim.g.buffer_completion_enabled then
+      vim.notify("Buffer completion enabled")
+    else
+      vim.notify("Buffer completion disabled")
     end
   end
 end

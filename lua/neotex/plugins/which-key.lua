@@ -421,6 +421,7 @@ return {
         u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
 
         -- AUTOCOMPLETION TOGGLES
+        b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion" },
         c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
         o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
 
