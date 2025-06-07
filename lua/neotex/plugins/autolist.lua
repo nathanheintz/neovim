@@ -5,6 +5,7 @@ return {
     -- "text",
     -- "tex",
     -- "plaintex",
+    "lectic.markdown",
     "norg",
   },
   config = function()
@@ -12,6 +13,12 @@ return {
       lists = {
         -- Disable roman numerals and use simple numbered lists
         markdown = {
+          "1.", -- Numbered lists (1., 2., 3., etc)
+          "-",  -- Unordered lists with dash
+          "*",  -- Unordered lists with asterisk
+          "+",  -- Unordered lists with plus
+        },
+        ["lectic.markdown"] = {
           "1.", -- Numbered lists (1., 2., 3., etc)
           "-",  -- Unordered lists with dash
           "*",  -- Unordered lists with asterisk

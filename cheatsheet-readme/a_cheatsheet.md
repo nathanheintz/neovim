@@ -1,61 +1,5 @@
 # Neovim Cheatsheet for Writing with AI
 
-## File Information
-
-### Showing File Path and Status
-- `:f` or `Ctrl-g` - Show current file path and status
-- `1 Ctrl-g` - Show full file path
-- `2 Ctrl-g` - Show full file path and buffer number
-- `:pwd` - Show present working directory
-- `:echo expand('%')` - Show relative path of current file
-- `:echo expand('%:p')` - Show full path of current file
-- `:echo expand('%:t')` - Show just the file name
-- `:echo expand('%:p:h')` - Show full directory path
-- `set laststatus=2` - Always show status line with file info
-- `Shift-ctrl + / Shift-ctrl -` - Zoom In / Out 
-
-### File Status Information
-- `:ls` - List buffers (shows file paths)
-- `g Ctrl-g` - Show detailed file info (cursor position, bytes, chars)
-- `:filetype` - Show filetype of current buffer
-- `:set fileencoding` - Show file encoding
-- `:version` - Show Vim version and build info
-- `:w filename.md` - Save current buffer as new file
-- `:w` - Save current file
-- `:w /full/path/to/dir/filename.md` - Save to new location with new name
-- `:w ~/Documents/filename.md` - Save to home directory (~ expansion works)
-- `:w %:h/newname.md` - Save in same directory as current file with new name
-- `:w ../filename.md` - Save in parent directory
-- `:e filename.md` - Open existing file
-- `:e .` - Open file explorer
-- `:bd` - Close current buffer
-- `:q` - Quit current window
-- `:wq` or `:x` - Save and quit
-- `:q!` - Quit without saving
-- `:w filename.md` - Save current buffer as new file
-- `:w` - Save current file
-- `:e filename.md` - Open existing file
-- `:e .` - Open file explorer
-- `:bd` - Close current buffer
-- `:q` - Quit current window
-- `:wq` or `:x` - Save and quit
-- `:q!` - Quit without saving
-
-### File System Operations
-- `:saveas newname.md` - Save as new file while keeping original
-- `:w >> filename.md` - Append current buffer to existing file
-- `:!mv -i % newname.md` - Rename current file with overwrite protection
-- `:!mv -n % newname.md` - Rename current file, don't overwrite if exists
-- `:!mv % ../newdir/` - Move current file to different directory
-- `:!rm filename.md` - Delete a file from the filesystem
-- `:!mkdir dirname` - Create a new directory
-- `:!rmdir dirname` - Remove an empty directory
-- `:w !sudo tee %` - Save file with sudo privileges (when opened without sudo)
-
-Note: The `!` prefix allows executing shell commands from within Neovim
-IMPORTANT: When using `:!mv`, add `-i` flag for interactive prompts or `-n` to prevent overwriting
-
-
 ## Movement, Navigation and Modes
 
 ### Mode Switching and Selection
@@ -231,6 +175,61 @@ You can replace `c` (change) with:
 - `d` for delete
 - `y` for yank (copy)
 - `v` for select
+
+## File Information
+
+### Showing File Path and Status
+- `:f` or `Ctrl-g` - Show current file path and status
+- `1 Ctrl-g` - Show full file path
+- `2 Ctrl-g` - Show full file path and buffer number
+- `:pwd` - Show present working directory
+- `:echo expand('%')` - Show relative path of current file
+- `:echo expand('%:p')` - Show full path of current file
+- `:echo expand('%:t')` - Show just the file name
+- `:echo expand('%:p:h')` - Show full directory path
+- `set laststatus=2` - Always show status line with file info
+- `Shift-ctrl + / Shift-ctrl -` - Zoom In / Out 
+
+### File Status Information
+- `:ls` - List buffers (shows file paths)
+- `g Ctrl-g` - Show detailed file info (cursor position, bytes, chars)
+- `:filetype` - Show filetype of current buffer
+- `:set fileencoding` - Show file encoding
+- `:version` - Show Vim version and build info
+- `:w filename.md` - Save current buffer as new file
+- `:w` - Save current file
+- `:w /full/path/to/dir/filename.md` - Save to new location with new name
+- `:w ~/Documents/filename.md` - Save to home directory (~ expansion works)
+- `:w %:h/newname.md` - Save in same directory as current file with new name
+- `:w ../filename.md` - Save in parent directory
+- `:e filename.md` - Open existing file
+- `:e .` - Open file explorer
+- `:bd` - Close current buffer
+- `:q` - Quit current window
+- `:wq` or `:x` - Save and quit
+- `:q!` - Quit without saving
+- `:w filename.md` - Save current buffer as new file
+- `:w` - Save current file
+- `:e filename.md` - Open existing file
+- `:e .` - Open file explorer
+- `:bd` - Close current buffer
+- `:q` - Quit current window
+- `:wq` or `:x` - Save and quit
+- `:q!` - Quit without saving
+
+### File System Operations
+- `:saveas newname.md` - Save as new file while keeping original
+- `:w >> filename.md` - Append current buffer to existing file
+- `:!mv -i % newname.md` - Rename current file with overwrite protection
+- `:!mv -n % newname.md` - Rename current file, don't overwrite if exists
+- `:!mv % ../newdir/` - Move current file to different directory
+- `:!rm filename.md` - Delete a file from the filesystem
+- `:!mkdir dirname` - Create a new directory
+- `:!rmdir dirname` - Remove an empty directory
+- `:w !sudo tee %` - Save file with sudo privileges (when opened without sudo)
+
+Note: The `!` prefix allows executing shell commands from within Neovim
+IMPORTANT: When using `:!mv`, add `-i` flag for interactive prompts or `-n` to prevent overwriting
 
 
 ## AI Integration (Lectic & Avante)

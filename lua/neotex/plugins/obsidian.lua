@@ -2,7 +2,7 @@ return {
   "epwalsh/obsidian.nvim",
   version = "*",
   lazy = true,
-  ft = {"markdown", "lectic.markdown"},
+  -- ft = {"markdown", "lectic.markdown"}, -- load obsidian automatically in these filetypes (commented out to enable manual control)
   dependencies = {
     "nvim-lua/plenary.nvim",
     "hrsh7th/nvim-cmp",
