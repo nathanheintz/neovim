@@ -184,56 +184,54 @@ return {
   opts = function()
     -- Default configuration
     local config = {
-      -- Gemini configuration
-      -- provider = "gemini", 
-      -- model = "gemini-2.5-pro-preview-03-25",
-      -- Claude configuration
-      provider = "claude",
-      model = "claude-3-5-sonnet-20241022",
-      endpoint = "https://api.anthropic.com",
-      -- Claude configuration
-      -- provider = "claude",
-      -- endpoint = "https://api.anthropic.com",
-      -- model = "claude-3-5-sonnet-20241022",
-      -- Removed force_model which isn't supported
-      temperature = 0.1, -- Slight increase for more creative responses
-      max_tokens = 4096,
-      top_p = 0.95,      -- Add top_p for better response quality
-      top_k = 40,        -- Add top_k for better response filtering
-      timeout = 60000,   -- Increase timeout for complex queries
+      -- MIGRATION CHANGE: Moved provider and model settings to providers section below
+      
+      endpoint = "https://api.anthropic.com", -- Keep endpoint at top level for backward compatibility
       auto_suggestions_provider = "claude",
-      -- Explicitly set model in provider config for priority
-      claude = {
-        model = "claude-3-5-sonnet-20241022",
-        temperature = 0.1,
-        max_tokens = 4096,
-        top_p = 0.95,
-        timeout = 60000,
+      
+      -- MIGRATION CHANGE: All provider configurations moved under 'providers' field
+      providers = {
+        -- MIGRATION CHANGE: Claude configuration moved from top level 'claude = {...}'
+        claude = {
+          model = "claude-3-5-sonnet-20241022",
+          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
+          extra_request_body = {
+            temperature = 0.1,
+            max_tokens = 4096,
+            top_p = 0.95,
+          },
+          timeout = 60000,
+        },
+        
+        -- MIGRATION CHANGE: OpenAI configuration moved from top level 'openai = {...}'
+        openai = {
+          api_key = os.getenv("OPENAI_API_KEY"),
+          model = "gpt-4o",
+          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
+          extra_request_body = {
+            temperature = 0.1,
+            max_tokens = 4096,
+            top_p = 0.95,
+          },
+          timeout = 60000,
+        },
+        
+        -- MIGRATION CHANGE: Gemini configuration moved from top level 'gemini = {...}'
+        gemini = {
+          model = "gemini-2.5-pro-preview-03-25",
+          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
+          extra_request_body = {
+            temperature = 0.1,
+            max_tokens = 8192,
+          },
+        },
       },
-      -- OpenAI configuration
-      openai = {
-        api_key = os.getenv("OPENAI_API_KEY"),
-        model = "gpt-4o",
-        temperature = 0.1,
-        max_tokens = 4096,
-        top_p = 0.95,
-        timeout = 60000,
-      },
-      -- Gemini configuration
-      gemini = {
-        model = "gemini-2.5-pro-preview-03-25", -- Use the latest model
-        temperature = 0.1,
-        max_tokens = 8192, -- Higher token limit for newer models
-      },
+      
       system_prompt =
       "You are an expert mathematician, logician and computer scientist with deep knowledge of Neovim, Lua, and programming languages. Provide concise, accurate responses with code examples when appropriate. For mathematical content, use clear notation and step-by-step explanations. IMPORTANT: Never create files, make git commits, or perform system changes without explicit permission. Always ask before suggesting any file modifications or system operations. Only use the SEARCH/REPLACE blocks to suggest changes.",
-      -- Disable all tools that could modify the system
-      disable_tools = {
-        "file_creation",
-        "git_operations",
-        "system_commands",
-        "file_modifications",
-      },
+      
+      -- MIGRATION CHANGE: disable_tools moved to individual providers (see below in the override section)
+      
       -- custom_tools = {
       --   require("mcphub.extensions.avante").mcp_tool(),
       -- },
@@ -343,27 +341,39 @@ return {
       },
     }
 
+    -- MIGRATION CHANGE: Add disable_tools to each provider since it's now provider-scoped
+    for provider_name, provider_config in pairs(config.providers) do
+      provider_config.disable_tools = {
+        "file_creation",
+        "git_operations",
+        "system_commands",
+        "file_modifications",
+      }
+    end
+
     -- Override with saved settings if they exist
     -- Note: Using new variable names to avoid confusion with the init function scope
-    local opts_support = require("neotex.plugins.ai.avante-support")
-    local opts_settings = opts_support.init()
+    
+    -- local opts_support = require("neotex.plugins.ai.avante-support")
+    -- local opts_settings = opts_support.init()
 
     -- Apply settings to config
-    if opts_settings then
-      for k, v in pairs(opts_settings) do
-        if type(v) == "table" then
-          if config[k] then
-            for sk, sv in pairs(v) do
-              config[k][sk] = sv
-            end
-          else
-            config[k] = v
-          end
-        else
-          config[k] = v
-        end
-      end
-    end
+    
+    -- if opts_settings then
+      -- for k, v in pairs(opts_settings) do
+        -- if type(v) == "table" then
+          -- if config[k] then
+            -- for sk, sv in pairs(v) do
+              -- config[k][sk] = sv
+            -- end
+          -- else
+            -- config[k] = v
+          -- end
+        -- else
+          -- config[k] = v
+        -- end
+      -- end
+    -- end
 
     return config
   end,
