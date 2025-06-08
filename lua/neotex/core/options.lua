@@ -9,6 +9,7 @@ local options = {
 
   -- APPEARANCE
   laststatus = 3,                 -- views can only be fully collapsed with the global statusline
+  showtabline = 2,                -- always show the tabline/bufferline
   fileencoding = "utf-8",         -- the encoding written to a file
   guifont = "monospace:h17",      -- the font used in graphical neovim applications
   background = "dark",            -- colorschemes that can be light or dark will be made dark

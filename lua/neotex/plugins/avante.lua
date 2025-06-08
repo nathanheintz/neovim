@@ -360,19 +360,19 @@ return {
     -- Apply settings to config
     
     -- if opts_settings then
-      -- for k, v in pairs(opts_settings) do
-        -- if type(v) == "table" then
-          -- if config[k] then
-            -- for sk, sv in pairs(v) do
-              -- config[k][sk] = sv
-            -- end
-          -- else
-            -- config[k] = v
-          -- end
-        -- else
-          -- config[k] = v
-        -- end
-      -- end
+    --   for k, v in pairs(opts_settings) do
+    --     if type(v) == "table" then
+    --       if config[k] then
+    --         for sk, sv in pairs(v) do
+    --           config[k][sk] = sv
+    --         end
+    --       else
+    --         config[k] = v
+    --       end
+    --     else
+    --       config[k] = v
+    --     end
+    --   end
     -- end
 
     return config

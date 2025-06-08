@@ -14,6 +14,21 @@ api.nvim_create_autocmd(
   }
 )
 
+-- Restore UI elements when entering buffers (but not dashboard)
+api.nvim_create_autocmd({"TabEnter", "BufEnter"}, {
+  callback = function()
+    -- Only restore UI if we have a real file buffer
+    if vim.bo.filetype ~= "snacks_dashboard" and vim.bo.buftype == "" then
+      vim.opt.showtabline = 2
+      vim.opt.laststatus = 3
+    -- Hide UI when in dashboard
+    elseif vim.bo.filetype == "snacks_dashboard" then
+      vim.opt.showtabline = 0
+      vim.opt.laststatus = 0
+    end
+  end,
+})
+
 -- Handle Avante help markdown file specifically
 api.nvim_create_autocmd(
   "BufEnter",
