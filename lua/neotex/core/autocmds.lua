@@ -15,16 +15,36 @@ api.nvim_create_autocmd(
 )
 
 -- Restore UI elements when entering buffers (but not dashboard)
-api.nvim_create_autocmd({"TabEnter", "BufEnter"}, {
+api.nvim_create_autocmd({"TabEnter", "BufEnter", "WinEnter"}, {
   callback = function()
+    -- Check if nvim-tree is visible in any window
+    local nvim_tree_visible = false
+    for _, win in pairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.bo[buf].filetype == "NvimTree" then
+        nvim_tree_visible = true
+        break
+      end
+    end
+    
     -- Only restore UI if we have a real file buffer
     if vim.bo.filetype ~= "snacks_dashboard" and vim.bo.buftype == "" then
       vim.opt.showtabline = 2
       vim.opt.laststatus = 3
-    -- Hide UI when in dashboard
+    -- Hide UI when in dashboard (but show statusline if nvim-tree is visible)
     elseif vim.bo.filetype == "snacks_dashboard" then
       vim.opt.showtabline = 0
-      vim.opt.laststatus = 0
+      vim.opt.laststatus = nvim_tree_visible and 3 or 0
+    end
+  end,
+})
+
+-- Force statusline when nvim-tree buffer is created
+api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  callback = function()
+    if vim.bo.filetype == "NvimTree" then
+      vim.opt.laststatus = 3
     end
   end,
 })
