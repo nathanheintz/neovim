@@ -286,5 +286,11 @@ map("v", "J", "gj", {}, "Move down display line")
 map("v", "K", "gk", {}, "Move up display line")
 
 -- Character Insertion
-map("i", "<M-Right>", "→", {}, "Insert right arrow")
-map("i", "<M-Left>", "←", {}, "Insert left arrow")
+map("i", "<S-M-Right>", "→", {}, "Insert right arrow")
+map("i", "<S-M-Left>", "←", {}, "Insert left arrow")
+
+-- Mac-style movement in insert mode
+map("i", "<M-Left>", "<C-o>g^", {}, "Move to start of row")
+map("i", "<M-Right>", "<C-o>g$", {}, "Move to end of row")
+map("i", "<M-Up>", "<C-o>{", {}, "Move to start of paragraph")
+map("i", "<M-Down>", "<C-o>}", {}, "Move to end of paragraph")
