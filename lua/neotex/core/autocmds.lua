@@ -67,8 +67,8 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
   command = "lua set_terminal_keymaps()",
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre", "BufNewFile" }, {
-  pattern = { "*.md" },
+vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre", "BufNewFile", "FileType" }, {
+  pattern = { "*.md", "markdown" },  -- Also add "markdown" for FileType event
   command = "lua set_markdown_keymaps()",
 })
 
