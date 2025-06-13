@@ -51,7 +51,7 @@ M.sections = {
   { section = "keys", gap = 0, padding = 1 },
   { section = 'startup' },
   {section = 'terminal',
-    cmd = "ascii-image-converter ~/.config/ronin.png -C -c -W 55",
+    cmd = "ascii-image-converter ~/.config/ronin.png -C -c -W 44",
     random = 10,
     pane = 2,
     indent = 4,

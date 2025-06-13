@@ -10,21 +10,30 @@ return {
     -- custom browser function
     vim.g.mkdp_browserfunc = 'OpenMarkdownPreview'
 
+    -- set to 1, the preview will automatically close when you close the buffer or quit neovim
+    vim.g.mkdp_auto_close = 0
+
     -- create the custom open function
-    vim.cmd([[
-      function! OpenMarkdownPreview(url)
-        execute "silent! !brave " . a:url . " &"
-      endfunction
-    ]])
+vim.cmd([[
+  function! OpenMarkdownPreview(url)
+    execute "silent! !open -a 'Brave Browser' " . a:url
+  endfunction
+]])    
 
     -- set to 1, auto open preview page when entering markdown buffer
     vim.g.mkdp_auto_start = 0
-
+    
     -- preview page title
     vim.g.mkdp_page_title = '「${name}」'
 
     -- set default theme (dark or light)
     vim.g.mkdp_theme = 'dark'
+
+    -- define source for custom css 
+    vim.g.mkdp_markdown_css = vim.fn.expand('~/.config/nvim/lua/neotex/plugins/md-css/markdown-custom.css')
+    
+    -- define source for images folder 
+    vim.g.mkdp_images_path = vim.fn.expand('~/.config/nvim/lua/neotex/plugins/md-css/')
 
     -- set to 1, the vim will refresh markdown when save the buffer or
     -- leave from insert mode, default 0 is auto refresh markdown as you edit or

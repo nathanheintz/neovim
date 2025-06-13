@@ -417,7 +417,7 @@ return {
         s = { "<cmd>lua SubmitLecticSelection()<CR>", "submit selection with message" },
 
         -- MARKDOWN/PREVIEW
-        p = { "<cmd>MarkdownPreviewToggle <CR>", "markdown preview" },
+        p = { "<cmd>MarkdownPreviewToggle<CR>", "markdown preview" },
         u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
 
         -- AUTOCOMPLETION TOGGLES
