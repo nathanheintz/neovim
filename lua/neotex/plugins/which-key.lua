@@ -289,7 +289,6 @@ return {
       e = { "<cmd>NvimTreeToggle<CR>", "explorer" },
       j = { "<cmd>clo<CR>", "drop split" },
       i = { "<cmd>VimtexTocOpen<CR>", "index" },
-      k = { "<cmd>on<CR>", "max split" },
       q = { "<cmd>wa! | qa!<CR>", "quit" },
       u = { "<cmd>Telescope undo<CR>", "undo" },
       v = { "<cmd>VimtexView<CR>", "view" },
@@ -325,15 +324,11 @@ return {
       f = {
         name = "FIND",
         a = { "<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true, search_dirs = { '~/' } })<CR>", "all files" },
-        b = {
-          "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>",
-          "buffers",
-        },
-        
+        f = { "<cmd>Telescope find_files<CR>", "project files" },
+        g = { "<cmd>Telescope live_grep theme=ivy<CR>", "project grep" },
+        b = { "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>","buffers", },
         c = { "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", "citations" },
-        f = { "<cmd>Telescope live_grep theme=ivy<CR>", "project" },
         l = { "<cmd>Telescope resume<CR>", "last search" },
-        g = { "<cmd>Telescope git_commits<CR>", "git history" },
         h = { "<cmd>Telescope help_tags<CR>", "help" },
         k = { "<cmd>Telescope keymaps<CR>", "keymaps" },
         r = { "<cmd>Telescope oldfiles<CR>", "recent" },
@@ -341,6 +336,7 @@ return {
         s = { "<cmd>Telescope grep_string<CR>", "string" },
         w = { "<cmd>lua SearchWordUnderCursor()<CR>", "word" },
         y = { "<cmd>YankyRingHistory<CR>", "yanks" },
+        -- g = { "<cmd>Telescope git_commits<CR>", "git history" },        
         -- q = { "<cmd>Telescope quickfix<CR>", "quickfix" },
         -- r = { "<cmd>Telescope registers<CR>", "registers" },
         -- m = { "<cmd>Telescope man_pages<CR>", "man pages" },
@@ -382,6 +378,16 @@ return {
       --   a = { "<cmd>lua require('harpoon.mark').add_file()<cr>", "mark" },
       --   n = { "<cmd>lua require('harpoon.ui').nav_next()<cr>", "next" },
       --   p = { "<cmd>lua require('harpoon.ui').nav_prev()<cr>", "previous" },
+      
+
+      -- KANBAN MAPPINGS
+      k = {
+        name = "KANBAN",
+        w = { ":KanbanOpen ~/SecondBrain/2-Areas/Writing/writing-kanban.md<CR>", "writing board" },
+        c = { ":KanbanOpen ~/SecondBrain/2-Areas/Business/Clients/clients-kanban.md<CR>", "clients board" },
+        t = { ":KanbanOpen telescope<CR>", "find boards" },
+      },
+
       -- LIST MAPPINGS
       L = {
         name = "LIST",
