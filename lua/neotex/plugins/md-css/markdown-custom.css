@@ -11,6 +11,15 @@
   border-left: 4px solid #4a9b9b !important;
 }
 
+.columns {
+  display: flex !important;
+  gap: 20px !important;
+}
+
+.column {
+  flex: 1 !important;
+}
+
 /* Custom Typography */
 .markdown-body {
   font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif !important;
