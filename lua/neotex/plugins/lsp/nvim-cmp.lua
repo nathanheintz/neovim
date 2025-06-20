@@ -22,7 +22,7 @@ return {
 -- Variables for tracking completion source state
 vim.g.spell_completion_enabled = false  -- Spell completion disabled by default for markdown
 vim.g.obsidian_completion_enabled = true -- Obsidian completion enabled by default for markdown
-vim.g.buffer_completion_enabled = true -- Buffer completion enabled by default for markdown
+vim.g.buffer_completion_enabled = false -- Buffer completion enabled by default for markdown
 
 -- Helper function to update completion sources
 local function setup_completion_sources()
