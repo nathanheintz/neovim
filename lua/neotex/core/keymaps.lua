@@ -255,6 +255,10 @@ map("n", "<A-l>", ":vertical resize +2<CR>", {}, "Increase width")
 map("n", "<TAB>", "", { callback = function() GotoBuffer(1, 1) end }, "Next buffer")
 map("n", "<S-TAB>", "", { callback = function() GotoBuffer(1, -1) end }, "Previous buffer")
 
+-- Buffer reordering
+map("n", "<C-A-h>", "<cmd>BufferLineMovePrev<CR>", {}, "Move buffer left")
+map("n", "<C-A-l>", "<cmd>BufferLineMoveNext<CR>", {}, "Move buffer right")
+
 -- Line manipulation
 map("n", "<A-j>", "<Esc>:m .+1<CR>==", {}, "Move line down")
 map("n", "<A-k>", "<Esc>:m .-2<CR>==", {}, "Move line up")

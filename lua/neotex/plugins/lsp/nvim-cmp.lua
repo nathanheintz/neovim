@@ -21,8 +21,9 @@ return {
 
 -- Variables for tracking completion source state
 vim.g.spell_completion_enabled = false  -- Spell completion disabled by default for markdown
-vim.g.obsidian_completion_enabled = true -- Obsidian completion enabled by default for markdown
+vim.g.obsidian_completion_enabled = false -- Obsidian completion enabled by default for markdown
 vim.g.buffer_completion_enabled = false -- Buffer completion enabled by default for markdown
+vim.g.luasnip_completion_enabled = false -- LuaSnip completion disabled by default for markdown
 
 -- Helper function to update completion sources
 local function setup_completion_sources()
@@ -31,33 +32,33 @@ local function setup_completion_sources()
   -- Only modify sources for markdown files
   if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
     cmp.setup.buffer({
-      sources = cmp.config.sources(
-        -- Create a table of sources, filtering out nil values
-        vim.tbl_filter(
-          function(source) return source ~= nil end,
-          {
-            { name = "nvim_lsp" },
-            { name = "luasnip" },
-            { name = "vimtex" },
-            -- Add Buffer conditionally
-            vim.g.buffer_completion_enabled and { name = "buffer", keyword_length = 3 } or nil,
-            { name = "path", option = { trailing_slash = true } },
-            -- Add Obsidian conditionally
-            vim.g.obsidian_completion_enabled and { name = "obsidian" } or nil,
-            -- Add Spell conditionally
-            vim.g.spell_completion_enabled and { 
-              name = "spell",
-              keyword_length = 4,
-              option = {
-                keep_all_entries = false,
-                enable_in_context = function() return true end
-              }
-            } or nil,
-          }
-        )
-      )
-    })
-  end
+sources = cmp.config.sources(
+  -- Create a table of sources, filtering out nil values
+  vim.tbl_filter(
+    function(source) return source ~= nil end,
+    {
+      -- Always enabled sources
+      { name = "nvim_lsp" },
+      { name = "vimtex" },
+      { name = "path", option = { trailing_slash = true } },
+      
+      -- Conditionally enabled sources
+      vim.g.luasnip_completion_enabled and { name = "luasnip" } or nil,
+      vim.g.buffer_completion_enabled and { name = "buffer", keyword_length = 3 } or nil,
+      vim.g.obsidian_completion_enabled and { name = "obsidian" } or nil,
+      vim.g.spell_completion_enabled and { 
+        name = "spell",
+        keyword_length = 4,
+        option = {
+          keep_all_entries = false,
+          enable_in_context = function() return true end
+        }
+      } or nil,
+    }
+  )
+)    
+})
+end
 end
 
 -- Create toggle functions
@@ -96,6 +97,19 @@ function _G.toggle_buffer_completion()
       vim.notify("Buffer completion enabled")
     else
       vim.notify("Buffer completion disabled")
+    end
+  end
+end
+
+function _G.toggle_luasnip_completion()
+  if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+    vim.g.luasnip_completion_enabled = not vim.g.luasnip_completion_enabled
+    setup_completion_sources()
+    
+    if vim.g.luasnip_completion_enabled then
+      vim.notify("LuaSnip completion enabled")
+    else
+      vim.notify("LuaSnip completion disabled")
     end
   end
 end

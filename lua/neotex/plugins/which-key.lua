@@ -428,9 +428,10 @@ return {
         u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
 
         -- AUTOCOMPLETION TOGGLES
-        b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion" },
+        b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion", icon = "\u{f204}" },
         c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
         o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
+        x = { "<cmd>lua _G.toggle_luasnip_completion()<CR>", "toggle luasnip completion" },
 
         -- FOLDING
         a = { "<cmd>lua ToggleAllFolds()<CR>", "toggle all folds" },
