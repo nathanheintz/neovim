@@ -252,8 +252,10 @@ map("n", "<A-h>", ":vertical resize -2<CR>", {}, "Decrease width")
 map("n", "<A-l>", ":vertical resize +2<CR>", {}, "Increase width")
 
 -- Buffer navigation
-map("n", "<TAB>", "", { callback = function() GotoBuffer(1, 1) end }, "Next buffer")
-map("n", "<S-TAB>", "", { callback = function() GotoBuffer(1, -1) end }, "Previous buffer")
+-- map("n", "<TAB>", "", { callback = function() GotoBuffer(1, 1) end }, "Next buffer")
+-- map("n", "<S-TAB>", "", { callback = function() GotoBuffer(1, -1) end }, "Previous buffer")
+map("n", "<TAB>", "<cmd>BufferLineCycleNext<CR>", {}, "Next buffer")
+map("n", "<S-TAB>", "<cmd>BufferLineCyclePrev<CR>", {}, "Previous buffer")
 
 -- Buffer reordering
 map("n", "<C-A-h>", "<cmd>BufferLineMovePrev<CR>", {}, "Move buffer left")

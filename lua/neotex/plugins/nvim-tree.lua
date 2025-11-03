@@ -1,5 +1,7 @@
 return {
   "nvim-tree/nvim-tree.lua",
+  lazy = true,
+    cmd = { "NvimTreeToggle", "NvimTreeFocus", "NvimTreeFindFile" },
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     local nvimtree = require("nvim-tree")
