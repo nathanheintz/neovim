@@ -107,8 +107,13 @@ end
 -- BUFFER-SPECIFIC KEYMAP FUNCTIONS  --
 ----------------------------------------
 
--- Terminal mappings setup function triggered by an auto-command
 function _G.set_terminal_keymaps()
+  -- Don't set winfixbuf for dashboard-related terminals
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname:match("ascii%-image%-converter") then
+    return
+  end
+  
   -- Set the terminal window as fixed
   vim.wo.winfixbuf = true
 

@@ -2,6 +2,7 @@ return {
   "yetone/avante.nvim",
   event = "VeryLazy",
   version = false, -- Using latest version to get the most recent fixes
+  
   -- Explicitly checking for Neovim 0.10.1+ compatibility
   cond = function()
     if vim.fn.has("nvim-0.10.1") == 0 then
@@ -10,267 +11,278 @@ return {
     end
     return true
   end,
+  
   init = function()
     -- Set recommended vim option for best Avante view compatibility
     -- Views can only be fully collapsed with the global statusline
     vim.opt.laststatus = 3
 
     -- Define provider models (moved to global scope for reuse)
-    -- IMPORTANT: Keep claude-3-5-sonnet as the first model
+    -- IMPORTANT: Keep claude-sonnet-4-20250514 as the first model
     _G.provider_models = {
       claude = {
-        "claude-3-5-sonnet-20241022", -- IMPORTANT: Keep this as index 1
-        "claude-3-7-sonnet-20250219",
-        "claude-3-opus-20240229",
+        "claude-sonnet-4-20250514",     -- Claude 4 (current)
+        "claude-3-7-sonnet-20250219",   -- Claude 3.7
+        "claude-3-5-sonnet-20241022",   -- Claude 3.5 (legacy)
       },
-      openai = {
-        "gpt-4o",
-        "gpt-4-turbo",
-        "gpt-4",
-        "gpt-3.5-turbo",
-      },
-      gemini = {
-        -- Gemini 2.5 models
-        "gemini-2.5-pro-preview-03-25",
-        -- "gemini-2.5-pro-exp-03-25",
-        -- Gemini 2.0 models
-        "gemini-2.0-flash",
-        -- "gemini-2.0-flash-lite",
-        -- "gemini-2.0-flash-001",
-        -- "gemini-2.0-flash-exp",
-        -- "gemini-2.0-flash-lite-001",
-        -- Gemini 1.5 models
-        -- "gemini-1.5-pro",
-        -- "gemini-1.5-flash",
-      }
+      -- Commented out - OpenAI models
+      -- openai = {
+      --   "gpt-4o",
+      --   "gpt-4-turbo",
+      --   "gpt-4",
+      --   "gpt-3.5-turbo",
+      -- },
+      -- Commented out - Gemini models
+      -- gemini = {
+      --   "gemini-2.5-pro-preview-03-25",
+      --   "gemini-2.0-flash",
+      -- }
     }
 
-    -- Require the support module just once in this scope
-    -- This module will be visible to all code in the init function
-    local avante_support = require("neotex.plugins.ai.avante-support")
+    -- Require the support module if you have one
+    -- If you don't have avante-support.lua, you can remove these lines
+    local has_support, avante_support = pcall(require, "neotex.plugins.ai.avante-support")
+    
+    if has_support then
+      -- Initialize state with the settings from our support module
+      local settings = avante_support.init()
 
-    -- Initialize state with the settings from our support module
-    -- This sets up _G.avante_cycle_state and returns the settings
-    local settings = avante_support.init()
+      -- Add additional autocmd to enforce model after fully loaded
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LazyDone",
+        callback = function()
+          vim.defer_fn(function()
+            local ok, avante = pcall(require, "avante")
+            if ok then
+              local lazy_settings = avante_support.init()
+              local model_config = lazy_settings
 
-    -- Add additional autocmd to enforce model after fully loaded
-    -- No notification here - will show when window is first opened
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "LazyDone",
-      callback = function()
-        vim.defer_fn(function()
-          local ok, avante = pcall(require, "avante")
-          if ok then
-            -- Load settings from our support module
-            -- Using the avante_support variable from the outer scope
-            local lazy_settings = avante_support.init()
-
-            -- Create model config from settings
-            local model_config = lazy_settings
-
-            -- First try: config.override
-            local success = pcall(function()
-              if avante.config and avante.config.override then
-                avante.config.override(model_config)
-                return true
-              end
-            end)
-
-            -- Second try: direct override
-            if not success then
-              success = pcall(function()
-                if type(avante.override) == "function" then
-                  avante.override(model_config)
+              -- Try different methods to override config
+              local success = pcall(function()
+                if avante.config and avante.config.override then
+                  avante.config.override(model_config)
                   return true
                 end
               end)
-            end
 
-            -- Third try: require config module
-            if not success then
-              pcall(function()
-                local config_module = require("avante.config")
-                if config_module and config_module.override then
-                  config_module.override(model_config)
-                end
-              end)
-            end
-
-            -- Set a flag to show notification on first window open
-            _G.avante_first_open = true
-          end
-        end, 1000) -- Longer delay to ensure everything is loaded
-      end
-    })
-
-    -- Add VimEnter event to enforce model configuration without disrupting UI settings
-    -- No notification here to keep the interface clean
-    vim.api.nvim_create_autocmd("VimEnter", {
-      callback = function()
-        vim.defer_fn(function()
-          local ok, avante = pcall(require, "avante")
-          if ok then
-            -- Load settings from our support module
-            -- Using the avante_support variable from the outer scope
-            local vim_settings = avante_support.init()
-
-            -- Create model config from settings
-            local model_config = vim_settings
-
-            -- Try different paths to update configuration
-            local success = false
-
-            -- First try: config.override
-            success = pcall(function()
-              if avante.config and avante.config.override then
-                avante.config.override(model_config)
-                return true
+              if not success then
+                success = pcall(function()
+                  if type(avante.override) == "function" then
+                    avante.override(model_config)
+                    return true
+                  end
+                end)
               end
-            end)
 
-            -- Second try: direct override
-            if not success then
-              success = pcall(function()
-                if type(avante.override) == "function" then
-                  avante.override(model_config)
+              if not success then
+                pcall(function()
+                  local config_module = require("avante.config")
+                  if config_module and config_module.override then
+                    config_module.override(model_config)
+                  end
+                end)
+              end
+
+              _G.avante_first_open = true
+            end
+          end, 1000)
+        end
+      })
+
+      -- Add VimEnter event to enforce model configuration
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.defer_fn(function()
+            local ok, avante = pcall(require, "avante")
+            if ok then
+              local vim_settings = avante_support.init()
+              local model_config = vim_settings
+
+              local success = pcall(function()
+                if avante.config and avante.config.override then
+                  avante.config.override(model_config)
                   return true
                 end
               end)
-            end
 
-            -- Third try: require config module
-            if not success then
-              pcall(function()
-                local config_module = require("avante.config")
-                if config_module and config_module.override then
-                  config_module.override(model_config)
-                end
-              end)
-            end
-          end
-        end, 300) -- Delay after Vim is fully started
-      end
-    })
+              if not success then
+                success = pcall(function()
+                  if type(avante.override) == "function" then
+                    avante.override(model_config)
+                    return true
+                  end
+                end)
+              end
 
-    -- Set up Avante commands using the support module
-    avante_support.setup_commands()
+              if not success then
+                pcall(function()
+                  local config_module = require("avante.config")
+                  if config_module and config_module.override then
+                    config_module.override(model_config)
+                  end
+                end)
+              end
+            end
+          end, 300)
+        end
+      })
+
+      -- Set up Avante commands using the support module
+      avante_support.setup_commands()
+    end
 
     -- Create autocmd for Avante buffer-specific mappings
     vim.api.nvim_create_autocmd("FileType", {
       pattern = { "AvanteInput", "Avante" },
       callback = function()
         -- Show model notification on first window open in a session
-        -- Use local variable to prevent race condition with multiple notifications
         local filetype = vim.bo.filetype
         if _G.avante_first_open and filetype == "Avante" then
-          -- Immediately clear the flag to prevent multiple notifications
           _G.avante_first_open = false
 
           vim.defer_fn(function()
-            -- Use support module to show the notification
-            -- Using the avante_support variable from the outer scope
-            avante_support.show_model_notification()
+            if has_support and avante_support.show_model_notification then
+              avante_support.show_model_notification()
+            end
           end, 100)
         end
 
-        -- Set up buffer keymaps using the function in keymaps.lua
-        -- This centralizes all keymappings in one place
-        _G.set_avante_keymaps()
+        -- Set up buffer keymaps if you have a global function for this
+        if _G.set_avante_keymaps then
+          _G.set_avante_keymaps()
+        end
 
         vim.opt_local.scrolloff = 999
       end
     })
   end,
+  
   opts = function()
-    -- Default configuration
+    -- Default configuration following the new migration structure
     local config = {
-      -- MIGRATION CHANGE: Moved provider and model settings to providers section below
+      -- Project-specific instructions file
+      instructions_file = "avante.md",
       
-      endpoint = "https://api.anthropic.com", -- Keep endpoint at top level for backward compatibility
+      -- Mode: "agentic" enables autonomous AI behavior
+      mode = "agentic",
+      
+      -- Primary provider
+      provider = "claude",
+      
+      -- Auto-suggestions provider (disabled below, but you could use a cheaper provider here)
       auto_suggestions_provider = "claude",
       
-      -- MIGRATION CHANGE: All provider configurations moved under 'providers' field
+      -- NEW STRUCTURE: All provider configurations under 'providers' field
       providers = {
-        -- MIGRATION CHANGE: Claude configuration moved from top level 'claude = {...}'
+        -- Claude configuration (ACTIVE)
         claude = {
-          model = "claude-3-5-sonnet-20241022",
-          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
+          endpoint = "https://api.anthropic.com",
+          model = "claude-sonnet-4-20250514",  -- Claude 4
+          timeout = 60000,  -- 60 seconds
+          
+          -- STRICT TOKEN LIMITS to control API usage
           extra_request_body = {
             temperature = 0.1,
-            max_tokens = 4096,
+            max_tokens = 4096,  -- Conservative limit (Claude 4 supports up to 20480+)
             top_p = 0.95,
           },
-          timeout = 60000,
-        },
-        
-        -- MIGRATION CHANGE: OpenAI configuration moved from top level 'openai = {...}'
-        openai = {
-          api_key = os.getenv("OPENAI_API_KEY"),
-          model = "gpt-4o",
-          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
-          extra_request_body = {
-            temperature = 0.1,
-            max_tokens = 4096,
-            top_p = 0.95,
-          },
-          timeout = 60000,
-        },
-        
-        -- MIGRATION CHANGE: Gemini configuration moved from top level 'gemini = {...}'
-        gemini = {
-          model = "gemini-2.5-pro-preview-03-25",
-          -- MIGRATION CHANGE: Request body fields moved to extra_request_body
-          extra_request_body = {
-            temperature = 0.1,
-            max_tokens = 8192,
+          
+          -- Disable automatic tool usage for safety
+          disable_tools = {
+            "file_creation",
+            "git_operations",
+            "system_commands",
+            "file_modifications",
           },
         },
+        
+        -- OpenAI configuration (COMMENTED OUT)
+        -- openai = {
+        --   endpoint = "https://api.openai.com/v1",
+        --   api_key_name = "OPENAI_API_KEY",
+        --   model = "gpt-4o",
+        --   timeout = 60000,
+        --   
+        --   extra_request_body = {
+        --     temperature = 0.1,
+        --     max_tokens = 4096,
+        --     top_p = 0.95,
+        --   },
+        --   
+        --   disable_tools = {
+        --     "file_creation",
+        --     "git_operations",
+        --     "system_commands",
+        --     "file_modifications",
+        --   },
+        -- },
+        
+        -- Gemini configuration (COMMENTED OUT)
+        -- gemini = {
+        --   endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+        --   api_key_name = "GEMINI_API_KEY",
+        --   model = "gemini-2.5-pro-preview-03-25",
+        --   
+        --   extra_request_body = {
+        --     temperature = 0.1,
+        --     max_tokens = 8192,
+        --   },
+        --   
+        --   disable_tools = {
+        --     "file_creation",
+        --     "git_operations",
+        --     "system_commands",
+        --     "file_modifications",
+        --   },
+        -- },
       },
       
-      system_prompt =
-      "You are an expert mathematician, logician and computer scientist with deep knowledge of Neovim, Lua, and programming languages. Provide concise, accurate responses with code examples when appropriate. For mathematical content, use clear notation and step-by-step explanations. IMPORTANT: Never create files, make git commits, or perform system changes without explicit permission. Always ask before suggesting any file modifications or system operations. Only use the SEARCH/REPLACE blocks to suggest changes.",
+      -- System prompt
+      system_prompt = 
+        "You are an expert mathematician, logician and computer scientist with deep knowledge of Neovim, Lua, and programming languages. Provide concise, accurate responses with code examples when appropriate. For mathematical content, use clear notation and step-by-step explanations. IMPORTANT: Never create files, make git commits, or perform system changes without explicit permission. Always ask before suggesting any file modifications or system operations. Only use the SEARCH/REPLACE blocks to suggest changes.",
       
-      -- MIGRATION CHANGE: disable_tools moved to individual providers (see below in the override section)
-      
-      -- custom_tools = {
-      --   require("mcphub.extensions.avante").mcp_tool(),
-      -- },
+      -- Dual boost disabled (would use two providers simultaneously)
       dual_boost = {
         enabled = false,
         first_provider = "claude",
         second_provider = "openai",
-        prompt =
-        "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
+        prompt = "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
         timeout = 60000,
       },
+      
+      -- Fallback disabled
       fallback = {
-        enabled = false,                      -- Enable fallback model if primary fails
-        model = "claude-3-5-sonnet-20241022", -- More stable fallback model
+        enabled = false,
+        model = "claude-sonnet-4-20250514",
         auto_retry = false,
       },
+      
+      -- Behavior settings
       behaviour = {
         enable_claude_text_editor_tool_mode = true,
-        enable_cursor_planning_mode = false,    -- Experimental feature for more focused cursor-based planning
-        auto_suggestions = false,
-        auto_suggestions_respect_ignore = true, -- Honor .gitignore when searching for context
+        enable_cursor_planning_mode = false,
+        auto_suggestions = false,  -- DISABLED as requested
+        auto_suggestions_respect_ignore = true,
         auto_set_highlight_group = false,
         auto_set_keymaps = false,
         auto_apply_diff_after_generation = false,
         support_paste_from_clipboard = true,
         minimize_diff = true,
-        preserve_state = true,                   -- Add safe mode to handle potential iteration errors
-        require_confirmation_for_actions = true, -- Require confirmation for any actions
-        disable_file_creation = true,            -- Prevent automatic file creation
-        disable_git_operations = true,           -- Prevent automatic git operations
-        respect_enter_key = true,                -- Add this to make <CR> behave normally in insert mode
-        use_cwd_as_project_root = false,         -- Use current working directory as project root
+        preserve_state = true,
+        require_confirmation_for_actions = true,  -- Safety: require confirmation
+        disable_file_creation = true,             -- Safety: no auto file creation
+        disable_git_operations = true,            -- Safety: no auto git ops
+        respect_enter_key = true,
+        use_cwd_as_project_root = false,
       },
 
-      -- Token counting configuration (helps track token usage)
+      -- Token counting configuration
       token_counting = {
-        enabled = true,              -- Enable token counting for cost awareness
-        show_in_status_line = false, -- Don't show in status line to keep it clean
+        enabled = true,              -- Track token usage
+        show_in_status_line = false,
       },
+      
+      -- Keymaps
       mappings = {
         diff = {
           ours = "o",
@@ -293,7 +305,7 @@ return {
         },
         submit = {
           normal = "<CR>",
-          insert = "<C-l>", -- Keep this as <C-l> to avoid conflicts with normal <CR> behavior
+          insert = "<C-l>",
         },
         sidebar = {
           apply_all = "A",
@@ -302,7 +314,11 @@ return {
           reverse_switch_windows = "<S-Tab>",
         },
       },
+      
+      -- Hints disabled
       hints = { enabled = false },
+      
+      -- Window configuration
       windows = {
         position = "right",
         wrap = true,
@@ -328,12 +344,16 @@ return {
           focus_on_apply = "ours",
         },
       },
+      
+      -- Highlights
       highlights = {
         diff = {
           current = "DiffText",
           incoming = "DiffAdd",
         },
       },
+      
+      -- Diff settings
       diff = {
         autojump = true,
         list_opener = "copen",
@@ -341,43 +361,19 @@ return {
       },
     }
 
-    -- MIGRATION CHANGE: Add disable_tools to each provider since it's now provider-scoped
-    for provider_name, provider_config in pairs(config.providers) do
-      provider_config.disable_tools = {
-        "file_creation",
-        "git_operations",
-        "system_commands",
-        "file_modifications",
-      }
-    end
-
-    -- Override with saved settings if they exist
-    -- Note: Using new variable names to avoid confusion with the init function scope
-    
-    -- local opts_support = require("neotex.plugins.ai.avante-support")
-    -- local opts_settings = opts_support.init()
-
-    -- Apply settings to config
-    
-    -- if opts_settings then
-    --   for k, v in pairs(opts_settings) do
-    --     if type(v) == "table" then
-    --       if config[k] then
-    --         for sk, sv in pairs(v) do
-    --           config[k][sk] = sv
-    --         end
-    --       else
-    --         config[k] = v
-    --       end
-    --     else
-    --       config[k] = v
-    --     end
-    --   end
-    -- end
-
     return config
   end,
-  build = "make",
+  
+  -- Build command (conditional based on OS)
+  build = function()
+    if vim.fn.has("win32") == 1 then
+      return "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+    else
+      return "make"
+    end
+  end,
+  
+  -- Dependencies
   dependencies = {
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
@@ -399,7 +395,7 @@ return {
       },
     },
     
-    -- Optional add-on - Renders Pretty Markdown in the Avante chat thread
+    -- Optional: Prettier markdown rendering in Avante chat (COMMENTED OUT)
     -- {
     --   'MeanderingProgrammer/render-markdown.nvim',
     --   opts = {

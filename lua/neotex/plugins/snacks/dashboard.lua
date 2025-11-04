@@ -56,6 +56,7 @@ M.sections = {
     pane = 2,
     indent = 4,
     height = 50,
+    ttimeoutlen = 0,
   }
 }
 

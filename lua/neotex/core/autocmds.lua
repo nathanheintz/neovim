@@ -4,10 +4,14 @@ local api = vim.api
 api.nvim_create_autocmd(
   "FileType",
   {
-    pattern = { "man", "help", "qf", "lspinfo", "infoview", "NvimTree" }, -- "startuptime",
+    pattern = { "man", "help", "qf", "lspinfo", "infoview", "NvimTree" },
     callback = function(ev)
+      local bufname = vim.api.nvim_buf_get_name(ev.buf)
+      local filetype = vim.bo[ev.buf].filetype
+      
       -- Set the window as fixed
       vim.wo.winfixbuf = true
+      
       -- Map q to close
       vim.keymap.set("n", "q", ":close<CR>", { buffer = ev.buf, silent = true })
     end,

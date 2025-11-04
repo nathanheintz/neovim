@@ -24,7 +24,7 @@ return {
 
     -- configure python server
     lspconfig["pyright"].setup({
-      capabilities = default,
+    capabilities = default,
     })
 
     -- configure texlab (LaTeX LSP) server
