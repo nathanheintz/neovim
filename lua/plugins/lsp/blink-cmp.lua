@@ -176,6 +176,15 @@ return {
 
       cmdline = {
         enabled = true,
+        completion = {
+          menu = {
+            auto_show = true,
+          },
+          trigger = {
+            show_on_blocked_trigger_characters = {},
+            show_on_x_blocked_trigger_characters = {}
+          }
+        },
         sources = function()
           local type = vim.fn.getcmdtype()
           if type == '/' or type == '?' then
@@ -185,6 +194,14 @@ return {
           end
           return {}
         end,
+        keymap = {
+          preset = 'default',
+          ['<C-k>'] = { 'select_prev', 'fallback' },
+          ['<C-j>'] = { 'select_next', 'fallback' },
+          ['<CR>'] = { 'accept_and_enter', 'fallback' },
+          ['<C-e>'] = { 'hide', 'fallback' },
+          ['<Tab>'] = { 'select_and_accept', 'fallback' },
+        },
       },
     }
   }
