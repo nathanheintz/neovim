@@ -23,4 +23,4 @@ require("nvim-surround").buffer_setup({
 -- vim.g.markdown_recommended_style = 0
 
 -- Load the saved folding state for markdown
-require("neotex.core.functions").LoadFoldingState()
+require("core.functions").LoadFoldingState()

@@ -11,7 +11,7 @@ end
 -- Only add lectic-specific settings here
 
 -- Load the saved folding state instead
-require("neotex.core.functions").LoadFoldingState()
+require("core.functions").LoadFoldingState()
 
 -- Make sure that we inherit markdown settings
 vim.cmd [[

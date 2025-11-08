@@ -22,9 +22,9 @@ return {
     bufdelete = { enabled = true },
     dashboard = {
       enabled = true,
-      preset = require("neotex.plugins.snacks.dashboard").preset,
-      sections = require("neotex.plugins.snacks.dashboard").sections,
-      -- sections = require("neotex.plugins.snacks.gh_dashboard").sections,
+      preset = require("plugins.snacks.dashboard").preset,
+      sections = require("plugins.snacks.dashboard").sections,
+      -- sections = require("plugins.snacks.gh_dashboard").sections,
     },
     git = { enabled = true },
     gitbrowse = { enabled = true },

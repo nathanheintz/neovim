@@ -80,13 +80,13 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   pattern = {"*"},
   callback = function()
     -- Call the function to load the folding state
-    require("neotex.core.functions").LoadFoldingState()
+    require("core.functions").LoadFoldingState()
   end
 })
 
 -- Set up global URL handling for all buffers
 -- This only needs to be done once at startup
-require("neotex.core.functions").SetupUrlMappings()
+require("core.functions").SetupUrlMappings()
 
 -- CLIPBOARD -- (for yanky)
 -- May help Arch/Debian Linux users
