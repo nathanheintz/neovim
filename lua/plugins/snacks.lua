@@ -143,7 +143,7 @@ return {
     zen = {
         enabled = true,
         toggles = {
-            dim = true,
+            dim = false,  -- Don't dim, we want full opacity
             git_signs = false,
             mini_diff_signs = false,
             line_numbers = false,  -- Hide line numbers in zen mode
@@ -155,6 +155,10 @@ return {
         win = {
           style = 'zen',
           width = 90,  -- Centered text with margins
+          backdrop = {
+            transparent = false,  -- Make backdrop fully opaque
+            blend = 100,          -- Full opacity (0 = transparent, 100 = opaque)
+          },
           wo = {
             wrap = true,
             linebreak = true,  -- Wrap without breaking words
