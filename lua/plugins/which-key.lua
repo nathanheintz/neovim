@@ -9,28 +9,28 @@ TOP-LEVEL MAPPINGS (<leader>)                   | DESCRIPTION
 <leader>b - VimtexCompile                       | Compile LaTeX document
 <leader>c - Create vertical split               | Split window vertically
 <leader>d - Save and delete buffer              | Save file and close buffer
-<leader>e - Toggle NvimTree explorer            | Open/close file explorer
+<leader>e - Toggle NeoTree explorer            | Open/close file explorer
 <leader>j - Close split                         | Close current split window
 <leader>i - Open VimtexToc                      | Show LaTeX table of contents
 <leader>k - Maximize split                      | Make current window full screen
 <leader>q - Save all and quit                   | Save all files and exit Neovim
 <leader>u - Open Telescope undo                 | Show undo history with preview
 <leader>v - VimtexView                          | View compiled LaTeX document
-<leader>w - Write all files                     | Save all open files
+<leader>w - WRITING tools (zen, word count)                     | Save all open files
 ----------------------------------------------------------------------------------
 TOP-LEVEL MAPPINGS (<leader>)                   | DESCRIPTION
 ----------------------------------------------------------------------------------
 <leader>b - VimtexCompile                       | Compile LaTeX document
 <leader>c - Create vertical split               | Split window vertically
 <leader>d - Save and delete buffer              | Save file and close buffer
-<leader>e - Toggle NvimTree explorer            | Open/close file explorer
+<leader>e - Toggle NeoTree explorer            | Open/close file explorer
 <leader>j - Close split                         | Close current split window
 <leader>i - Open VimtexToc                      | Show LaTeX table of contents
 <leader>k - Maximize split                      | Make current window full screen
 <leader>q - Save all and quit                   | Save all files and exit Neovim
 <leader>u - Open Telescope undo                 | Show undo history with preview
 <leader>v - VimtexView                          | View compiled LaTeX document
-<leader>w - Write all files                     | Save all open files
+<leader>w - WRITING tools (zen, word count)                     | Save all open files
 
 ----------------------------------------------------------------------------------
 ACTIONS (<leader>a)                             | DESCRIPTION
@@ -87,23 +87,6 @@ GIT (<leader>g)                                 | DESCRIPTION
 <leader>gt - Toggle blame                       | Toggle line blame display
 
 ----------------------------------------------------------------------------------
-AI HELP (<leader>h)                             | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>ha - Ask                                | Ask Avante AI a question
-<leader>hb - Build dependencies                 | Build deps for Avante project
-<leader>hc - Chat                               | Start chat with Avante AI
-<leader>hd - Set model & provider               | Change AI model with defaults
-<leader>he - Edit prompts                       | Open system prompt manager
-<leader>hi - Stop generation                    | Interrupt AI generation
-<leader>hk - Clear                              | Clear Avante chat/content
-<leader>hm - Select model                       | Choose AI model for current provider
-<leader>hM - Map repo                           | Create repo map for AI context
-<leader>hp - Select prompt                      | Choose a different system prompt
-<leader>hs - Selected edit                      | Edit selected text with AI
-<leader>hr - Refresh assistant                  | Reload AI assistant
-<leader>ht - Toggle assistant                   | Show/hide Avante interface
-
-----------------------------------------------------------------------------------
 LIST (<leader>L)                                | DESCRIPTION
 ----------------------------------------------------------------------------------
 <leader>Lc - Toggle checkbox                    | Check/uncheck a checkbox
@@ -148,17 +131,6 @@ SESSIONS (<leader>S)                            | DESCRIPTION
 <leader>Ss - Save session                       | Save current session
 <leader>Sd - Delete session                     | Delete a saved session
 <leader>Sl - Load session                       | Load a saved session
-
-----------------------------------------------------------------------------------
-NIXOS (<leader>n)                               | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>nd - Nix develop                        | Enter nix development shell
-<leader>ng - Garbage collection                 | Clean up old nix packages
-<leader>np - Browse packages                    | Open nixOS packages website
-<leader>nm - MyNixOS                            | Open MyNixOS website
-<leader>nr - Rebuild flake                      | Rebuild system from flake
-<leader>nh - Home-manager switch                | Apply home-manager changes
-<leader>nu - Update flake                       | Update flake dependencies
 
 ----------------------------------------------------------------------------------
 PANDOC (<leader>p)                              | DESCRIPTION
@@ -272,7 +244,7 @@ return {
       -- Disabled by default for Telescope
       disable = {
         bt = { "help", "quickfix", "terminal", "prompt" }, -- for example
-        ft = { "NvimTree" }                                -- add your explorer's filetype here
+        ft = { "neo-tree" }                                -- add your explorer's filetype here
       }
     },
     defaults = {
@@ -286,14 +258,18 @@ return {
       c = { "<cmd>vert sb<CR>", "create split" },
       d = { "<cmd>update! | lua Snacks.bufdelete()<CR>", "delete buffer" },
       -- d = { "<cmd>update! | bdelete!<CR>", "delete buffer" },
-      e = { "<cmd>NvimTreeToggle<CR>", "explorer" },
+      e = { "<cmd>NeoTreeToggle<CR>", "explorer" },
       j = { "<cmd>clo<CR>", "drop split" },
       i = { "<cmd>VimtexTocOpen<CR>", "index" },
       q = { "<cmd>wa! | qa!<CR>", "quit" },
       u = { "<cmd>Telescope undo<CR>", "undo" },
       v = { "<cmd>VimtexView<CR>", "view" },
-      w = { "<cmd>wa!<CR>", "write" },
-      -- z = { "<cmd>ZenMode<CR>", "zen" },
+      w = {
+        name = "WRITING",
+        a = { "<cmd>wa!<CR>", "write all" },
+        z = { "<cmd>lua Snacks.zen()<CR>", "zen mode" },
+        w = { "<cmd>lua require('core.functions').word_count()<CR>", "word count" },
+      },
       a = {
         name = "ACTIONS",
         a = { "<cmd>lua PdfAnnots()<CR>", "annotate" },
@@ -313,12 +289,12 @@ return {
         p = { "<cmd>TermExec cmd='python %:p:r.py'<CR>", "python" },
         r = { "<cmd>AutolistRecalculate<CR>", "reorder list" },
         t = { "<cmd>terminal latexindent -w %:p:r.tex<CR>", "tex format" },
-        u = { "<cmd>cd %:p:h | NvimTreeRefresh | NvimTreeFindFile<CR>", "update cwd" },
+        u = { "<cmd>cd %:p:h | NeoTreeToggle<CR>", "update cwd" },
         v = { "<plug>(vimtex-context-menu)", "vimtex menu" },
         w = { "<cmd>VimtexCountWords!<CR>", "word count" },
         -- w = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>" , "word"},
         -- s = { "<cmd>lua function() require('cmp_vimtex.search').search_menu() end<CR>"           , "search citations" },
-        s = { "<cmd>NvimTreeOpen ~/.config/nvim/snippets/<CR>", "snippets edit" },
+        s = { "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", "snippets edit" },
         S = { "<cmd>TermExec cmd='ssh brastmck@eofe10.mit.edu'<CR>", "ssh" },
       },
       f = {
@@ -356,23 +332,6 @@ return {
         s = { "<cmd>Telescope git_status<CR>", "git status" },
         t = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "toggle blame" },
         -- t = { "<cmd>Gitsigns toggle_word_diff<CR>", "toggle word diff" },
-      },
-      h = {
-        name = "AI HELP",
-        a = { "<cmd>AvanteAsk<CR>", "ask" },
-        b = { "<cmd>AvanteBuild<CR>", "build dependencies" },
-        c = { "<cmd>AvanteChat<CR>", "chat" },
-        d = { "<cmd>AvanteProvider<CR>", "set model & provider" },
-        e = { "<cmd>AvantePromptManager<CR>", "edit prompts" },
-        i = { "<cmd>AvanteStop<CR>", "interupt avante" },
-        k = { "<cmd>AvanteClear<CR>", "clear" },
-        m = { "<cmd>AvanteModel<CR>", "select model" },
-        M = { "<cmd>AvanteShowRepoMap<CR>", "map repo" },
-        p = { "<cmd>AvantePrompt<CR>", "select prompt" },
-        s = { "<cmd>AvanteEdit<CR>", "selected edit" },
-        -- s = { "<cmd>AvanteSwitchProvider<CR>", "quick provider switch" },
-        r = { "<cmd>AvanteRefresh<CR>", "refresh assistant" },
-        t = { "<cmd>AvanteToggle<CR>", "toggle assistant" },
       },
       --   HARPOON
       --   a = { "<cmd>lua require('harpoon.mark').add_file()<cr>", "mark" },
@@ -444,21 +403,6 @@ return {
         s = { "<cmd>SessionManager save_current_session<CR>", "save" },
         d = { "<cmd>SessionManager delete_session<CR>", "delete" },
         l = { "<cmd>SessionManager load_session<CR>", "load" },
-      },
-      n = {
-        name = "NIXOS",
-        d = { "<cmd>TermExec cmd='nix develop'<CR><C-w>j", "develop" },
-        -- f = { "<cmd>TermExec cmd='sudo nixos-rebuild switch --flake ~/.config/nixos/'<CR><C-w>j", "flake" },
-        g = { "<cmd>TermExec cmd='nix-collect-garbage --delete-older-than 15d'<CR><C-w>j", "garbage" },
-        -- g = { "<cmd>TermExec cmd='nix-collect-garbage -d'<CR><C-w>j", "garbage" },
-        p = { "<cmd>TermExec cmd='brave https://search.nixos.org/packages' open=0<CR>", "packages" },
-        m = { "<cmd>TermExec cmd='brave https://mynixos.com' open=0<CR>", "my-nixos" },
-        r = { "<cmd>TermExec cmd='sudo nixos-rebuild switch --flake ~/.dotfiles/'<CR><C-w>l", "rebuild flake" },
-        h = { "<cmd>TermExec cmd='home-manager switch --flake ~/.dotfiles/'<CR><C-w>l", "home-manager" },
-        -- r = { "<cmd>TermExec cmd='home-manager switch'<CR><C-w>j", "home rebuild" },
-        -- r = { "<cmd>TermExec cmd='sudo nixos-rebuild switch --flake ~/.config/home-manager/#nandi'<CR><C-w>j", "home rebuild" },
-        -- r = { "<cmd>TermExec cmd='home-manager switch --flake ~/.config/home-manager/'<CR><C-w>j", "rebuild" },
-        u = { "<cmd>TermExec cmd='nix flake update'<CR><C-w>j", "update" },
       },
       p = {
         name = "PANDOC",

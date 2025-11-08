@@ -141,27 +141,32 @@ return {
     win = { enabled = true },
     words = { enabled = false },
     zen = {
-        enabled = false,
+        enabled = true,
         toggles = {
             dim = true,
             git_signs = false,
             mini_diff_signs = false,
-            -- diagnostics = false,
-            -- inlay_hints = false,
+            line_numbers = false,  -- Hide line numbers in zen mode
         },
         show = {
             statusline = false,
             tabline = false,
         },
-        win = { style = 'zen' },
-        zoom = {
-            toggles = {},
-            show = { statusline = true, tabline = true },
-            win = {
-                backdrop = false,
-                width = 0,
-            },
+        win = {
+          style = 'zen',
+          width = 90,  -- Centered text with margins
+          wo = {
+            wrap = true,
+            linebreak = true,  -- Wrap without breaking words
+            spell = true,      -- Keep spell checking
+          }
         },
+        on_open = function()
+          vim.g.zen_mode_enabled = true
+        end,
+        on_close = function()
+          vim.g.zen_mode_enabled = false
+        end,
     },
   },
 }
