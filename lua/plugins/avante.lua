@@ -41,7 +41,7 @@ return {
 
     -- Require the support module if you have one
     -- If you don't have avante-support.lua, you can remove these lines
-    local has_support, avante_support = pcall(require, "neotex.plugins.ai.avante-support")
+    local has_support, avante_support = pcall(require, "plugins.ai.avante-support")
     
     if has_support then
       -- Initialize state with the settings from our support module
