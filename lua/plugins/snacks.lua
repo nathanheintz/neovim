@@ -157,7 +157,7 @@ return {
           width = 90,  -- Centered text with margins
           backdrop = {
             transparent = false,  -- Make backdrop fully opaque
-            blend = 100,          -- Full opacity (0 = transparent, 100 = opaque)
+            blend = 0,            -- Full opacity (0 = opaque, 100 = transparent)
           },
           wo = {
             wrap = true,
