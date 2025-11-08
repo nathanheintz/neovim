@@ -1,9 +1,6 @@
 return {
   "windwp/nvim-autopairs",
   event = { "InsertEnter" },
-  dependencies = {
-    "hrsh7th/nvim-cmp",
-  },
   config = function()
     -- import nvim-autopairs
     local autopairs = require("nvim-autopairs")
@@ -82,22 +79,5 @@ return {
     autopairs.get_rule('$'):with_move(function(opts)
       return opts.char == opts.next_char:sub(1, 1)
     end)
-
-    -- import nvim-cmp plugin (completions plugin)
-    local cmp = require("cmp")
-
-    -- import nvim-autopairs completion functionality
-    local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-
-    -- make autopairs and completion work together
-    cmp.event:on(
-      'confirm_done',
-      cmp_autopairs.on_confirm_done({
-        filetypes = {
-          tex = false, -- Disable for tex
-          lean = true  -- Enable for lean
-        }
-      })
-    )
   end,
 }

@@ -1,17 +1,6 @@
 return {
   -- Plugins for Ghost theme development
-  {
-    "norcalli/nvim-colorizer.lua",  -- Color preview in CSS files
-    config = function()
-      require("colorizer").setup({
-        "css";
-        "scss";
-        "html";
-        "handlebars";
-        "hbs";
-      })
-    end,
-  },
+  -- Note: Color highlighting now handled by mini.hipatterns in mini.lua
   {
     "windwp/nvim-autopairs",  -- Auto close HTML tags and brackets
     event = "InsertEnter",

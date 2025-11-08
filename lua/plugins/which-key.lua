@@ -258,7 +258,7 @@ return {
       c = { "<cmd>vert sb<CR>", "create split" },
       d = { "<cmd>update! | lua Snacks.bufdelete()<CR>", "delete buffer" },
       -- d = { "<cmd>update! | bdelete!<CR>", "delete buffer" },
-      e = { "<cmd>NeoTreeToggle<CR>", "explorer" },
+      e = { "<cmd>Neotree toggle<CR>", "explorer" },
       j = { "<cmd>clo<CR>", "drop split" },
       i = { "<cmd>VimtexTocOpen<CR>", "index" },
       q = { "<cmd>wa! | qa!<CR>", "quit" },

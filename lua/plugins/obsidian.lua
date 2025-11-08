@@ -5,7 +5,6 @@ return {
   -- ft = {"markdown", "lectic.markdown"}, -- load obsidian automatically in these filetypes (commented out to enable manual control)
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "hrsh7th/nvim-cmp",
     "nvim-telescope/telescope.nvim",
   },
   opts = {
@@ -16,7 +15,7 @@ return {
       },
     },
     completion = {
-      nvim_cmp = true,
+      nvim_cmp = true, -- Works with blink.cmp via blink.compat
       min_chars = 2,
     },
     picker = {
