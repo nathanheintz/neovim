@@ -88,7 +88,7 @@ return {
         -- Smart per-filetype defaults
         per_filetype = {
           -- Markdown/Lectic: writing-focused completion
-          markdown = { 'lsp', 'path', 'buffer', 'snippets' },
+          markdown = { 'lsp', 'path', 'buffer', 'snippets', 'obsidian' },
           ['lectic.markdown'] = { 'lsp', 'path', 'buffer', 'snippets' },
 
           -- LaTeX: VimTeX + snippets priority
@@ -137,6 +137,15 @@ return {
             max_items = 50,
             min_keyword_length = 0,
             score_offset = 100,
+          },
+          obsidian = {
+            name = 'obsidian',
+            module = 'blink.compat.source',
+            enabled = function()
+              return vim.bo.filetype == 'markdown'
+            end,
+            min_keyword_length = 2,
+            max_items = 20,
           },
         },
       },
