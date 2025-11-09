@@ -43,25 +43,25 @@ Set up a lightweight but robust documentation system for Claude Code based on Be
 
 **Testing**: Reference standards in subsequent commands
 
-### Phase 3: Agent Behavioral Files
+### Phase 3: Agent Behavioral Files [COMPLETED]
 **Estimated Time**: 40 minutes
 
 Create 4 specialized agents with tool restrictions:
 
-- [ ] research-specialist.md
+- [x] research-specialist.md
   - Tools: Read, Write, Grep, Glob, WebSearch
   - NO Edit (can't modify existing code)
   - NO Bash (can't execute)
 
-- [ ] plan-architect.md
+- [x] plan-architect.md
   - Tools: Read, Write, Grep, Glob
   - NO Edit, NO Bash
 
-- [ ] code-writer.md
+- [x] code-writer.md
   - Tools: Read, Write, Edit, Bash, TodoWrite
   - Full implementation access
 
-- [ ] doc-writer.md
+- [x] doc-writer.md
   - Tools: Read, Write, Edit, Grep, Glob
   - Focuses on README/cheatsheet updates
 
