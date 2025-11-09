@@ -67,26 +67,26 @@ Create 4 specialized agents with tool restrictions:
 
 **Testing**: Verify tool restrictions are clearly stated in each file
 
-### Phase 4: Core Commands
+### Phase 4: Core Commands [COMPLETED]
 **Estimated Time**: 60 minutes
 
-- [ ] /research command
-  - Creates research reports in specs/NNN_topic/research/
+- [x] /research command
+  - Creates research reports in .claude/specs/NNN_topic/research/
   - Invokes research-specialist agent
   - Outputs structured findings
 
-- [ ] /plan command
-  - Creates implementation plans in specs/NNN_topic/plans/
+- [x] /plan command
+  - Creates implementation plans in .claude/specs/NNN_topic/plans/
   - Invokes plan-architect agent
   - Includes phases, checkboxes, complexity estimates
 
-- [ ] /implement command
+- [x] /implement command
   - Follows plan file with checkboxes
   - Updates partial summary after each phase
   - Creates git commits per phase
   - Invokes code-writer agent
 
-- [ ] /document command
+- [x] /document command
   - Updates global README.md
   - Updates global CHEATSHEET.md
   - Invokes doc-writer agent
