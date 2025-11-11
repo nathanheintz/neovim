@@ -6,9 +6,6 @@ return {
     { "antosha417/nvim-lsp-file-operations", config = true },
   },
   config = function()
-    -- import lspconfig plugin
-    local lspconfig = require("lspconfig")
-
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -23,12 +20,13 @@ return {
     end
 
     -- configure python server
-    lspconfig["pyright"].setup({
-    capabilities = default,
-    })
+    vim.lsp.config.pyright = {
+      capabilities = default,
+    }
+    vim.lsp.enable('pyright')
 
     -- configure texlab (LaTeX LSP) server
-    lspconfig["texlab"].setup({
+    vim.lsp.config.texlab = {
       capabilities = default,
       settings = {
         python = {
@@ -64,10 +62,11 @@ return {
           -- },
         },
       },
-    })
+    }
+    vim.lsp.enable('texlab')
 
     -- configure lua server (with special settings)
-    lspconfig["lua_ls"].setup({
+    vim.lsp.config.lua_ls = {
       capabilities = default,
       settings = {
                    -- custom settings for lua
@@ -85,9 +84,11 @@ return {
           },
         },
       },
-    })
+    }
+    vim.lsp.enable('lua_ls')
+
     -- configure html server with enhanced handlebars support
-    lspconfig["html"].setup({
+    vim.lsp.config.html = {
       capabilities = default,
       filetypes = { "html", "handlebars", "hbs" },
       init_options = {
@@ -111,10 +112,11 @@ return {
           },
         }
       }
-    })
+    }
+    vim.lsp.enable('html')
 
     -- configure emmet_ls for enhanced HTML/Handlebars editing
-    lspconfig["emmet_ls"].setup({
+    vim.lsp.config.emmet_ls = {
       capabilities = default,
       filetypes = { "html", "handlebars", "hbs", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
       init_options = {
@@ -125,6 +127,7 @@ return {
           },
         },
       }
-    })
+    }
+    vim.lsp.enable('emmet_ls')
   end,
 }

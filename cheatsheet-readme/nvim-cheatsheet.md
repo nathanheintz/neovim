@@ -232,24 +232,26 @@ Note: The `!` prefix allows executing shell commands from within Neovim
 IMPORTANT: When using `:!mv`, add `-i` flag for interactive prompts or `-n` to prevent overwriting
 
 
-## AI Integration (Lectic & Avante)
+## AI Writing Assistant (Lectic)
 
-### Lectic Commands
-- `:Lectic` - Open Lectic interface
-- `:LecticNew` - Create new conversation
-- `:LecticLoad` - Load previous conversation
-- `:LecticSave` - Save current conversation
+Multiparty AI conversations with 5 persona modes. See [lectic-cheatsheet.md](lectic-cheatsheet.md) for details.
 
-### Context Management
-- `:LecticContext add` - Add current file to context
-- `:LecticContext remove` - Remove file from context
-- `:LecticContext clear` - Clear all context
-- `:LecticContext list` - List current context files
+### Keybindings
 
-### Model Switching
-- `:LecticModel gpt-4` - Switch to GPT-4
-- `:LecticModel claude` - Switch to Claude
-- `:LecticModel gpt-3.5` - Switch to GPT-3.5
+**Markdown/Writing (`<leader>m`)**:
+- `<leader>mz` - Toggle zen mode
+- `<leader>mw` - Write all buffers
+- `<leader>mn` - New Lectic file (select mode: Business/Writing/Workshop/Homie/Nomad)
+- `<leader>ml` - Run Lectic on current file
+- `<leader>mS` - Submit visual selection with message
+- `<leader>mv` - Markdown preview toggle
+- `<leader>mu` - Open URL under cursor
+- `<leader>ms` - Surround submenu
+- `<leader>mt` - Toggles submenu (completion, folding)
+
+**In conversation**: Type `:ask[PersonaName]` to switch personas
+
+**Quick tip**: Type `file:` + space → auto-expands to `/Users/nathanheintz/SecondBrain/` for context files
 
 
 ## Search and Replace

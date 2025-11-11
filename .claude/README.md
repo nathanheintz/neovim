@@ -165,8 +165,23 @@ Updates:
 
 **Why**: Start minimal, expand only as needed for our writing/publishing workflow.
 
+## Finding Code in the Config
+
+**Confused about where code lives?** See `docs/nvim-config-structure.md` for:
+- Directory structure explanation
+- How Lazy.nvim plugin loading works
+- Difference between `init` and `config` sections
+- Where to find specific features
+
+**Quick lookup**:
+- Keybindings → `lua/plugins/which-key.lua`
+- Dashboard → `lua/plugins/snacks/dashboard.lua`
+- Lectic personas → `lua/plugins/lectic.lua`
+- Colorscheme → `lua/plugins/colorscheme.lua`
+
 ## Getting Help
 
 - See `docs/getting-started.md` for detailed command usage
+- See `docs/nvim-config-structure.md` for config architecture
 - See `NVIM_STANDARDS.md` for coding conventions
-- Check existing specs for examples of plans/summaries
+- Check `specs/001_neovim_second_brain/SESSION_LOG.md` for change history

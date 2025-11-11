@@ -158,6 +158,7 @@ return {
           backdrop = {
             transparent = false,  -- Make backdrop fully opaque
             blend = 0,            -- Full opacity (0 = opaque, 100 = transparent)
+            bg = "#0f1c1e",       -- Match NeoTree background color
           },
           wo = {
             wrap = true,

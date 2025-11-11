@@ -147,6 +147,16 @@ return {
             min_keyword_length = 2,
             max_items = 20,
           },
+          cmdline = {
+            name = 'cmdline',
+            min_keyword_length = function(ctx)
+              -- Only show completions when typing 2+ character commands (before first space)
+              if ctx.mode == 'cmdline' and string.find(ctx.line, ' ') == nil then
+                return 2
+              end
+              return 0
+            end
+          },
         },
       },
 
