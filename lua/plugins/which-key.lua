@@ -116,14 +116,15 @@ LSP (<leader>l)                                 | DESCRIPTION
 ----------------------------------------------------------------------------------
 MARKDOWN (<leader>m)                            | DESCRIPTION
 ----------------------------------------------------------------------------------
+<leader>mz - Zen mode                           | Toggle zen mode
+<leader>mw - Write all                          | Save all modified buffers
 <leader>ml - Run Lectic                         | Run Lectic on current file
-<leader>mn - New Lectic file                    | Create new Lectic file with template
-<leader>ms - Submit selection                   | Submit visual selection with user message
-<leader>mp - Markdown preview                   | Toggle markdown preview
+<leader>mn - New Lectic file                    | Create multiparty Lectic file
+<leader>mS - Submit selection                   | Submit visual selection with user message
+<leader>mv - Markdown preview                   | Toggle markdown preview
 <leader>mu - Open URL                           | Open URL under cursor
-<leader>ma - Toggle all folds                   | Toggle all folds open/closed
-<leader>mf - Toggle fold                        | Toggle fold under cursor
-<leader>mt - Toggle folding method              | Switch between manual/smart folding
+<leader>ms - Surround submenu                   | Text surround operations
+<leader>mt - Toggles submenu                    | Toggle completion, folding, etc.
 
 ----------------------------------------------------------------------------------
 SESSIONS (<leader>S)                            | DESCRIPTION
@@ -254,48 +255,34 @@ return {
       nowait = true,  -- use `nowait` when creating keymaps
       prefix = "<leader>",
       mode = { "n", "v" },
-      b = { "<cmd>VimtexCompile<CR>", "build" },
-      c = { "<cmd>vert sb<CR>", "create split" },
       d = { "<cmd>update! | lua Snacks.bufdelete()<CR>", "delete buffer" },
-      -- d = { "<cmd>update! | bdelete!<CR>", "delete buffer" },
       e = { "<cmd>Neotree toggle<CR>", "explorer" },
-      j = { "<cmd>clo<CR>", "drop split" },
-      i = { "<cmd>VimtexTocOpen<CR>", "index" },
       q = { "<cmd>wa! | qa!<CR>", "quit" },
       u = { "<cmd>Telescope undo<CR>", "undo" },
-      v = { "<cmd>VimtexView<CR>", "view" },
       w = {
-        name = "WRITING",
-        a = { "<cmd>wa!<CR>", "write all" },
-        z = { "<cmd>lua Snacks.zen()<CR>", "zen mode" },
-        w = { "<cmd>lua require('core.functions').word_count()<CR>", "word count" },
+        name = "WINDOW",
+        c = { "<cmd>vert sb<CR>", "create split" },
+        j = { "<cmd>clo<CR>", "close split" },
+        k = { "<cmd>only<CR>", "maximize split" },
+      },
+      c = {
+        name = "CODE",
+        f = { "<cmd>lua vim.lsp.buf.format()<CR>", "format" },
+        d = { "<cmd>Telescope lsp_definitions<CR>", "go to definition" },
+        h = { "<cmd>lua vim.lsp.buf.hover()<CR>", "hover help" },
+        n = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "next error" },
+        p = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "previous error" },
+        a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "code action" },
+        r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "rename" },
       },
       a = {
         name = "ACTIONS",
-        a = { "<cmd>lua PdfAnnots()<CR>", "annotate" },
-        b = { "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", "bib export" },
-        c = { "<cmd>:VimtexClearCache All<CR>", "clear vimtex" },
-        e = { "<cmd>VimtexErrors<CR>", "error report" },
-        f = { "<cmd>lua vim.lsp.buf.format()<CR>", "format" },
-        g = { "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", "edit glossary" },
-        -- h = { "<cmd>lua _HTOP_TOGGLE()<CR>", "htop" },
-        h = { "<cmd>LocalHighlightToggle<CR>", "highlight" },
-        k = { "<cmd>VimtexClean<CR>", "kill aux" },
-        l = { "<cmd>LeanInfoviewToggle<CR>", "lean info" },
-        -- l = { "<cmd>lua vim.g.cmptoggle = not vim.g.cmptoggle<CR>", "LSP" },
-        m = { "<cmd>TermExec cmd='./Code/dev_cli.py %:p:r.py'<CR>", "model checker" },
-        -- m = { "<cmd>TermExec cmd='python3 -m src.model_checker.cli %:p:r.py'<CR>", "model checker" },
-        -- m = { "<cmd>TermExec cmd='cd /home/benjamin/Documents/Philosophy/Projects/ModelChecker/Code && python3 -m src.model_checker.cli %:p:r.py'<CR>", "model checker" },
-        p = { "<cmd>TermExec cmd='python %:p:r.py'<CR>", "python" },
+        a = { "<cmd>lua PdfAnnots()<CR>", "pdf annotations" },
+        h = { "<cmd>LocalHighlightToggle<CR>", "highlight word" },
+        c = { "<cmd>checkhealth<CR>", "checkhealth" },
         r = { "<cmd>AutolistRecalculate<CR>", "reorder list" },
-        t = { "<cmd>terminal latexindent -w %:p:r.tex<CR>", "tex format" },
+        s = { "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", "edit snippets" },
         u = { "<cmd>cd %:p:h | NeoTreeToggle<CR>", "update cwd" },
-        v = { "<plug>(vimtex-context-menu)", "vimtex menu" },
-        w = { "<cmd>VimtexCountWords!<CR>", "word count" },
-        -- w = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>" , "word"},
-        -- s = { "<cmd>lua function() require('cmp_vimtex.search').search_menu() end<CR>"           , "search citations" },
-        s = { "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", "snippets edit" },
-        S = { "<cmd>TermExec cmd='ssh brastmck@eofe10.mit.edu'<CR>", "ssh" },
       },
       f = {
         name = "FIND",
@@ -303,7 +290,6 @@ return {
         f = { "<cmd>Telescope find_files<CR>", "project files" },
         g = { "<cmd>Telescope live_grep theme=ivy<CR>", "project grep" },
         b = { "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>","buffers", },
-        c = { "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", "citations" },
         l = { "<cmd>Telescope resume<CR>", "last search" },
         h = { "<cmd>Telescope help_tags<CR>", "help" },
         k = { "<cmd>Telescope keymaps<CR>", "keymaps" },
@@ -312,11 +298,6 @@ return {
         s = { "<cmd>Telescope grep_string<CR>", "string" },
         w = { "<cmd>lua SearchWordUnderCursor()<CR>", "word" },
         y = { "<cmd>YankyRingHistory<CR>", "yanks" },
-        -- g = { "<cmd>Telescope git_commits<CR>", "git history" },        
-        -- q = { "<cmd>Telescope quickfix<CR>", "quickfix" },
-        -- r = { "<cmd>Telescope registers<CR>", "registers" },
-        -- m = { "<cmd>Telescope man_pages<CR>", "man pages" },
-        -- c = { "<cmd>Telescope commands<CR>", "commands" },
       },
       g = {
         name = "GIT",
@@ -333,86 +314,92 @@ return {
         t = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "toggle blame" },
         -- t = { "<cmd>Gitsigns toggle_word_diff<CR>", "toggle word diff" },
       },
-      --   HARPOON
-      --   a = { "<cmd>lua require('harpoon.mark').add_file()<cr>", "mark" },
-      --   n = { "<cmd>lua require('harpoon.ui').nav_next()<cr>", "next" },
-      --   p = { "<cmd>lua require('harpoon.ui').nav_prev()<cr>", "previous" },
-      
-
-      -- KANBAN MAPPINGS
-      k = {
-        name = "KANBAN",
-        w = { ":KanbanOpen ~/SecondBrain/2-Areas/Writing/writing-kanban.md<CR>", "writing board" },
-        c = { ":KanbanOpen ~/SecondBrain/2-Areas/Business/Clients/clients-kanban.md<CR>", "clients board" },
-        t = { ":KanbanOpen telescope<CR>", "find boards" },
-      },
-
-      -- LIST MAPPINGS
-      L = {
-        name = "LIST",
-        c = { "<cmd>lua HandleCheckbox()<CR>", "checkbox" },
-        n = { "<cmd>AutolistCycleNext<CR>", "next" },
-        p = { "<cmd>AutolistCyclePrev<CR>", "previous" },
-        r = { "<cmd>AutolistRecalculate<CR>", "reorder" },
-      },
-      l = {
-        name = "LSP",
-        b = { "<cmd>Telescope diagnostics bufnr=0<CR>", "buffer diagnostics" },
-        c = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "code action" },
-        d = { "<cmd>Telescope lsp_definitions<CR>", "definition" },
-        D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "declaration" },
-        h = { "<cmd>lua vim.lsp.buf.hover()<CR>", "help" },
-        i = { "<cmd>Telescope lsp_implementations<CR>", "implementations" },
-        k = { "<cmd>LspStop<CR>", "kill lsp" },
-        l = { "<cmd>lua vim.diagnostic.open_float()<CR>", "line diagnostics" },
-        n = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "next diagnostic" },
-        p = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "previous diagnostic" },
-        r = { "<cmd>Telescope lsp_references<CR>", "references" },
-        s = { "<cmd>LspRestart<CR>", "restart lsp" },
-        t = { "<cmd>LspStart<CR>", "start lsp" },
-        y = { "<cmd>lua CopyDiagnosticsToClipboard()<CR>", "copy diagnostics to clipboard" },
-        R = { "<cmd>lua vim.lsp.buf.rename()<CR>", "rename" },
-        -- T = { "<cmd>Telescope lsp_type_definitions<CR>", "type definition" },
-      },
-      -- MARKDOWN MAPPINGS
+      -- MARKDOWN & WRITING
       m = {
-        name = "MARKDOWN",
+        name = "MARKDOWN & WRITING",
+        -- ZEN & WRITING
+        z = { "<cmd>lua Snacks.zen()<CR>", "zen mode" },
+        w = { "<cmd>wa!<CR>", "write all" },
+
         -- LECTIC COMMANDS
         l = { "<cmd>Lectic<CR>", "run lectic on file" },
-        n = { "<cmd>lua CreateNewLecticFile()<CR>", "new lectic file" },
-        s = { "<cmd>lua SubmitLecticSelection()<CR>", "submit selection with message" },
+        n = { "<cmd>lua CreateNewLecticFile()<CR>", "new lectic file (multiparty)" },
+        S = { "<cmd>lua SubmitLecticSelection()<CR>", "submit selection with message" },
+        c = { "<cmd>lua InsertContextLink()<CR>", "insert context link" },
+
+        -- PERSONA SWITCHING
+        p = {
+          name = "SWITCH PERSONA",
+          c = { "<cmd>lua SwitchLecticPersona('Consultant')<CR>", "consultant" },
+          m = { "<cmd>lua SwitchLecticPersona('Marketing')<CR>", "marketing" },
+          f = { "<cmd>lua SwitchLecticPersona('Finance')<CR>", "finance" },
+          p = { "<cmd>lua SwitchLecticPersona('Product')<CR>", "product" },
+          r = { "<cmd>lua SwitchLecticPersona('Researcher')<CR>", "researcher" },
+          w = { "<cmd>lua SwitchLecticPersona('Writer')<CR>", "writer" },
+          e = { "<cmd>lua SwitchLecticPersona('Editor')<CR>", "editor" },
+          d = { "<cmd>lua SwitchLecticPersona('Designer')<CR>", "designer" },
+          s = { "<cmd>lua SwitchLecticPersona('Scholar')<CR>", "scholar" },
+          b = { "<cmd>lua SwitchLecticPersona('Scribe')<CR>", "scribe" },
+          h = { "<cmd>lua SwitchLecticPersona('Homie')<CR>", "homie" },
+          n = { "<cmd>lua SwitchLecticPersona('Nomad')<CR>", "nomad" },
+        },
 
         -- MARKDOWN/PREVIEW
-        p = { "<cmd>MarkdownPreviewToggle<CR>", "markdown preview" },
+        v = { "<cmd>MarkdownPreviewToggle<CR>", "markdown preview" },
         u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
 
-        -- AUTOCOMPLETION TOGGLES
-        b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion", icon = "\u{f204}" },
-        c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
-        o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
-        x = { "<cmd>lua _G.toggle_luasnip_completion()<CR>", "toggle luasnip completion" },
+        -- SURROUND
+        s = {
+          name = "SURROUND",
+          s = { "<Plug>(nvim-surround-normal)", "surround" },
+          d = { "<Plug>(nvim-surround-delete)", "delete surround" },
+          c = { "<Plug>(nvim-surround-change)", "change surround" },
+        },
 
-        -- FOLDING
-        a = { "<cmd>lua ToggleAllFolds()<CR>", "toggle all folds" },
-        f = { "za", "toggle fold under cursor" },
-        t = { "<cmd>lua ToggleFoldingMethod()<CR>", "toggle folding method" },
+        -- TOGGLES (completion, folding, etc.)
+        t = {
+          name = "TOGGLES",
+          b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion" },
+          c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
+          o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
+          x = { "<cmd>lua _G.toggle_luasnip_completion()<CR>", "toggle luasnip completion" },
+          a = { "<cmd>lua ToggleAllFolds()<CR>", "toggle all folds" },
+          f = { "za", "toggle fold under cursor" },
+          m = { "<cmd>lua ToggleFoldingMethod()<CR>", "toggle folding method" },
+        },
       },
 
-      S = {
+      s = {
         name = "SESSIONS",
-        s = { "<cmd>SessionManager save_current_session<CR>", "save" },
-        d = { "<cmd>SessionManager delete_session<CR>", "delete" },
-        l = { "<cmd>SessionManager load_session<CR>", "load" },
+        s = { "<cmd>SessionManager save_current_session<CR>", "save session" },
+        d = { "<cmd>SessionManager delete_session<CR>", "delete session" },
+        l = { "<cmd>SessionManager load_session<CR>", "load session" },
       },
       p = {
-        name = "PANDOC",
-        w = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", "word" },
-        m = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", "markdown" },
-        h = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", "html" },
-        l = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", "latex" },
-        p = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", "pdf" },
-        v = { "<cmd>TermExec cmd='zathura %:p:r.pdf &' open=0<CR>", "view" },
-        -- x = { "<cmd>echo "run: unoconv -f pdf path-to.docx""  , "word to pdf"},
+        name = "PUBLISHING",
+        -- VIMTEX / LATEX
+        c = { "<cmd>VimtexCompile<CR>", "compile latex" },
+        v = { "<cmd>VimtexView<CR>", "view pdf" },
+        i = { "<cmd>VimtexTocOpen<CR>", "latex TOC" },
+
+        -- VIMTEX UTILITIES
+        b = { "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", "export bibliography" },
+        C = { "<cmd>VimtexClearCache All<CR>", "clear vimtex cache" },
+        e = { "<cmd>VimtexErrors<CR>", "latex errors" },
+        f = { "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", "find citations" },
+        g = { "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", "edit glossary" },
+        k = { "<cmd>VimtexClean<CR>", "clean aux files" },
+        t = { "<cmd>terminal latexindent -w %:p:r.tex<CR>", "format tex file" },
+        V = { "<plug>(vimtex-context-menu)", "vimtex context menu" },
+        W = { "<cmd>VimtexCountWords!<CR>", "word count (vimtex)" },
+
+        -- PANDOC CONVERSIONS
+        w = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", "convert to word" },
+        m = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", "convert to markdown" },
+        h = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", "convert to html" },
+        l = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", "convert to latex" },
+        p = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", "convert to pdf" },
+        P = { "<cmd>TermExec cmd='zathura %:p:r.pdf &' open=0<CR>", "view pdf (zathura)" },
       },
       r = {
         name = "RUN",
@@ -427,45 +414,11 @@ return {
         m = { "<cmd>lua Snacks.notifier.show_history()<cr>", "show messages" },
         -- d = { "function() vim.diagnostic.open_float(0, { scope = 'line', header = false, focus = false }) end", "diagnostics" },
       },
-      s = {
-        name = "SURROUND",
-        s = { "<Plug>(nvim-surround-normal)", "surround" },
-        d = { "<Plug>(nvim-surround-delete)", "delete" },
-        c = { "<Plug>(nvim-surround-change)", "change" },
-      },
       t = {
         name = "TEMPLATES",
-        p = {
-          "<cmd>read ~/.config/nvim/templates/PhilPaper.tex<CR>",
-          "PhilPaper.tex",
-        },
         l = {
           "<cmd>read ~/.config/nvim/templates/Letter.tex<CR>",
           "Letter.tex",
-        },
-        g = {
-          "<cmd>read ~/.config/nvim/templates/Glossary.tex<CR>",
-          "Glossary.tex",
-        },
-        h = {
-          "<cmd>read ~/.config/nvim/templates/HandOut.tex<CR>",
-          "HandOut.tex",
-        },
-        b = {
-          "<cmd>read ~/.config/nvim/templates/PhilBeamer.tex<CR>",
-          "PhilBeamer.tex",
-        },
-        s = {
-          "<cmd>read ~/.config/nvim/templates/SubFile.tex<CR>",
-          "SubFile.tex",
-        },
-        r = {
-          "<cmd>read ~/.config/nvim/templates/Root.tex<CR>",
-          "Root.tex",
-        },
-        m = {
-          "<cmd>read ~/.config/nvim/templates/MultipleAnswer.tex<CR>",
-          "MultipleAnswer.tex",
         },
       },
     },

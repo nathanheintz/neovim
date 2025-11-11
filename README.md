@@ -17,7 +17,14 @@ This configuration prioritizes:
 - Zen mode for distraction-free writing (Snacks.nvim)
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
-- Lectic AI writing assistant
+- Lectic AI multiparty conversations with 5 persona modes:
+  - **Business**: Consultant, Marketing, Finance, Product
+  - **Writing**: Researcher, Writer, Editor
+  - **Workshop**: Designer, Scholar, Scribe
+  - **Homie**: Aspirational generalist (philosophy, conflict resolution, systemic change)
+  - **Nomad**: Travel planner & digital nomadism expert
+  - Switch personas mid-conversation with `:ask[Name]` directive
+  - Context files via `prompt: file:/absolute/path` (use `file:` abbreviation for quick entry)
 - Markdown rendering and preview
 - Spell checking enabled by default
 
@@ -78,7 +85,12 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 
 **Quick reference**:
 - `<leader>e` - Toggle file explorer
-- `<leader>wz` - Toggle zen mode
+- `<leader>mz` - Toggle zen mode
+- `<leader>mn` - Create new Lectic file (Homie)
+- `<leader>ml` - Run Lectic on current file
+- `<leader>mc` - Insert context link
+- `<leader>mp` - Switch Lectic persona
+- `<leader>mt` - Toggles submenu (completion, folding)
 - `<leader>ff` - Find files
 - `<leader>fg` - Live grep
 - `<leader>gg` - Open LazyGit
