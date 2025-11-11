@@ -1,9 +1,28 @@
 # Implementation Plan: Neovim Second Brain Configuration
 
 **Created**: 2025-11-09
-**Status**: Active
+**Last Updated**: 2025-11-11
+**Status**: In Progress
 **Complexity**: 8/10 (High)
 **Estimated Duration**: 12-16 hours
+
+## Current Progress
+
+**Completed**:
+- ✅ Session 1: Which-Key Cleanup (2025-11-09)
+- ✅ Session 2: Dashboard Cleanup (2025-11-09)
+- ✅ Phase 2: Lectic Single-Party Persona System (2025-11-11)
+
+**In Progress**:
+- Phase 1: Foundation - Markdown & Search (Deferred)
+- Phase 3: Dashboard & Which-Key Refinement (Partially done via Sessions 1-2)
+- Phase 4: Publishing Workflows (Not started)
+- Phase 5: Citation & Cross-Vault Integration (Not started)
+- Phase 6: Testing & Documentation (Not started)
+
+**Next Steps**:
+- Implement Phase 1 when search functionality needed
+- Continue with Phase 4 (Publishing) or Phase 5 (Citations) as priorities dictate
 
 ## Executive Summary
 
@@ -114,9 +133,11 @@ This plan implements a complete second-brain and coding environment in Neovim, i
 
 ## Implementation Phases
 
-### Phase 1: Foundation - Markdown & Search (3-4 hours)
+### Phase 1: Foundation - Markdown & Search
 
 **Objective**: Fix markdown rendering and implement vault search functionality.
+
+**Status**: ⏸️ DEFERRED - Not yet started
 
 **Tasks**:
 - [ ] Disable markdown auto-rendering
@@ -161,71 +182,65 @@ This plan implements a complete second-brain and coding environment in Neovim, i
 - `lua/core/functions.lua`
 - `lua/plugins/which-key.lua`
 
+**Note**: Phase 2 (Lectic) was completed first due to priority. Phase 1 can be implemented when search functionality becomes needed.
+
 ---
 
-### Phase 2: Lectic Persona System (3-4 hours)
+### Phase 2: Lectic Single-Party Persona System (COMPLETED)
 
-**Objective**: Create switchable AI personas with templates and which-key menu.
+**Objective**: Create switchable AI personas with single-party mode and context file loading.
 
-**Tasks**:
-- [ ] Create templates directory
-  - Run `mkdir -p ~/.config/nvim/templates/lectic/`
-  - Verify directory creation
+**Status**: ✅ COMPLETED - Session 4 (2025-11-11)
 
-- [ ] Create Design Writer persona template
-  - File: `~/.config/nvim/templates/lectic/design-writer.lec`
-  - Include frontmatter with name, prompt, provider
-  - Set memories path: `~/SecondBrain/2-Areas/Writing/`
-  - Craft prompt: "Minimalist, accessible style. Language as designed object. Humble, curious, detail-oriented without verbosity."
+**Implementation**:
+- ✅ Created 12 personas in `lua/plugins/lectic.lua`
+  - Business: Consultant, Marketing, Finance, Product
+  - Writing: Researcher, Writer, Editor
+  - Workshop: Designer, Scholar, Scribe
+  - General: Homie, Nomad
 
-- [ ] Create Editing Expert persona template
-  - File: `~/.config/nvim/templates/lectic/editing-expert.lec`
-  - Craft prompt: "Nonfiction editor and storytelling expert with deep knowledge of editing theory."
+- ✅ Implemented `InsertContextLink()` function
+  - Inserts `[Context](/Users/nathanheintz/SecondBrain/)`
+  - Positions cursor for path completion
+  - Bound to `<leader>mc`
 
-- [ ] Create Researcher persona template
-  - File: `~/.config/nvim/templates/lectic/researcher.lec`
-  - Craft prompt: "Logician, philosopher, political theorist, neuroscientist, anthropologist, psychologist. Expertise: conflict resolution, peacebuilding, restorative justice, organizational psychology."
+- ✅ Implemented `SwitchLecticPersona(persona_name)` function
+  - Switches persona in current file
+  - Preserves Obsidian frontmatter (`id`, `aliases`, `tags`)
+  - Updates only `interlocutor.name` and `interlocutor.prompt`
 
-- [ ] Create Business Coach persona template
-  - File: `~/.config/nvim/templates/lectic/business-coach.lec`
-  - Craft prompt: "Marketing and strategy expert. Professional services, consulting, storytelling. Business strategy specialist."
+- ✅ Modified `CreateNewLecticFile()` function
+  - Always creates with Homie persona
+  - Generates Obsidian-compatible frontmatter
+  - Single-party format: `interlocutor:` (singular)
 
-- [ ] Implement persona loading function
-  - Add `load_lectic_persona(template_name)` to `lua/core/functions.lua`
-  - Read template file and insert into new buffer
-  - Set filetype to `lectic.markdown`
-  - Prompt user for save location with date-based default
+- ✅ Commented out multi-party code
+  - Multi-party broken in Lectic beta6
+  - `:ask[Name]` produces undefined errors
+  - Code preserved for future when bug fixed
 
-- [ ] Update which-key persona menu
-  - Edit `lua/plugins/which-key.lua`
-  - Create `<leader>mp` submenu "Lectic Personas"
-  - Add `<leader>mpw` - "Writer persona"
-  - Add `<leader>mpe` - "Editor persona"
-  - Add `<leader>mpr` - "Researcher persona"
-  - Add `<leader>mpb` - "Business coach persona"
+- ✅ Updated which-key persona menu
+  - Created `<leader>mp` submenu with 12 personas
+  - Added `<leader>mc` for context link insertion
+  - Updated `<leader>mn` for file creation
 
-- [ ] Test persona workflow
-  - Load each persona template
-  - Verify frontmatter is correct
-  - Test saving to different locations
-  - Verify `:Lectic` command works on persona files
-
-**Success Criteria**:
-- Four persona templates created with proper frontmatter
-- Personas loadable via which-key shortcuts
-- Files save with `.lec` extension
-- Lectic command processes persona files correctly
-- Frontmatter compatible with Obsidian
-
-**Files Created**:
-- `~/.config/nvim/templates/lectic/design-writer.lec`
-- `~/.config/nvim/templates/lectic/editing-expert.lec`
-- `~/.config/nvim/templates/lectic/researcher.lec`
-- `~/.config/nvim/templates/lectic/business-coach.lec`
+**Success Criteria Met**:
+- ✅ 12 personas available via which-key
+- ✅ Persona switching preserves frontmatter
+- ✅ Context file loading works via markdown links
+- ✅ Files save with `.md` extension
+- ✅ Lectic command processes files correctly
+- ✅ Frontmatter compatible with Obsidian
 
 **Files Modified**:
-- `lua/core/functions.lua`
-- `lua/plugins/which-key.lua`
+- `lua/plugins/lectic.lua` - Added persona system
+- `lua/plugins/which-key.lua` - Added keybindings
+- `cheatsheet-readme/lectic-cheatsheet.md` - Complete rewrite
+- `README.md` - Updated quick reference
+
+**Git Commits**:
+- 065c7c6 - feat: implement single-party Lectic persona system
+- 1d36eeb - chore: update configuration and documentation
 
 ---
 

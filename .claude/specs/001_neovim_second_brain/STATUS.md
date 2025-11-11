@@ -1,48 +1,52 @@
-# Lectic Context File Loading - Current Status
+# Lectic Single-Party Persona System - Current Status
 
-**Date**: 2025-11-10 Early Afternoon
-**Status**: RESOLVED - Working syntax found
+**Date**: 2025-11-11
+**Status**: COMPLETED - Single-party system working
 
 ## Solution
 
-**Working syntax for context file loading:**
-```yaml
-interlocutor:
-  name: Design Writer
-  prompt: file:/Users/nathanheintz/SecondBrain/1-Projects/Book-Meditation/Meditation-Book-Posture-of-Mind.md
-    You are a design writer with minimalist style...
-```
+**Working approach for Lectic:**
+- Use single-party mode with `interlocutor:` (singular) in frontmatter
+- Add context files via markdown links in document body: `[Context](/absolute/path.md)`
+- Switch personas using `<leader>mp` which-key menu
+- Multi-party conversations broken in Lectic beta6, code commented out
 
 **Key requirements:**
+- Use **markdown links** for context files in document body (NOT in frontmatter)
 - Use **absolute paths** (`/Users/...`) NOT tilde (`~`) or relative paths
-- `file:` prefix loads file contents, then rest of prompt field provides persona instructions
-- Both context file and persona description work in same `prompt:` field
+- Persona switching preserves Obsidian frontmatter fields
 
 ## What Works
 
 ✅ **Persona system functional**:
-- 4 personas created (writer, editor, researcher, business)
-- Dashboard shortcut `n` creates new file with persona selection
-- Which-key submenu `<leader>mp` switches personas
+- 12 personas available (Consultant, Marketing, Finance, Product, Researcher, Writer, Editor, Designer, Scholar, Scribe, Homie, Nomad)
+- `<leader>mn` creates new file with Homie persona
+- `<leader>mp` which-key submenu switches personas
+- `<leader>mc` inserts context link template with path completion
 - Frontmatter combines Obsidian + Lectic fields correctly
+- Single-party format: `interlocutor:` (singular)
 
 ✅ **Obsidian compatibility**:
 - Fields ordered correctly: `id`, `aliases`, `tags`, `interlocutor`
-- Subfields alphabetized: `name`, `prompt`, `reminder`
+- Persona switching preserves all Obsidian fields
 - Obsidian doesn't rewrite frontmatter if properly formatted
 
+✅ **Context file loading**:
+- Markdown links in document body load context files
+- Format: `[Context](/Users/nathanheintz/SecondBrain/file.md)`
+- `<leader>mc` provides quick insertion with path completion
+
 ✅ **Basic Lectic usage**:
-- `:Lectic` command processes files
+- `:Lectic` command processes files (`<leader>ml`)
 - Visual selection with `<leader>mS` works
-- Personas respond correctly
+- Personas respond correctly with context
 
 ## What Doesn't Work
 
-❌ **Context file loading**:
-- `file:` prefix in `prompt` field doesn't load file contents
-- Tested syntax: `prompt: file:~/path.md You are a writer...`
-- Result: Lectic treats path as literal text
-- File contents never loaded into conversation
+❌ **Multi-party conversations**:
+- `:ask[Name]` directive produces undefined errors in Lectic beta6
+- Multi-party mode code commented out
+- Must use single-party with manual persona switching instead
 
 ## Testing Results
 
@@ -96,52 +100,40 @@ interlocutor:
 
 **Status**: NOT TESTED YET
 
-## Known Constraints
+## Known Constraints & Errors
 
-1. **Empty YAML fields break parsing** - omit fields with no value
-2. **Multiline strings need `|` indicator** - blank lines require proper syntax
-3. **Obsidian rewrites frontmatter** - if it has gaps or comments
-4. **`memories:` field deprecated** - removed July 2025, use `file:` prefix
-5. **`prompt` vs `reminder`**:
-   - `prompt`: Loads ONCE at start (good for context files)
-   - `reminder`: Adds to EVERY message (expensive for large files)
+1. **Multi-party broken in Lectic beta6** - `:ask[Name]` produces error: `<error>Something went wrong when executing a command:<stdout from="PersonaName">undefined</stdout><stderr from="PersonaName">undefined</stderr></error>`
+2. **Must use markdown links for context** - `file:` prefix in frontmatter doesn't load file contents
+3. **Absolute paths required** - tilde (`~`) not supported in file paths
+4. **Empty YAML fields break parsing** - omit fields with no value
+5. **Multiline strings need `|` indicator** - blank lines require proper syntax
+6. **Obsidian rewrites frontmatter** - if it has gaps or comments
+7. **Persona switching is manual** - cannot switch within conversation, must update frontmatter and re-run Lectic
 
 ## Files Modified
 
+**Core Implementation**:
 - `lua/plugins/lectic.lua`:
-  - `CreateNewLecticFile()` - creates files with persona selection
-  - `SwitchLecticPersona()` - switches personas, preserves `reminder` field
-  - Persona templates in `init` section
+  - Added `InsertContextLink()` function (line 219)
+  - Added `all_personas` table with 12 personas (line 228)
+  - Added `SwitchLecticPersona()` function (line 280)
+  - Modified `CreateNewLecticFile()` to always create Homie files (line 187)
+  - Commented out all multi-party code with reason notes
 
-- `.claude/specs/001_neovim_second_brain/SESSION_LOG.md`:
-  - Added Session 3 Lectic persona system
-  - Documented troubleshooting issues
-  - Added Context Management Testing section with all test results
+**Keybindings**:
+- `lua/plugins/which-key.lua`:
+  - Added `<leader>mc` - Insert context link (line 328)
+  - Added `<leader>mp` submenu with 12 persona options (lines 330-345)
+  - Updated `<leader>mn` description (line 326)
 
-- `.claude/specs/001_neovim_second_brain/SPEC.md`:
-  - Updated frontmatter format (removed `memories:`)
-  - Added Technical Constraints section
-  - Updated Phase 1/2 progress checkboxes
-  - Marked `file:` loading as BLOCKED
+**Documentation**:
+- `cheatsheet-readme/lectic-cheatsheet.md` - Complete rewrite for single-party workflow
+- `README.md` - Updated quick reference keybindings
+- `.claude/specs/002_lectic_single_party/summaries/001_implementation_summary.md` - Created
 
-- `README.md` and `cheatsheet-readme/nvim-cheatsheet.md`:
-  - Added persona documentation
-  - Updated keybindings
-  - **NOTE**: May need updating once `file:` prefix works
+## Design Decision: Single-Party vs Multi-Party
 
-## Major Design Change Required
-
-**Current implementation is WRONG:**
-- We built `CreateNewLecticFile()` and `SwitchLecticPersona()` functions
-- These create separate files and replace frontmatter
-- This is NOT how Lectic is designed to work
-
-**Correct Lectic design:**
-- Define ALL personas in ONE frontmatter using `interlocutors:` (plural)
-- Switch between them during conversation using `:ask[PersonaName]` directive
-- All personas available in same conversation thread
-
-**Example:**
+**Multi-party INTENDED design** (from Lectic documentation):
 ```yaml
 ---
 interlocutors:
@@ -149,73 +141,64 @@ interlocutors:
     prompt: You are a writer...
   - name: Editor
     prompt: You are an editor...
-  - name: Researcher
-    prompt: You are a researcher...
 ---
 
-:ask[Researcher]
-Can you research this topic?
-
 :ask[Writer]
-Now write about it.
+Question for writer
 
 :ask[Editor]
-Edit this piece.
+Question for editor
 ```
+
+**Problem**: Multi-party broken in Lectic beta6, produces undefined errors
+
+**Solution IMPLEMENTED**: Single-party with manual switching
+```yaml
+---
+interlocutor:
+  name: Homie
+  prompt: You are...
+---
+
+Question
+```
+- Use `<leader>mp` to switch personas (updates frontmatter)
+- All personas available, just not in same conversation
 
 ## Next Steps
 
-### Immediate (Required)
-1. **PROTOTYPE**: Test multiparty interlocutor design with all 4 personas in one file
-2. **VERIFY**: Test `:ask[Name]` switching works as intended
-3. **DECIDE**: Keep current nvim functions or switch to Lectic's native design?
-4. **UPDATE**: All documentation to reflect correct usage
+### When Multi-Party is Fixed
+1. Uncomment multi-party code in `lua/plugins/lectic.lua`
+2. Restore multi-party mode options (business, writing, workshop)
+3. Re-enable `:ask[Name]` directive usage
+4. Update documentation
 
-### If Keeping Multiparty Design
-1. Remove `SwitchLecticPersona()` function (use `:ask[Name]` instead)
-2. Update `CreateNewLecticFile()` to create `interlocutors:` array with all 4 personas
-3. Remove which-key persona switching menu
-4. Document `:ask[Name]` workflow
+### Current System Maintenance
+1. ✅ Single-party system working
+2. ✅ Context file loading via markdown links
+3. ✅ Persona switching preserves Obsidian frontmatter
+4. ✅ Documentation updated
 
-### If Keeping Current Design
-1. Update templates to use absolute paths for context files
-2. Test that file loading works with current functions
-3. Document as "simplified single-persona workflow"
+## Git Commits
 
-## Research Resources
+**Commit 065c7c6** - feat: implement single-party Lectic persona system
+- Added persona switching (`<leader>mp`)
+- Added context link insertion (`<leader>mc`)
+- Simplified file creation (`<leader>mn`)
+- Commented out multi-party code
+- Updated documentation
 
-**Lectic source code examined**:
-- `/Users/nathanheintz/.local/share/nvim/lazy/lectic/src/types/interlocutor.ts`
-- `/Users/nathanheintz/.local/share/nvim/lazy/lectic/src/utils/loader.ts`
-- `/Users/nathanheintz/.local/share/nvim/lazy/lectic/src/types/lectic.ts`
-
-**Key finding**: `prompt` field loaded via `loadFrom()` at line 142 in lectic.ts
-
-## Process Failures & Lessons Learned
-
-**What went wrong:**
-1. Claude never found Lectic documentation despite user asking multiple times
-2. When blocked on finding docs, Claude pivoted to source code analysis instead of ASKING for help
-3. User had to provide direct documentation links
-4. Even after reading docs, Claude suggested tilde paths when docs clearly said absolute paths
-5. User solved the problem through their own testing
-
-**Root cause:**
-- Claude is a solution-implementer, not a problem-identifier or problem-solver
-- When blocked, Claude tries alternative approaches instead of STOPPING and asking for help
-- Documentation questions were treated as code-reading exercises
-
-**Corrective actions:**
-- When documentation is requested and cannot be found: STOP and explicitly ask user for link
-- When user asks "how is X intended to work?" - recognize this as DESIGN/DOCUMENTATION question
-- Read documentation FIRST before any code analysis or implementation
-- Don't proceed with workarounds when actual answer exists in documentation
+**Commit 1d36eeb** - chore: update configuration and documentation
+- Updated Claude Code configuration
+- Added project documentation
+- Updated plugin configurations
 
 ## Session Context
 
-This work is part of Session 3: Lectic Persona System (see SESSION_LOG.md).
+This work is part of Session 4: Lectic Single-Party System (see SESSION_LOG.md).
 
 Previous sessions:
 - Session 1: Which-Key Cleanup (COMPLETED)
 - Session 2: Dashboard Cleanup (COMPLETED)
-- Session 3: Lectic Persona System (COMPLETED - needs redesign based on actual Lectic workflow)
+- Session 3: Lectic Multi-Party Investigation (BLOCKED - multi-party broken)
+- Session 4: Lectic Single-Party Implementation (COMPLETED)
