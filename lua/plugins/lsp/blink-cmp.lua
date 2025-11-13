@@ -26,6 +26,32 @@ return {
           vim.bo.omnifunc = 'vimtex#complete#omnifunc'
         end,
       })
+
+      -- Initialize completion toggle states
+      -- Buffer starts OFF (will be off in markdown, on in other files via enabled function)
+      -- Obsidian and snippets start ON
+      vim.g.blink_buffer_enabled = false
+      vim.g.blink_obsidian_enabled = true
+      vim.g.blink_snippets_enabled = true
+
+      -- Global toggle functions for completion sources
+      function _G.toggle_buffer_completion()
+        vim.g.blink_buffer_enabled = not vim.g.blink_buffer_enabled
+        local status = vim.g.blink_buffer_enabled and "enabled" or "disabled"
+        vim.notify("Buffer completion " .. status, vim.log.levels.INFO)
+      end
+
+      function _G.toggle_obsidian_completion()
+        vim.g.blink_obsidian_enabled = not vim.g.blink_obsidian_enabled
+        local status = vim.g.blink_obsidian_enabled and "enabled" or "disabled"
+        vim.notify("Obsidian completion " .. status, vim.log.levels.INFO)
+      end
+
+      function _G.toggle_luasnip_completion()
+        vim.g.blink_snippets_enabled = not vim.g.blink_snippets_enabled
+        local status = vim.g.blink_snippets_enabled and "enabled" or "disabled"
+        vim.notify("Snippet completion " .. status, vim.log.levels.INFO)
+      end
     end,
 
     opts = {
@@ -117,15 +143,25 @@ return {
           },
           buffer = {
             name = 'buffer',
-            enabled = true,
+            enabled = function()
+              -- Buffer completion OFF by default in markdown files
+              local is_markdown = vim.bo.filetype == 'markdown' or vim.bo.filetype == 'lectic.markdown'
+              if is_markdown then
+                return vim.g.blink_buffer_enabled == true
+              end
+              -- ON by default in other file types
+              return vim.g.blink_buffer_enabled ~= false
+            end,
             max_items = 8,
             min_keyword_length = 2,
           },
           snippets = {
             name = 'snippets',
-            enabled = true,
+            enabled = function()
+              return vim.g.blink_snippets_enabled ~= false
+            end,
             max_items = 10,
-            min_keyword_length = 1,
+            min_keyword_length = 3,  -- Require 3 characters before showing snippets
           },
           omni = {
             name = 'omni',
@@ -142,7 +178,7 @@ return {
             name = 'obsidian',
             module = 'blink.compat.source',
             enabled = function()
-              return vim.bo.filetype == 'markdown'
+              return vim.bo.filetype == 'markdown' and vim.g.blink_obsidian_enabled ~= false
             end,
             min_keyword_length = 2,
             max_items = 20,

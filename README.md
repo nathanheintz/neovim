@@ -45,7 +45,23 @@ This configuration prioritizes:
 - Which-key command palette
 - Bufferline tab management
 - Snacks.nvim utilities (dashboard, notifications, zen)
-- Gruvbox color scheme
+- Color schemes auto-switch based on cwd - see `lua/core/options.lua`
+
+## Known Issues & Patches
+
+### Which-Key + Kitty Terminal Bug
+
+**Issue**: When using Kitty terminal, pressing `<Space>` (leader key) while a which-key menu is open causes corrupted key handling. The space keypress gets converted to the first-tier menu character (e.g., pressing `<leader>a<Space>` executes dashboard action `a` instead of closing the menu).
+
+**Root Cause**: Kitty's enhanced keyboard protocol sends special terminal codes that get corrupted when which-key uses `nvim_replace_termcodes()` + `nvim_feedkeys()` to handle unmapped keys.
+
+**Fix**: This config includes an automatic patch (applied on `VimEnter`) that modifies which-key's `state.lua` to treat `<Space>` the same as `<Esc>` - closing the menu cleanly instead of attempting to feed the key back.
+
+**Location**: `lua/plugins/which-key.lua` lines 71-91
+
+**Behavior**: Pressing `<Space>` while any which-key menu is open will now close the menu (same as pressing `<Esc>`).
+
+**Compatibility**: The patch uses string replacement and will survive which-key updates as long as the plugin doesn't refactor how escape keys are handled. If the patch fails silently after an update, the original bug will return.
 
 ## Installation
 
@@ -137,7 +153,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 - **nvim-ts-autotag** - Auto-close HTML tags
 
 ### Appearance
-- **gruvbox.nvim** - Color scheme
+- **nightfox.nvim** - Color schemes (carbonfox, terafox, nightfox)
 - **lualine.nvim** - Statusline
 - **mini.hipatterns** - Highlight color codes
 

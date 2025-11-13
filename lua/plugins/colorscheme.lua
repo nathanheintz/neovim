@@ -77,13 +77,11 @@
 --   end,
 -- }
 
--- NIGHTFOX (using terafox variant)
+-- NIGHTFOX (provides nightfox, nordfox, terafox variants)
+-- Colorscheme is auto-selected based on cwd (see lua/core/options.lua)
 return {
 	"EdenEast/nightfox.nvim",
 	priority = 1000,
-	config = function()
-		vim.cmd("colorscheme terafox")
-	end,
 }
 
 -- OTHER

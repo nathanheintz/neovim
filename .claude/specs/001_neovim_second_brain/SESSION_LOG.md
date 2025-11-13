@@ -5,6 +5,84 @@
 
 ---
 
+## Session 5: Which-Key Bug Fix & Configuration Tweaks
+
+**Date**: 2025-11-12
+**Status**: COMPLETED
+
+### Changes Made
+
+**1. Which-Key Kitty Terminal Bug Fix**
+
+**Problem**: Pressing `<Space>` (leader key) while a which-key submenu is open caused corrupted key handling. Space keypress converted to first-tier menu character (e.g., `<leader>a<Space>` executed dashboard action `a` instead of closing menu).
+
+**Root Cause**: Kitty terminal's enhanced keyboard protocol sends special terminal codes (`<t_ýg>`) that get corrupted when which-key uses `nvim_replace_termcodes()` + `nvim_feedkeys()` to handle unmapped keys.
+
+**Solution**: Auto-patch which-key's `state.lua` on startup to treat `<Space>` like `<Esc>` (close menu instead of feedkeys).
+
+**Files Modified**:
+- `lua/plugins/which-key.lua` - Added VimEnter autocmd patch (lines 71-91)
+- `.local/share/nvim/lazy/which-key.nvim/lua/which-key/state.lua` - Line 200 patched
+- `.claude/bug-reports/which-key-space-feedkeys.md` - Detailed bug report created
+- `README.md` - Added "Known Issues & Patches" section
+
+**Behavior**: Pressing `<Space>` in any which-key menu now closes it (same as `<Esc>`).
+
+**2. CWD-Specific Colorscheme Switching**
+
+**Feature**: Auto-switch colorschemes based on current working directory.
+
+**Implementation**: Added `DirChanged` + `VimEnter` autocmd in `lua/core/options.lua` (lines 91-106):
+- `~/.config` → carbonfox
+- `~/SecondBrain` → terafox
+- `~/ghostdev` → nightfox
+- Default → terafox
+
+**Files Modified**:
+- `lua/core/options.lua` - Added autocmd
+- `lua/plugins/colorscheme.lua` - Removed hardcoded colorscheme, added comment
+
+**3. Disabled Auto-Format-On-Save**
+
+**Problem**: Conform.nvim auto-formatting Lua files on save with stylua, reformatting code blocks in keymaps/which-key files.
+
+**Solution**: Disabled `format_on_save` option, kept manual `<leader>af` formatting command.
+
+**Files Modified**:
+- `lua/plugins/conform.lua` - Commented out format_on_save (lines 19-24)
+
+**Behavior**: Files no longer auto-format on save. Use `<leader>af` to manually format when needed.
+
+**4. Documentation Cleanup**
+
+**Problem**: `cheatsheet-readme/` directory contained 10 files - mix of Ben's original docs, outdated drafts, and useful references.
+
+**Actions Taken**:
+- Updated `nvim-cheatsheet.md` with current Lectic implementation (single-party, 12 personas)
+- Moved to main directory as `CHEATSHEET.md`
+- Created analysis report: `.claude/cheatsheet-readme-analysis.md`
+- Removed 4 outdated files:
+  - `ben-README.md` - Ben's original README (VimTeX/NixOS focus)
+  - `nh-README.md` - Draft personal notes (superseded)
+  - `config-cheatsheet.md` - Ben's 23KB guide (Avante/VimTeX/NixOS)
+  - `claude-config-guidelines.md` - Ben's AI guidelines (superseded by `.claude/`)
+
+**Final Structure**:
+```
+~/.config/nvim/
+├── README.md                        # Main config documentation
+├── CHEATSHEET.md                    # Config-specific commands (moved from cheatsheet-readme/)
+└── cheatsheet-readme/               # Supplementary references (4 files)
+    ├── lectic-cheatsheet.md         # Lectic technical details
+    ├── lazygit-cheatsheet.md        # LazyGit commands
+    ├── nvim-generic-cheatsheet.md   # Generic Vim reference
+    └── deckset-cheatsheet.md        # Deckset presentation syntax
+```
+
+**Rationale**: Removed Ben-specific docs (VimTeX, Avante, NixOS) that don't match current workflow. Kept universally useful references (Lectic, LazyGit, generic Vim, Deckset).
+
+---
+
 ## Session 4: Lectic Single-Party Persona System
 
 **Date**: 2025-11-11

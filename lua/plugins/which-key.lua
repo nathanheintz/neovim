@@ -1,431 +1,240 @@
---[[ WHICH-KEY MAPPINGS - QUICK REFERENCE
-
-NOTE: These mappings are also documented in ~/.config/nvim/README.md
-Please maintain consistency between both documents when making changes.
-
-----------------------------------------------------------------------------------
-TOP-LEVEL MAPPINGS (<leader>)                   | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>b - VimtexCompile                       | Compile LaTeX document
-<leader>c - Create vertical split               | Split window vertically
-<leader>d - Save and delete buffer              | Save file and close buffer
-<leader>e - Toggle NeoTree explorer            | Open/close file explorer
-<leader>j - Close split                         | Close current split window
-<leader>i - Open VimtexToc                      | Show LaTeX table of contents
-<leader>k - Maximize split                      | Make current window full screen
-<leader>q - Save all and quit                   | Save all files and exit Neovim
-<leader>u - Open Telescope undo                 | Show undo history with preview
-<leader>v - VimtexView                          | View compiled LaTeX document
-<leader>w - WRITING tools (zen, word count)                     | Save all open files
-----------------------------------------------------------------------------------
-TOP-LEVEL MAPPINGS (<leader>)                   | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>b - VimtexCompile                       | Compile LaTeX document
-<leader>c - Create vertical split               | Split window vertically
-<leader>d - Save and delete buffer              | Save file and close buffer
-<leader>e - Toggle NeoTree explorer            | Open/close file explorer
-<leader>j - Close split                         | Close current split window
-<leader>i - Open VimtexToc                      | Show LaTeX table of contents
-<leader>k - Maximize split                      | Make current window full screen
-<leader>q - Save all and quit                   | Save all files and exit Neovim
-<leader>u - Open Telescope undo                 | Show undo history with preview
-<leader>v - VimtexView                          | View compiled LaTeX document
-<leader>w - WRITING tools (zen, word count)                     | Save all open files
-
-----------------------------------------------------------------------------------
-ACTIONS (<leader>a)                             | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>aa - PDF annotations                    | Work with PDF annotations
-<leader>ab - Export bibliography                | Export BibTeX to separate file
-<leader>ac - Clear VimTex cache                 | Clear LaTeX compilation cache
-<leader>ae - Show VimTex errors                 | Display LaTeX error messages
-<leader>af - Format buffer                      | Format current buffer via LSP
-<leader>ag - Edit glossary                      | Open LaTeX glossary template
-<leader>ah - Toggle local highlight             | Highlight current word occurrences
-<leader>ak - Clean VimTex aux files             | Remove LaTeX auxiliary files
-<leader>al - Toggle Lean info view              | Show/hide Lean information panel
-<leader>am - Run model checker                  | Execute model checker on file
-<leader>ap - Run Python file                    | Execute current Python file
-<leader>ar - Recalculate autolist               | Fix numbering in lists
-<leader>at - Format tex file                    | Format LaTeX using latexindent
-<leader>au - Update CWD                         | Change to file's directory
-<leader>av - VimTex context menu                | Show VimTeX context actions
-<leader>aw - Count words                        | Count words in LaTeX document
-<leader>as - Edit snippets                      | Open snippets directory
-<leader>aS - SSH connect                        | Connect to MIT server via SSH
-
-----------------------------------------------------------------------------------
-FIND (<leader>f)                                | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>fa - Find all files                     | Search all files, including hidden
-<leader>fb - Find buffers                       | Switch between open buffers
-<leader>fc - Find citations                     | Search BibTeX citations
-<leader>ff - Find in project                    | Search text in project files
-<leader>fl - Resume last search                 | Continue previous search
-<leader>fq - Find in quickfix                   | Search within quickfix list
-<leader>fg - Git commit history                 | Browse git commit history
-<leader>fh - Help tags                          | Search Neovim help documentation
-<leader>fk - Keymaps                            | Show all keybindings
-<leader>fr - Registers                          | Show clipboard registers
-<leader>ft - Colorschemes                       | Browse and change themes
-<leader>fs - Search string                      | Search for string in project
-<leader>fw - Search word under cursor           | Find current word in project
-<leader>fy - Yank history                       | Browse clipboard history
-
-----------------------------------------------------------------------------------
-GIT (<leader>g)                                 | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>gb - Checkout branch                    | Switch to another git branch
-<leader>gc - View commits                       | Show commit history
-<leader>gd - View diff                          | Show changes against HEAD
-<leader>gg - Open lazygit                       | Launch terminal git interface
-<leader>gk - Previous hunk                      | Jump to previous change
-<leader>gj - Next hunk                          | Jump to next change
-<leader>gl - Line blame                         | Show git blame for current line
-<leader>gp - Preview hunk                       | Preview current change
-<leader>gs - Git status                         | Show files with changes
-<leader>gt - Toggle blame                       | Toggle line blame display
-
-----------------------------------------------------------------------------------
-LIST (<leader>L)                                | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>Lc - Toggle checkbox                    | Check/uncheck a checkbox
-<leader>Ln - Next list item                     | Move to next item in list
-<leader>Lp - Previous list item                 | Move to previous item in list
-<leader>Lr - Reorder list                       | Fix list numbering
-
-----------------------------------------------------------------------------------
-LSP (<leader>l)                                 | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>lb - Buffer diagnostics                 | Show all errors in current file
-<leader>lc - Code action                        | Show available code actions
-<leader>ld - Go to definition                   | Jump to symbol definition
-<leader>lD - Go to declaration                  | Jump to symbol declaration
-<leader>lh - Hover help                         | Show documentation under cursor
-<leader>li - Implementations                    | Find implementations of symbol
-<leader>lk - Kill LSP                           | Stop language server
-<leader>ll - Line diagnostics                   | Show errors for current line
-<leader>ln - Next diagnostic                    | Go to next error/warning
-<leader>lp - Previous diagnostic                | Go to previous error/warning
-<leader>lr - References                         | Find all references to symbol
-<leader>ls - Restart LSP                        | Restart language server
-<leader>lt - Start LSP                          | Start language server
-<leader>ly - Copy diagnostics                   | Copy diagnostics to clipboard
-<leader>lR - Rename                             | Rename symbol under cursor
-
-----------------------------------------------------------------------------------
-MARKDOWN (<leader>m)                            | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>mz - Zen mode                           | Toggle zen mode
-<leader>mw - Write all                          | Save all modified buffers
-<leader>ml - Run Lectic                         | Run Lectic on current file
-<leader>mn - New Lectic file                    | Create multiparty Lectic file
-<leader>mS - Submit selection                   | Submit visual selection with user message
-<leader>mv - Markdown preview                   | Toggle markdown preview
-<leader>mu - Open URL                           | Open URL under cursor
-<leader>ms - Surround submenu                   | Text surround operations
-<leader>mt - Toggles submenu                    | Toggle completion, folding, etc.
-
-----------------------------------------------------------------------------------
-SESSIONS (<leader>S)                            | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>Ss - Save session                       | Save current session
-<leader>Sd - Delete session                     | Delete a saved session
-<leader>Sl - Load session                       | Load a saved session
-
-----------------------------------------------------------------------------------
-PANDOC (<leader>p)                              | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>pw - Convert to Word                    | Convert to .docx format
-<leader>pm - Convert to Markdown                | Convert to .md format
-<leader>ph - Convert to HTML                    | Convert to .html format
-<leader>pl - Convert to LaTeX                   | Convert to .tex format
-<leader>pp - Convert to PDF                     | Convert to .pdf format
-<leader>pv - View PDF                           | Open PDF in document viewer
-
-----------------------------------------------------------------------------------
-RUN (<leader>r)                                 | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>rc - Clear plugin cache                 | Clear Neovim plugin cache
-<leader>re - Locate errors                      | Show all errors in location list
-<leader>rk - Wipe plugin files                  | Remove all plugin files
-<leader>rn - Next error                         | Go to next diagnostic/error
-<leader>rp - Previous error                     | Go to previous diagnostic/error
-<leader>rr - Reload configs                     | Reload Neovim configuration
-<leader>rm - Show messages                      | Display notification history
-
-----------------------------------------------------------------------------------
-SURROUND (<leader>s)                            | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>ss - Surround                           | Surround with characters
-<leader>sd - Delete surround                    | Remove surrounding characters
-<leader>sc - Change surround                    | Change surrounding characters
-
-----------------------------------------------------------------------------------
-TEMPLATES (<leader>t)                           | DESCRIPTION
-----------------------------------------------------------------------------------
-<leader>tp - PhilPaper.tex                      | Insert philosophy paper template
-<leader>tl - Letter.tex                         | Insert letter template
-<leader>tg - Glossary.tex                       | Insert glossary template
-<leader>th - HandOut.tex                        | Insert handout template
-<leader>tb - PhilBeamer.tex                     | Insert beamer presentation
-<leader>ts - SubFile.tex                        | Insert subfile template
-<leader>tr - Root.tex                           | Insert root document template
-<leader>tm - MultipleAnswer.tex                 | Insert multiple answer template
-]]
+--[[ WHICH-KEY MAPPINGS - V3 FORMAT
+Converted to which-key v3 add() API format
+--]]
 
 return {
-  "folke/which-key.nvim",
-  event = "VeryLazy",
-  dependencies = {
-    'echasnovski/mini.nvim',
-  },
-  opts = {
-    setup = {
-      show_help = false,
-      show_keys = false, -- show the currently pressed key and its label as a message in the command line
-      notify = false,    -- prevent which-key from automatically setting up fields for defined mappings
-      triggers = {
-        { "<leader>", mode = { "n", "v" } },
-      },
-      plugins = {
-        presets = {
-          marks = false,        -- shows a list of your marks on ' and `
-          registers = false,    -- shows your registers on " in NORMAL or <C-r> in INSERT mode
-          spelling = {
-            enabled = false,    -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-            suggestions = 10,   -- how many suggestions should be shown in the list?
-          },
-          operators = false,    -- adds help for operators like d, y, ... and registers them for motion / text object completion
-          motions = false,      -- adds help for motions
-          text_objects = false, -- help for text objects triggered after entering an operator
-          windows = false,      -- default bindings on <c-w>
-          nav = false,          -- misc bindings to work with windows
-          z = false,            -- bindings for folds, spelling and others prefixed with z
-          g = false,            -- bindings for prefixed with g
-        },
-      },
-      win = {
-        no_overlap = true,
-        -- width = 1,
-        -- height = { min = 4, max = 25 },
-        -- col = 0,
-        -- row = math.huge,
-        border = "rounded", -- can be 'none', 'single', 'double', 'shadow', etc.
-        padding = { 1, 2 }, -- extra window padding [top/bottom, right/left]
-        title = false,
-        title_pos = "center",
-        zindex = 1000,
-        -- Additional vim.wo and vim.bo options
-        bo = {},
-        wo = {
-          winblend = 10, -- value between 0-100 0 for fully opaque and 100 for fully transparent
-        },
-      },
-      -- add operators that will trigger motion and text object completion
-      -- to enable native operators, set the preset / operators plugin above
-      -- operators = { gc = "Comments" },
-      icons = {
-        breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
-        separator = "➜", -- symbol used between a key and it's label
-        group = "+", -- symbol prepended to a group
-      },
-      layout = {
-        width = { min = 20, max = 50 }, -- min and max width of the columns
-        height = { min = 4, max = 25 }, -- min and max height of the columns
-        spacing = 3,                    -- spacing between columns
-        align = "left",                 -- align columns left, center or right
-      },
-      keys = {
-        scroll_down = "<c-d>", -- binding to scroll down inside the popup
-        scroll_up = "<c-u>",   -- binding to scroll up inside the popup
-      },
-      sort = { "local", "order", "group", "alphanum", "mod" },
-      -- disable the WhichKey popup for certain buf types and file types.
-      -- Disabled by default for Telescope
-      disable = {
-        bt = { "help", "quickfix", "terminal", "prompt" }, -- for example
-        ft = { "neo-tree" }                                -- add your explorer's filetype here
-      }
-    },
-    defaults = {
-      buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true,  -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true,  -- use `nowait` when creating keymaps
-      prefix = "<leader>",
-      mode = { "n", "v" },
-      d = { "<cmd>update! | lua Snacks.bufdelete()<CR>", "delete buffer" },
-      e = { "<cmd>Neotree toggle<CR>", "explorer" },
-      q = { "<cmd>wa! | qa!<CR>", "quit" },
-      u = { "<cmd>Telescope undo<CR>", "undo" },
-      w = {
-        name = "WINDOW",
-        c = { "<cmd>vert sb<CR>", "create split" },
-        j = { "<cmd>clo<CR>", "close split" },
-        k = { "<cmd>only<CR>", "maximize split" },
-      },
-      c = {
-        name = "CODE",
-        f = { "<cmd>lua vim.lsp.buf.format()<CR>", "format" },
-        d = { "<cmd>Telescope lsp_definitions<CR>", "go to definition" },
-        h = { "<cmd>lua vim.lsp.buf.hover()<CR>", "hover help" },
-        n = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "next error" },
-        p = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "previous error" },
-        a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "code action" },
-        r = { "<cmd>lua vim.lsp.buf.rename()<CR>", "rename" },
-      },
-      a = {
-        name = "ACTIONS",
-        a = { "<cmd>lua PdfAnnots()<CR>", "pdf annotations" },
-        h = { "<cmd>LocalHighlightToggle<CR>", "highlight word" },
-        c = { "<cmd>checkhealth<CR>", "checkhealth" },
-        r = { "<cmd>AutolistRecalculate<CR>", "reorder list" },
-        s = { "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", "edit snippets" },
-        u = { "<cmd>cd %:p:h | NeoTreeToggle<CR>", "update cwd" },
-      },
-      f = {
-        name = "FIND",
-        a = { "<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true, search_dirs = { '~/' } })<CR>", "all files" },
-        f = { "<cmd>Telescope find_files<CR>", "project files" },
-        g = { "<cmd>Telescope live_grep theme=ivy<CR>", "project grep" },
-        b = { "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>","buffers", },
-        l = { "<cmd>Telescope resume<CR>", "last search" },
-        h = { "<cmd>Telescope help_tags<CR>", "help" },
-        k = { "<cmd>Telescope keymaps<CR>", "keymaps" },
-        r = { "<cmd>Telescope oldfiles<CR>", "recent" },
-        t = { "<cmd>Telescope colorscheme<CR>", "theme" },
-        s = { "<cmd>Telescope grep_string<CR>", "string" },
-        w = { "<cmd>lua SearchWordUnderCursor()<CR>", "word" },
-        y = { "<cmd>YankyRingHistory<CR>", "yanks" },
-      },
-      g = {
-        name = "GIT",
-        -- { '<leader>g', group = ' Git' },
-        b = { "<cmd>Telescope git_branches<CR>", "checkout branch" },
-        c = { "<cmd>Telescope git_commits<CR>", "git commits" },
-        d = { "<cmd>Gitsigns diffthis HEAD<CR>", "diff" },
-        g = { "<cmd>lua Snacks.lazygit()<cr>", "lazygit" },
-        k = { "<cmd>Gitsigns prev_hunk<CR>", "prev hunk" },
-        j = { "<cmd>Gitsigns next_hunk<CR>", "next hunk" },
-        l = { "<cmd>Gitsigns blame_line<CR>", "line blame" }, -- TODO: use snacks?
-        p = { "<cmd>Gitsigns preview_hunk<CR>", "preview hunk" },
-        s = { "<cmd>Telescope git_status<CR>", "git status" },
-        t = { "<cmd>Gitsigns toggle_current_line_blame<CR>", "toggle blame" },
-        -- t = { "<cmd>Gitsigns toggle_word_diff<CR>", "toggle word diff" },
-      },
-      -- MARKDOWN & WRITING
-      m = {
-        name = "MARKDOWN & WRITING",
-        -- ZEN & WRITING
-        z = { "<cmd>lua Snacks.zen()<CR>", "zen mode" },
-        w = { "<cmd>wa!<CR>", "write all" },
+	"folke/which-key.nvim",
+	event = "VeryLazy",
+	dependencies = {
+		"echasnovski/mini.nvim",
+	},
+	opts = {
+		show_help = false,
+		show_keys = true,
+		notify = false,
+		-- triggers = auto by default
+		plugins = {
+			presets = {
+				marks = false,
+				registers = false,
+				spelling = {
+					enabled = false,
+					suggestions = 10,
+				},
+				operators = false,
+				motions = false,
+				text_objects = false,
+				windows = false,
+				nav = false,
+				z = false,
+				g = false,
+			},
+		},
+		win = {
+			no_overlap = true,
+			border = "rounded",
+			padding = { 1, 2 },
+			title = false,
+			title_pos = "center",
+			zindex = 1000,
+			bo = {},
+			wo = {
+				winblend = 10,
+			},
+		},
+		icons = {
+			breadcrumb = "»",
+			separator = "➜",
+			group = "+",
+			colors = false,
+		},
+		layout = {
+			width = { min = 20, max = 50 },
+			height = { min = 4, max = 25 },
+			spacing = 3,
+			align = "left",
+		},
+		keys = {
+			scroll_down = "<c-d>",
+			scroll_up = "<c-u>",
+		},
+		sort = { "local", "order", "group", "alphanum", "mod" },
+		disable = {
+			bt = { "help", "quickfix", "terminal", "prompt" },
+			ft = { "neo-tree" },
+		},
+	},
+	config = function(_, opts)
+		local wk = require("which-key")
+		wk.setup(opts)
 
-        -- LECTIC COMMANDS
-        l = { "<cmd>Lectic<CR>", "run lectic on file" },
-        n = { "<cmd>lua CreateNewLecticFile()<CR>", "new lectic file (multiparty)" },
-        S = { "<cmd>lua SubmitLecticSelection()<CR>", "submit selection with message" },
-        c = { "<cmd>lua InsertContextLink()<CR>", "insert context link" },
+		-- PATCH: Fix Kitty terminal bug where Space in which-key menus gets corrupted
+		-- See README.md for details on this patch
+		vim.api.nvim_create_autocmd("VimEnter", {
+			once = true,
+			callback = function()
+				local state_file = vim.fn.stdpath("data") .. "/lazy/which-key.nvim/lua/which-key/state.lua"
+				local lines = vim.fn.readfile(state_file)
+				local content = table.concat(lines, "\n")
 
-        -- PERSONA SWITCHING
-        p = {
-          name = "SWITCH PERSONA",
-          c = { "<cmd>lua SwitchLecticPersona('Consultant')<CR>", "consultant" },
-          m = { "<cmd>lua SwitchLecticPersona('Marketing')<CR>", "marketing" },
-          f = { "<cmd>lua SwitchLecticPersona('Finance')<CR>", "finance" },
-          p = { "<cmd>lua SwitchLecticPersona('Product')<CR>", "product" },
-          r = { "<cmd>lua SwitchLecticPersona('Researcher')<CR>", "researcher" },
-          w = { "<cmd>lua SwitchLecticPersona('Writer')<CR>", "writer" },
-          e = { "<cmd>lua SwitchLecticPersona('Editor')<CR>", "editor" },
-          d = { "<cmd>lua SwitchLecticPersona('Designer')<CR>", "designer" },
-          s = { "<cmd>lua SwitchLecticPersona('Scholar')<CR>", "scholar" },
-          b = { "<cmd>lua SwitchLecticPersona('Scribe')<CR>", "scribe" },
-          h = { "<cmd>lua SwitchLecticPersona('Homie')<CR>", "homie" },
-          n = { "<cmd>lua SwitchLecticPersona('Nomad')<CR>", "nomad" },
-        },
+				-- Patch: Treat Space like Escape (close menu instead of buggy feedkeys)
+				local patched = content:gsub(
+					'elseif key == "<Esc>" then',
+					'elseif key == "<Esc>" or key == "<Space>" then'
+				)
 
-        -- MARKDOWN/PREVIEW
-        v = { "<cmd>MarkdownPreviewToggle<CR>", "markdown preview" },
-        u = { "<cmd>lua OpenUrlUnderCursor()<CR>", "open URL under cursor" },
+				if content ~= patched then
+					vim.fn.writefile(vim.split(patched, "\n"), state_file)
+					vim.notify("which-key patched: Space closes menus", vim.log.levels.INFO)
+				end
+			end,
+		})
 
-        -- SURROUND
-        s = {
-          name = "SURROUND",
-          s = { "<Plug>(nvim-surround-normal)", "surround" },
-          d = { "<Plug>(nvim-surround-delete)", "delete surround" },
-          c = { "<Plug>(nvim-surround-change)", "change surround" },
-        },
+		-- Add mappings using v3 format
+		wk.add({
+			mode = { "n", "v" },
 
-        -- TOGGLES (completion, folding, etc.)
-        t = {
-          name = "TOGGLES",
-          b = { "<cmd>lua _G.toggle_buffer_completion()<CR>", "toggle buffer completion" },
-          c = { "<cmd>lua _G.toggle_spell_completion()<CR>", "toggle spell completion" },
-          o = { "<cmd>lua _G.toggle_obsidian_completion()<CR>", "toggle obsidian completion" },
-          x = { "<cmd>lua _G.toggle_luasnip_completion()<CR>", "toggle luasnip completion" },
-          a = { "<cmd>lua ToggleAllFolds()<CR>", "toggle all folds" },
-          f = { "za", "toggle fold under cursor" },
-          m = { "<cmd>lua ToggleFoldingMethod()<CR>", "toggle folding method" },
-        },
-      },
+			-- Top-level mappings
+			{ "<leader>d", "<cmd>update! | lua Snacks.bufdelete()<CR>", desc = "delete buffer" },
+			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "explorer", icon = "" },
+			{ "<leader>q", "<cmd>wa! | qa!<CR>", desc = "quit" },
+			{ "<leader>u", "<cmd>Telescope undo<CR>", desc = "undo", icon = "" },
 
-      s = {
-        name = "SESSIONS",
-        s = { "<cmd>SessionManager save_current_session<CR>", "save session" },
-        d = { "<cmd>SessionManager delete_session<CR>", "delete session" },
-        l = { "<cmd>SessionManager load_session<CR>", "load session" },
-      },
-      p = {
-        name = "PUBLISHING",
-        -- VIMTEX / LATEX
-        c = { "<cmd>VimtexCompile<CR>", "compile latex" },
-        v = { "<cmd>VimtexView<CR>", "view pdf" },
-        i = { "<cmd>VimtexTocOpen<CR>", "latex TOC" },
+			-- WINDOW
+			{ "<leader>w", group = "WINDOW" },
+			{ "<leader>wc", "<cmd>vert sb<CR>", desc = "create split" },
+			{ "<leader>wj", "<cmd>clo<CR>", desc = "close split" },
+			{ "<leader>wk", "<cmd>only<CR>", desc = "maximize split" },
 
-        -- VIMTEX UTILITIES
-        b = { "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", "export bibliography" },
-        C = { "<cmd>VimtexClearCache All<CR>", "clear vimtex cache" },
-        e = { "<cmd>VimtexErrors<CR>", "latex errors" },
-        f = { "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", "find citations" },
-        g = { "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", "edit glossary" },
-        k = { "<cmd>VimtexClean<CR>", "clean aux files" },
-        t = { "<cmd>terminal latexindent -w %:p:r.tex<CR>", "format tex file" },
-        V = { "<plug>(vimtex-context-menu)", "vimtex context menu" },
-        W = { "<cmd>VimtexCountWords!<CR>", "word count (vimtex)" },
+			-- CODE
+			{ "<leader>c", group = "CODE" },
+			{ "<leader>cf", "<cmd>lua vim.lsp.buf.format()<CR>", desc = "format" },
+			{ "<leader>cd", "<cmd>Telescope lsp_definitions<CR>", desc = "go to definition" },
+			{ "<leader>ch", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "hover help" },
+			{ "<leader>cn", "<cmd>lua vim.diagnostic.goto_next()<CR>", desc = "next error" },
+			{ "<leader>cp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", desc = "previous error" },
+			{ "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
+			{ "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "rename" },
 
-        -- PANDOC CONVERSIONS
-        w = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", "convert to word" },
-        m = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", "convert to markdown" },
-        h = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", "convert to html" },
-        l = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", "convert to latex" },
-        p = { "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", "convert to pdf" },
-        P = { "<cmd>TermExec cmd='zathura %:p:r.pdf &' open=0<CR>", "view pdf (zathura)" },
-      },
-      r = {
-        name = "RUN",
-        c = { "<cmd>TermExec cmd='rm -rf ~/.cache/nvim' open=0<CR>", "clear plugin cache" },
-        e = { "vim.diagnostics.setloclist", "locate errors" },
-        -- h = { "<cmd>Hardtime toggle<cr>", "hardtime" }, -- Hardtime plugin has been deprecated
-        k = { "<cmd>TermExec cmd='rm -rf ~/.local/share/nvim/lazy &' open=0<CR>", "wipe plugin files" },
-        -- m = { "<cmd>MCPHub<cr>", "mcp-hub" }, -- MCP-Hub plugin has been deprecated
-        n = { "function() vim.diagnostic.goto_next{popup_opts = {show_header = false}} end", "next" },
-        p = { "function() vim.diagnostic.goto_prev{popup_opts = {show_header = false}} end", "prev" },
-        r = { "<cmd>ReloadConfig<cr>", "reload configs" },
-        m = { "<cmd>lua Snacks.notifier.show_history()<cr>", "show messages" },
-        -- d = { "function() vim.diagnostic.open_float(0, { scope = 'line', header = false, focus = false }) end", "diagnostics" },
-      },
-      t = {
-        name = "TEMPLATES",
-        l = {
-          "<cmd>read ~/.config/nvim/templates/Letter.tex<CR>",
-          "Letter.tex",
-        },
-      },
-    },
-  },
-  config = function(_, opts)
-    local wk = require("which-key")
-    wk.setup(opts.setup)
-    wk.register(opts.defaults)
-  end,
+			-- ACTIONS
+			{ "<leader>a", group = "ACTIONS", icon = "󱐋" },
+			{ "<leader>aa", "<cmd>lua PdfAnnots()<CR>", desc = "pdf annotations" },
+			{ "<leader>ah", "<cmd>LocalHighlightToggle<CR>", desc = "highlight word" },
+			{ "<leader>ac", "<cmd>checkhealth<CR>", desc = "checkhealth" },
+			{ "<leader>ar", "<cmd>AutolistRecalculate<CR>", desc = "reorder list" },
+			{ "<leader>as", "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", desc = "edit snippets" },
+			{ "<leader>au", "<cmd>cd %:p:h | NeoTreeToggle<CR>", desc = "update cwd" },
+
+			-- FIND
+			{ "<leader>f", group = "FIND" },
+			{ "<leader>fa", "<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true, search_dirs = { '~/' } })<CR>", desc = "all files" },
+			{ "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "project files" },
+			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
+			{ "<leader>fb", "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>", desc = "buffers" },
+			{ "<leader>fl", "<cmd>Telescope resume<CR>", desc = "last search" },
+			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
+			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
+			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
+			{ "<leader>ft", "<cmd>Telescope colorscheme<CR>", desc = "theme" },
+			{ "<leader>fs", "<cmd>Telescope grep_string<CR>", desc = "string" },
+			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word" },
+			{ "<leader>fy", "<cmd>YankyRingHistory<CR>", desc = "yanks" },
+
+			-- GIT
+			{ "<leader>g", group = "GIT" },
+			{ "<leader>gb", "<cmd>Telescope git_branches<CR>", desc = "checkout branch" },
+			{ "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "git commits" },
+			{ "<leader>gd", "<cmd>Gitsigns diffthis HEAD<CR>", desc = "diff" },
+			{ "<leader>gg", "<cmd>lua Snacks.lazygit()<cr>", desc = "lazygit" },
+			{ "<leader>gk", "<cmd>Gitsigns prev_hunk<CR>", desc = "prev hunk" },
+			{ "<leader>gj", "<cmd>Gitsigns next_hunk<CR>", desc = "next hunk" },
+			{ "<leader>gl", "<cmd>Gitsigns blame_line<CR>", desc = "line blame" },
+			{ "<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", desc = "preview hunk" },
+			{ "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "git status" },
+			{ "<leader>gt", "<cmd>Gitsigns toggle_current_line_blame<CR>", desc = "toggle blame" },
+
+			-- MARKDOWN & WRITING
+			{ "<leader>m", group = "MARKDOWN & WRITING", icon = "󱩼" },
+			{ "<leader>mz", "<cmd>lua Snacks.zen()<CR>", desc = "zen mode" },
+			{ "<leader>mw", "<cmd>wa!<CR>", desc = "write all" },
+			{ "<leader>ml", "<cmd>Lectic<CR>", desc = "run lectic on file" },
+			{ "<leader>mn", "<cmd>lua CreateNewLecticFile()<CR>", desc = "new lectic file (multiparty)" },
+			{ "<leader>mS", "<cmd>lua SubmitLecticSelection()<CR>", desc = "submit selection with message" },
+			{ "<leader>mc", "<cmd>lua InsertContextLink()<CR>", desc = "insert context link" },
+			{ "<leader>mv", "<cmd>MarkdownPreviewToggle<CR>", desc = "markdown preview" },
+			{ "<leader>mu", "<cmd>lua OpenUrlUnderCursor()<CR>", desc = "open URL under cursor" },
+
+			-- PERSONA SWITCHING
+			{ "<leader>mp", group = "SWITCH PERSONA" },
+			{ "<leader>mpc", "<cmd>lua SwitchLecticPersona('Consultant')<CR>", desc = "consultant" },
+			{ "<leader>mpm", "<cmd>lua SwitchLecticPersona('Marketing')<CR>", desc = "marketing" },
+			{ "<leader>mpf", "<cmd>lua SwitchLecticPersona('Finance')<CR>", desc = "finance" },
+			{ "<leader>mpp", "<cmd>lua SwitchLecticPersona('Product')<CR>", desc = "product" },
+			{ "<leader>mpr", "<cmd>lua SwitchLecticPersona('Researcher')<CR>", desc = "researcher" },
+			{ "<leader>mpw", "<cmd>lua SwitchLecticPersona('Writer')<CR>", desc = "writer" },
+			{ "<leader>mpe", "<cmd>lua SwitchLecticPersona('Editor')<CR>", desc = "editor" },
+			{ "<leader>mpd", "<cmd>lua SwitchLecticPersona('Designer')<CR>", desc = "designer" },
+			{ "<leader>mps", "<cmd>lua SwitchLecticPersona('Scholar')<CR>", desc = "scholar" },
+			{ "<leader>mpb", "<cmd>lua SwitchLecticPersona('Scribe')<CR>", desc = "scribe" },
+			{ "<leader>mph", "<cmd>lua SwitchLecticPersona('Homie')<CR>", desc = "homie" },
+			{ "<leader>mpn", "<cmd>lua SwitchLecticPersona('Nomad')<CR>", desc = "nomad" },
+
+			-- SURROUND
+			{ "<leader>ms", group = "SURROUND" },
+			{ "<leader>mss", "<Plug>(nvim-surround-normal)", desc = "surround" },
+			{ "<leader>msd", "<Plug>(nvim-surround-delete)", desc = "delete surround" },
+			{ "<leader>msc", "<Plug>(nvim-surround-change)", desc = "change surround" },
+
+			-- TOGGLES
+			{ "<leader>mt", group = "TOGGLES" },
+			{ "<leader>mtb", "<cmd>lua _G.toggle_buffer_completion()<CR>", desc = "toggle buffer completion", icon = " " },
+			{ "<leader>mto", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
+			{ "<leader>mtx", "<cmd>lua _G.toggle_luasnip_completion()<CR>", desc = "toggle snippet completion" },
+			{ "<leader>mta", "<cmd>lua ToggleAllFolds()<CR>", desc = "toggle all folds" },
+			{ "<leader>mtf", "za", desc = "toggle fold under cursor" },
+			{ "<leader>mtm", "<cmd>lua ToggleFoldingMethod()<CR>", desc = "toggle folding method" },
+
+			-- SESSIONS
+			{ "<leader>s", group = "SESSIONS" },
+			{ "<leader>ss", "<cmd>SessionManager save_current_session<CR>", desc = "save session" },
+			{ "<leader>sd", "<cmd>SessionManager delete_session<CR>", desc = "delete session" },
+			{ "<leader>sl", "<cmd>SessionManager load_session<CR>", desc = "load session" },
+
+			-- PUBLISHING
+			{ "<leader>p", group = "PUBLISHING", icon = "" },
+			{ "<leader>pc", "<cmd>VimtexCompile<CR>", desc = "compile latex" },
+			{ "<leader>pv", "<cmd>VimtexView<CR>", desc = "view pdf" },
+			{ "<leader>pi", "<cmd>VimtexTocOpen<CR>", desc = "latex TOC" },
+			{ "<leader>pb", "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", desc = "export bibliography" },
+			{ "<leader>pC", "<cmd>VimtexClearCache All<CR>", desc = "clear vimtex cache" },
+			{ "<leader>pe", "<cmd>VimtexErrors<CR>", desc = "latex errors" },
+			{ "<leader>pf", "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", desc = "find citations" },
+			{ "<leader>pg", "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", desc = "edit glossary" },
+			{ "<leader>pk", "<cmd>VimtexClean<CR>", desc = "clean aux files" },
+			{ "<leader>pt", "<cmd>terminal latexindent -w %:p:r.tex<CR>", desc = "format tex file" },
+			{ "<leader>pV", "<plug>(vimtex-context-menu)", desc = "vimtex context menu" },
+			{ "<leader>pW", "<cmd>VimtexCountWords!<CR>", desc = "word count (vimtex)" },
+			{ "<leader>pw", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", desc = "convert to word" },
+			{ "<leader>pm", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", desc = "convert to markdown" },
+			{ "<leader>ph", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", desc = "convert to html" },
+			{ "<leader>pl", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", desc = "convert to latex" },
+			{ "<leader>pp", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", desc = "convert to pdf" },
+			{ "<leader>pP", "<cmd>TermExec cmd='zathura %:p:r.pdf &' open=0<CR>", desc = "view pdf (zathura)" },
+
+			-- RUN
+			{ "<leader>r", group = "RUN", icon = "󰜎" },
+			{ "<leader>rc", "<cmd>TermExec cmd='rm -rf ~/.cache/nvim' open=0<CR>", desc = "clear plugin cache" },
+			{ "<leader>re", "vim.diagnostics.setloclist", desc = "locate errors" },
+			{ "<leader>rk", "<cmd>TermExec cmd='rm -rf ~/.local/share/nvim/lazy &' open=0<CR>", desc = "wipe plugin files" },
+			{ "<leader>rn", "function() vim.diagnostic.goto_next{popup_opts = {show_header = false}} end", desc = "next" },
+			{ "<leader>rp", "function() vim.diagnostic.goto_prev{popup_opts = {show_header = false}} end", desc = "prev" },
+			{ "<leader>rr", "<cmd>ReloadConfig<cr>", desc = "reload configs" },
+			{ "<leader>rm", "<cmd>lua Snacks.notifier.show_history()<cr>", desc = "show messages" },
+
+			-- TEMPLATES
+			{ "<leader>t", group = "TEMPLATES", icon = "" },
+			{ "<leader>tl", "<cmd>read ~/.config/nvim/templates/Letter.tex<CR>", desc = "Letter.tex" },
+		})
+
+	end,
 }

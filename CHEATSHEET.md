@@ -2,11 +2,35 @@
 
 ## Movement, Navigation and Modes
 
-### Mode Switching and Selection
+### Mode Switching
 - `<Esc>` or `Ctrl+[` - Enter Normal mode
 - `i` - Enter Insert mode before cursor
 - `a` - Enter Insert mode after cursor
 
+#### Basic Normal Mode Movement
+- `h/j/k/l` - Left/Down/Up/Right
+- `{` - Jump to previous paragraph
+- `}` - Jump to next paragraph
+- `Ctrl+u` - Scroll half page up
+- `Ctrl+d` - Scroll half page down
+- `w` - Move to start of next word
+- `b` - Move to start of previous word
+- `e` - Move to end of word
+- `0` - Move to start of line
+- `$` - Move to end of line
+- `gg` - Go to first line of document
+- `G` - Go to last line of document
+
+#### Basic Insert Mode Movement
+Horizontal movement:
+- <M-Left> = Option + Left arrow → start of display line
+- <M-Right> = Option + Right arrow → end of display line
+
+Vertical movement:
+- <M-Up> = Option + Up arrow → start of paragraph
+- <M-Down> = Option + Down arrow → end of paragraph
+
+### Visual Mode and Selection
 Visual Mode Types:
 - `v` - Character-wise Visual mode (selects just the current character)
 - `V` (Shift+v) - Line-wise Visual mode (selects entire current line)
@@ -64,6 +88,10 @@ After Selection:
 
 #### Basic Movement
 - `h/j/k/l` - Left/Down/Up/Right
+- `{` - Jump to previous paragraph
+- `}` - Jump to next paragraph
+- `Ctrl+u` - Scroll half page up
+- `Ctrl+d` - Scroll half page down
 - `w` - Move to start of next word
 - `b` - Move to start of previous word
 - `e` - Move to end of word
@@ -234,24 +262,30 @@ IMPORTANT: When using `:!mv`, add `-i` flag for interactive prompts or `-n` to p
 
 ## AI Writing Assistant (Lectic)
 
-Multiparty AI conversations with 5 persona modes. See [lectic-cheatsheet.md](lectic-cheatsheet.md) for details.
+Single-party AI conversations with 12 personas (multi-party mode disabled - broken in beta6). See [lectic-cheatsheet.md](lectic-cheatsheet.md) for details.
 
 ### Keybindings
 
 **Markdown/Writing (`<leader>m`)**:
 - `<leader>mz` - Toggle zen mode
 - `<leader>mw` - Write all buffers
-- `<leader>mn` - New Lectic file (select mode: Business/Writing/Workshop/Homie/Nomad)
+- `<leader>mn` - New Lectic file (creates with Homie persona)
 - `<leader>ml` - Run Lectic on current file
+- `<leader>mc` - Insert context link template (use Ctrl+x Ctrl+f for path completion)
+- `<leader>mp` - Switch persona submenu (see below)
 - `<leader>mS` - Submit visual selection with message
 - `<leader>mv` - Markdown preview toggle
 - `<leader>mu` - Open URL under cursor
 - `<leader>ms` - Surround submenu
 - `<leader>mt` - Toggles submenu (completion, folding)
 
-**In conversation**: Type `:ask[PersonaName]` to switch personas
+**Persona Switching (`<leader>mp`)**:
+- `c` - Consultant, `m` - Marketing, `f` - Finance, `p` - Product
+- `r` - Researcher, `w` - Writer, `e` - Editor
+- `d` - Designer, `s` - Scholar, `b` - Scribe
+- `h` - Homie, `n` - Nomad
 
-**Quick tip**: Type `file:` + space → auto-expands to `/Users/nathanheintz/SecondBrain/` for context files
+**Context Files**: Add markdown links in document body: `[Context](/absolute/path.md)` - use `<leader>mc` for quick insertion
 
 
 ## Search and Replace
