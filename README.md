@@ -1,32 +1,29 @@
 # Neovim Configuration
 
-A writing and publishing-focused Neovim configuration optimized for Lectic AI writing, Obsidian note-taking, LaTeX publishing, and Ghost theme development.
+A second brain and zettelkasten Neovim configuration optimized for AI-assisted note taking, writing, and publishing and [Ghost](https://github.com/TryGhost/Ghost) theme development. Key plugins include: [Obsidian](https://github.com/obsidian-nvim/obsidian.nvim), [Lectic AI](https://github.com/gleachkr/Lectic), and [LaTeX](https://github.com/lervag/vimtex).
 
 ## Overview
-
 This configuration prioritizes:
 - **Writing workflow**: Zen mode, smart completion, spell checking
 - **Note-taking**: Obsidian vault integration with wiki-link completion
-- **AI assistance**: Lectic writing assistant with frontmatter support
+- **AI assistance**: Lectic writing assistant with obsidian-compatible frontmatter support
 - **Publishing**: LaTeX with VimTeX, markdown presentations
-- **Development**: Ghost theme development (HTML/Handlebars)
+- **Development**: Ghost theme development (HTML/CSS/Handlebars/JS)
 
 ## Features
-
 ### Writing & Note-Taking
 - Zen mode for distraction-free writing (Snacks.nvim)
+- Markdown rendering and preview
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
-- Lectic AI multiparty conversations with 5 persona modes:
-  - **Business**: Consultant, Marketing, Finance, Product
-  - **Writing**: Researcher, Writer, Editor
-  - **Workshop**: Designer, Scholar, Scribe
-  - **Homie**: Aspirational generalist (philosophy, conflict resolution, systemic change)
+- Lectic AI assistance with 12 personas:
+  - **Business Personas**: Consultant, Marketing, Finance, Product
+  - **Writing Personas**: Researcher, Writer, Editor
+  - **Workshop Design Personas**: Designer, Scholar, Scribe
+  - **Homie**: A helpful generalist (philosopher, psychologist, designer, writer)
   - **Nomad**: Travel planner & digital nomadism expert
-  - Switch personas mid-conversation with `:ask[Name]` directive
-  - Context files via `prompt: file:/absolute/path` (use `file:` abbreviation for quick entry)
-- Markdown rendering and preview
-- Spell checking enabled by default
+  - Switch personas mid-conversation with <leader>mp and select your persona - frontmatter will update, preserving Obsidian fields and previous conversation
+  - Context files added to conversation via simple markdown link syntax.  
 
 ### LaTeX Publishing
 - VimTeX integration with forward/inverse search
@@ -48,51 +45,38 @@ This configuration prioritizes:
 - Color schemes auto-switch based on cwd - see `lua/core/options.lua`
 
 ## Known Issues & Patches
-
 ### Which-Key + Kitty Terminal Bug
-
 **Issue**: When using Kitty terminal, pressing `<Space>` (leader key) while a which-key menu is open causes corrupted key handling. The space keypress gets converted to the first-tier menu character (e.g., pressing `<leader>a<Space>` executes dashboard action `a` instead of closing the menu).
-
 **Root Cause**: Kitty's enhanced keyboard protocol sends special terminal codes that get corrupted when which-key uses `nvim_replace_termcodes()` + `nvim_feedkeys()` to handle unmapped keys.
-
 **Fix**: This config includes an automatic patch (applied on `VimEnter`) that modifies which-key's `state.lua` to treat `<Space>` the same as `<Esc>` - closing the menu cleanly instead of attempting to feed the key back.
-
 **Location**: `lua/plugins/which-key.lua` lines 71-91
-
 **Behavior**: Pressing `<Space>` while any which-key menu is open will now close the menu (same as pressing `<Esc>`).
-
 **Compatibility**: The patch uses string replacement and will survive which-key updates as long as the plugin doesn't refactor how escape keys are handled. If the patch fails silently after an update, the original bug will return.
 
 ## Installation
-
 1. **Backup existing config**:
    ```bash
    mv ~/.config/nvim ~/.config/nvim.backup
    ```
-
 2. **Clone this repository**:
    ```bash
    git clone <your-repo-url> ~/.config/nvim
    ```
-
 3. **Install dependencies**:
    - Neovim >= 0.9.0
    - Nerd Font (for icons)
    - ripgrep (for Telescope)
    - LaTeX distribution (for VimTeX)
-
 4. **Launch Neovim**:
    ```bash
    nvim
    ```
    Lazy.nvim will automatically install plugins on first launch.
-
 5. **Set up Lectic** (optional):
    ```bash
    cd ~/.local/share/nvim/lazy/lectic/extra/lectic.nvim
    npm install
    ```
-
 ## Key Mappings
 
 See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
@@ -112,7 +96,6 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 - `<leader>gg` - Open LazyGit
 
 ## Plugin List
-
 ### Core
 - **lazy.nvim** - Plugin manager with lazy loading
 - **plenary.nvim** - Lua utility functions (dependency for many plugins)
@@ -182,33 +165,18 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 ```
 
 ## Development Workflow
+This configuration includes a `.claude/` documentation system for planning and implementing changes.
 
-This configuration includes a `.claude/` documentation system for planning and implementing changes. It prevents work loss by documenting progress incrementally.
+In claude code, run `/init` with the nvim config as the cwd to initialize the workflow. The agent will: 
+  - Review project context files 
+  - Abide by session protocols
+  - Build and design collaboratively with the user
+  - Summarize, document and commit work progressively to prevent work loss
 
-**Quick workflow**:
-1. `/research` - Investigate approaches
-2. `/plan` - Create implementation plan
-3. `/implement` - Execute plan with incremental docs
-4. `/document` - Update README/CHEATSHEET
-
-See [.claude/docs/getting-started.md](.claude/docs/getting-started.md) for complete documentation system guide.
-
-## Configuration Philosophy
-
-**Writing-First**: Completion is context-aware, disabling in zen mode for distraction-free writing.
-
-**Lazy Loading**: Plugins load on-demand to maintain fast startup times.
-
-**Standards-Based**: All changes follow documented standards in `.claude/NVIM_STANDARDS.md`.
-
-**Incremental**: Changes are planned, implemented in phases, and documented comprehensively.
+See `.claude/SESSION_PROTOCOL.md` for complete documentation system guide.
 
 ## License
-
 MIT License - feel free to use and modify for your own configuration.
 
 ## Acknowledgments
-
-- Based on initial fork from [Ben's neotex config](https://github.com/benbrastmckie/.config)
-- Lectic AI writing system by Graham Leach-Krouse
-- Claude Code documentation system inspired by Ben's `.claude/` workflow
+- Originally forked and customized based on [Ben's neotex config](https://github.com/benbrastmckie/.config)
