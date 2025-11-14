@@ -101,6 +101,14 @@ end
 **Objective**: Implement four vault-specific search commands with preview.
 
 **Tasks**:
+- [x] Update current which-key for basic functionality
+  - Review current `<leader>f` FIND menu in `lua/plugins/which-key.lua`
+  - Remove unused or redundant commands
+  - Add missing basic commands (current buffer grep, etc.)
+  - Update icons for better visual organization
+  - Ensure descriptions are clear and concise
+  - Test all existing commands to verify they work
+
 - [ ] Create zettelkasten file search function
   - Add `search_zettelkasten_files()` to `lua/core/functions.lua`
   - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`

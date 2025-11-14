@@ -20,6 +20,36 @@ function SearchWordUnderCursor()
   require('telescope.builtin').live_grep({ default_text = word })
 end
 
+-- Search current buffer with Telescope
+function SearchCurrentBuffer()
+  require('telescope.builtin').current_buffer_fuzzy_find()
+end
+
+-- Search all open buffers with Telescope
+function SearchAllBuffers()
+  local buffers = vim.tbl_filter(function(buf)
+    return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted
+  end, vim.api.nvim_list_bufs())
+
+  local buffer_paths = {}
+  for _, buf in ipairs(buffers) do
+    local path = vim.api.nvim_buf_get_name(buf)
+    if path and path ~= "" then
+      table.insert(buffer_paths, path)
+    end
+  end
+
+  if #buffer_paths == 0 then
+    vim.notify("No buffers to search", vim.log.levels.WARN)
+    return
+  end
+
+  require('telescope.builtin').live_grep({
+    search_dirs = buffer_paths,
+    prompt_title = "Grep All Open Buffers"
+  })
+end
+
 -- Reload neovim config
 vim.api.nvim_create_user_command('ReloadConfig', function()
   for name, _ in pairs(package.loaded) do

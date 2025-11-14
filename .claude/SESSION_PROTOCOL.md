@@ -18,8 +18,8 @@ When user says "Load context", "Initialize", or "Continue project NNN", you MUST
    - `.claude/SESSION_PROTOCOL.md` - This file (refresh behavior guidelines)
 
 2. **If project specified, also read**:
-   - `specs/NNN_project/PLAN.md` - Current implementation plan
-   - `specs/NNN_project/SESSION_LOG.md` - Detailed work history
+   - `.claude/specs/NNN_project/PLAN.md` - Current implementation plan
+   - `.claude/specs/NNN_project/SESSION_LOG.md` - Detailed work history
 
 3. **Confirm context loaded**:
    - Tell user what you read
@@ -76,7 +76,7 @@ You: "I see you have CWD-based auto-switching in lua/core/options.lua.
 
 ### After Each Approved Task Batch
 
-**Automatically update** `specs/NNN_project/SESSION_LOG.md`:
+**Automatically update** `.claude/specs/NNN_project/SESSION_LOG.md`:
 
 **Format**:
 ```markdown
@@ -128,12 +128,12 @@ A task batch is approved changes that form a logical unit:
 
 When completing a phase of the plan:
 
-1. **Update** `specs/NNN_project/PLAN.md`:
+1. **Update** `.claude/specs/NNN_project/PLAN.md`:
    - Mark checkboxes complete: `- [ ]` → `- [x]`
    - Mark phase status: `## Phase N [COMPLETED]`
    - NEVER delete checkboxes (preserves full plan history)
 
-2. **Update** `specs/NNN_project/SESSION_LOG.md`:
+2. **Update** `.claude/specs/NNN_project/SESSION_LOG.md`:
    - Add session end state
    - List completed items
    - Note what's next
@@ -164,7 +164,7 @@ After all phases done:
    - Add project entry with medium detail (see DOCUMENTATION_SYSTEM.md)
    - Include problem, solution, key files, impact, commits
 
-2. **Create** `specs/NNN_project/SUMMARY.md`:
+2. **Create** `.claude/specs/NNN_project/SUMMARY.md`:
    - Final retrospective
    - Overview, key decisions, files modified, lessons learned
 
@@ -353,6 +353,35 @@ Do you use Deckset?
 - Read relevant files to verify
 - Don't make up answers
 - Admit mistakes clearly
+
+### Literal Interpretation of Pronouns and References
+
+**Use pronouns and references precisely**:
+- "you" means the agent (Claude)
+- "I/me" means the user
+- "we" means collaborative action
+- When user references something you just said/did, they mean THAT specific thing
+
+**When responding**:
+- If user says "you", answer about YOUR process/actions
+- If user says "I/me", answer about THEIR process/actions
+- Don't swap perspectives or generalize unless explicitly asked
+
+**Technical "why" questions**:
+- "Why did you X?" requires technical explanation of the actual mechanism/logic
+- NOT: high-level reasoning like "I misunderstood the requirement"
+- YES: specific technical details like "I called grep with pattern X because the variable contained Y, but the code path required Z"
+
+**Examples**:
+- User: "You said you'd test it. How would you test it?"
+  - ❌ "You could open nvim and try <leader>fc..."
+  - ✅ "I would execute `nvim --headless -c 'lua ...'` to check if the function loads without errors"
+
+- User: "Why did you use grep instead of find?"
+  - ❌ "I misunderstood what you wanted"
+  - ✅ "I executed grep because the `pattern` variable matched the regex `<leader>.*`, which triggers the content-search code path in my tool selection logic"
+
+**Rule**: Answer the question that was literally asked, using the exact pronouns/references used. Don't rephrase or generalize.
 
 ---
 

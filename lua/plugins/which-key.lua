@@ -127,18 +127,16 @@ return {
 
 			-- FIND
 			{ "<leader>f", group = "FIND" },
-			{ "<leader>fa", "<cmd>lua require('telescope.builtin').find_files({ no_ignore = true, hidden = true, search_dirs = { '~/' } })<CR>", desc = "all files" },
 			{ "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "project files" },
-			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
-			{ "<leader>fb", "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>", desc = "buffers" },
-			{ "<leader>fl", "<cmd>Telescope resume<CR>", desc = "last search" },
-			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
-			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
 			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
-			{ "<leader>ft", "<cmd>Telescope colorscheme<CR>", desc = "theme" },
-			{ "<leader>fs", "<cmd>Telescope grep_string<CR>", desc = "string" },
+			{ "<leader>fc", "<cmd>lua SearchCurrentBuffer()<CR>", desc = "current buffer" },
+			{ "<leader>fb", "<cmd>lua SearchAllBuffers()<CR>", desc = "all buffers" },
 			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word" },
+			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
+			{ "<leader>fl", "<cmd>Telescope resume<CR>", desc = "last search" },
 			{ "<leader>fy", "<cmd>YankyRingHistory<CR>", desc = "yanks" },
+			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
+			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
 
 			-- GIT
 			{ "<leader>g", group = "GIT" },
