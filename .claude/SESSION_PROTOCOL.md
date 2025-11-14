@@ -215,7 +215,6 @@ When completing a phase of the plan:
 3. **Create git commit**:
    - Meaningful commit message
    - Reference phase completed
-   - Include Claude Code footer
 
 **Commit format**:
 ```
@@ -383,7 +382,11 @@ Do you use Deckset?
 - Summarize the "why" not just "what"
 - Include bullet points for multi-part changes
 - Reference phase completed
-- Include Claude Code footer
+
+**NEVER include**:
+- Co-Authored-By: Claude line (user retains full authorship)
+- Claude Code footer or attribution
+- Any AI assistant credits or references
 
 ---
 
