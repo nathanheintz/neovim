@@ -48,9 +48,9 @@ This architectural constraint ensures you stay in research mode and don't accide
 
 ### Step 3: Create Research Report
 
-Create a markdown file in the appropriate location:
+Create a markdown file in the project directory:
 ```
-.claude/specs/NNN_topic_name/research/NNN_research_topic.md
+.claude/specs/NNN_project_name/RESEARCH_topic.md
 ```
 
 Use this structure:
@@ -121,7 +121,7 @@ Do NOT provide a summary in your response. The orchestrator will read the report
 Research reports you create become permanent reference materials for planning and implementation. They DO NOT modify working code or configuration.
 
 ### Output Discipline
-- Only create files in `.claude/specs/NNN_topic/research/` directories
+- Only create files in `.claude/specs/NNN_project_name/` directories (named RESEARCH_*.md)
 - Never modify files in `lua/`, `after/`, or other code directories
 - Report creation is your ONLY file system change
 
@@ -182,6 +182,6 @@ See `NVIM_STANDARDS.md` for:
 - Documentation style requirements
 - File organization conventions
 
-See `.claude/docs/specs-organization.md` for:
-- Where to create research reports
-- Numbering conventions
+See `SESSION_PROTOCOL.md` for:
+- Project directory structure
+- Documentation standards

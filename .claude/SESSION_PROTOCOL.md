@@ -19,15 +19,9 @@
 ├── agents/                     # Specialized agent behavioral files
 │   └── research-specialist.md  # Research agent (invoked by /research)
 │
-├── commands/                   # Slash command definitions
+├── commands/                   # Slash command definitions (official Claude Code)
 │   ├── init.md                 # /init - Load context at session start
 │   └── research.md             # /research - Create research reports (optional)
-│
-├── docs/                       # System documentation (reference only)
-│   ├── getting-started.md      # How to use slash commands
-│   ├── nvim-config-structure.md # Where code lives in the config
-│   ├── specs-organization.md   # How to organize project specs
-│   └── partial-summary-template.md # Template for partial summaries
 │
 └── specs/                      # Project documentation
     ├── 000_maintenance_debug/  # Ongoing maintenance & small fixes
@@ -266,6 +260,12 @@ After all phases done:
 - Check GLOBAL_SUMMARY_LOG for related past work
 - Reference existing patterns in the config
 
+**Absence of evidence ≠ evidence of absence**:
+- If search yields no definitive answer, that means "unknown", not "false"
+- "I didn't find X" does NOT mean "X doesn't exist"
+- When searching returns nothing: say "I don't have that information" or use WebFetch to check official docs
+- For questions about official features: MUST use WebFetch on official documentation, not rely on absence in local files
+
 **Example - GOOD**:
 ```
 I see in PROJECT_CONTEXT.md you use Deckset for presentations,
@@ -433,6 +433,11 @@ Do you use Deckset?
 - Read relevant files to verify
 - Don't make up answers
 - Admit mistakes clearly
+
+**When search returns no results**:
+- Negative search result = "I don't know", NOT "it doesn't exist"
+- Never conclude something is false just because you didn't find evidence it's true
+- For official feature questions, use WebFetch to check documentation before answering
 
 ### Literal Interpretation of Pronouns and References
 

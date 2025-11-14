@@ -201,6 +201,32 @@ Based on current working directory (see `lua/core/options.lua`):
 2. Update `all_personas` table (line 228)
 3. Update which-key persona menu if adding new persona
 
+### Lazy.nvim Plugin Loading: init vs config
+
+Each plugin file in `lua/plugins/*.lua` returns a spec with two key sections:
+
+```lua
+return {
+  "author/plugin-name",
+  lazy = true,              -- Don't load immediately
+  ft = { "markdown" },      -- Load for these filetypes
+
+  init = function()
+    -- Runs IMMEDIATELY on startup (even if plugin lazy-loads)
+    -- Use for: keybindings, global functions, commands
+  end,
+
+  config = function()
+    -- Runs ONLY when plugin actually loads
+    -- Use for: plugin setup, autocmds, filetype settings
+  end,
+}
+```
+
+**Key difference**:
+- `init` runs at startup, before plugin loads (use for functions that need to be available immediately, like dashboard shortcuts)
+- `config` runs when plugin loads (use for plugin setup/configuration)
+
 ---
 
 ## Terminal & Shell
