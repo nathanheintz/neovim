@@ -2,7 +2,51 @@
 
 **Purpose**: Define how Claude Code agent should behave and document work
 
-**Last Updated**: 2025-11-13
+**Last Updated**: 2025-11-14
+
+---
+
+## .claude Directory Structure
+
+```
+.claude/
+├── PROJECT_CONTEXT.md         # Config overview, tools, preferences
+├── SESSION_PROTOCOL.md         # This file - agent behavior guidelines
+├── GLOBAL_SUMMARY_LOG.md       # All completed projects history
+├── NVIM_STANDARDS.md           # Shared coding/doc standards
+├── settings.local.json         # Claude Code settings
+│
+├── agents/                     # Specialized agent behavioral files
+│   └── research-specialist.md  # Research agent (invoked by /research)
+│
+├── commands/                   # Slash command definitions
+│   ├── init.md                 # /init - Load context at session start
+│   └── research.md             # /research - Create research reports (optional)
+│
+├── docs/                       # System documentation (reference only)
+│   ├── getting-started.md      # How to use slash commands
+│   ├── nvim-config-structure.md # Where code lives in the config
+│   ├── specs-organization.md   # How to organize project specs
+│   └── partial-summary-template.md # Template for partial summaries
+│
+└── specs/                      # Project documentation
+    ├── 000_maintenance_debug/  # Ongoing maintenance & small fixes
+    │   ├── MAINTENANCE_LOG.md  # Log of small tasks (no PLAN needed)
+    │   └── bug-reports/        # All bug documentation goes here
+    │       └── YYYYMMDD_bug_name.md
+    │
+    ├── NNN_project_name/       # Numbered project directories
+    │   ├── PLAN.md             # Implementation plan with phases
+    │   ├── SESSION_LOG.md      # Detailed work history
+    │   └── SUMMARY.md          # Final retrospective (when complete)
+    │
+    └── ...                     # Additional projects (001, 002, etc.)
+```
+
+**Key Locations**:
+- Bug reports: `specs/000_maintenance_debug/bug-reports/`
+- Small fixes: `specs/000_maintenance_debug/MAINTENANCE_LOG.md`
+- Major features: Their own numbered project (001, 002, etc.)
 
 ---
 
@@ -74,9 +118,45 @@ You: "I see you have CWD-based auto-switching in lua/core/options.lua.
 
 ## Documentation Rules
 
+### Small Maintenance Tasks
+
+**When user requests small fixes, tweaks, or debugging**:
+
+1. **Suggest documenting in maintenance log**:
+   - "This looks like a maintenance task. Should I document this in the maintenance log after we're done?"
+
+2. **After completing the work**, update `specs/000_maintenance_debug/MAINTENANCE_LOG.md`:
+   ```markdown
+   ### YYYY-MM-DD - Brief Task Description
+
+   **Task**: What was done
+
+   **Changes**:
+   - File modified (line numbers if relevant)
+   - What changed and why
+
+   **Commit**: [hash if applicable]
+   ```
+
+3. **For bugs**, also create a bug report in `specs/000_maintenance_debug/bug-reports/YYYYMMDD_bug_name.md`
+
+**Examples of maintenance tasks**:
+- Fixing a keybinding
+- Adjusting a color or style
+- Debugging an error
+- Small config tweaks
+- Cleanup tasks
+
+**NOT maintenance tasks** (need full project):
+- New features
+- Major refactors
+- Multi-file changes
+
+---
+
 ### After Each Approved Task Batch
 
-**Automatically update** `.claude/specs/NNN_project/SESSION_LOG.md`:
+**For major features**, automatically update `.claude/specs/NNN_project/SESSION_LOG.md`:
 
 **Format**:
 ```markdown
