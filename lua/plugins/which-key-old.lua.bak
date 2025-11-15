@@ -257,9 +257,9 @@ return {
 			prefix = "<leader>",
 			mode = { "n", "v" },
 			d = { "<cmd>update! | lua Snacks.bufdelete()<CR>", "delete buffer" },
-			e = { "<cmd>Neotree toggle<CR>", "explorer", icon = "" },
+			e = { "<cmd>Neotree toggle<CR>", "explorer", icon = "", },
 			q = { "<cmd>wa! | qa!<CR>", "quit" },
-			u = { "<cmd>Telescope undo<CR>", "undo", icon = "" },
+			u = { "<cmd>Telescope undo<CR>", "undo", icon = "", },
 			w = {
 				name = "WINDOW",
 				c = { "<cmd>vert sb<CR>", "create split" },

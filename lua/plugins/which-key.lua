@@ -96,9 +96,9 @@ return {
 
 			-- Top-level mappings
 			{ "<leader>d", "<cmd>update! | lua Snacks.bufdelete()<CR>", desc = "delete buffer" },
-			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "explorer", icon = "" },
+			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "explorer", icon = "" },
 			{ "<leader>q", "<cmd>wa! | qa!<CR>", desc = "quit" },
-			{ "<leader>u", "<cmd>Telescope undo<CR>", desc = "undo", icon = "" },
+			{ "<leader>u", "<cmd>Telescope undo<CR>", desc = "undo", icon = "" },
 
 			-- WINDOW
 			{ "<leader>w", group = "WINDOW" },
@@ -199,7 +199,7 @@ return {
 			{ "<leader>sl", "<cmd>SessionManager load_session<CR>", desc = "load session" },
 
 			-- PUBLISHING
-			{ "<leader>p", group = "PUBLISHING", icon = "" },
+			{ "<leader>p", group = "PUBLISHING", icon = "" },
 			{ "<leader>pc", "<cmd>VimtexCompile<CR>", desc = "compile latex" },
 			{ "<leader>pv", "<cmd>VimtexView<CR>", desc = "view pdf" },
 			{ "<leader>pi", "<cmd>VimtexTocOpen<CR>", desc = "latex TOC" },
@@ -230,7 +230,7 @@ return {
 			{ "<leader>rm", "<cmd>lua Snacks.notifier.show_history()<cr>", desc = "show messages" },
 
 			-- TEMPLATES
-			{ "<leader>t", group = "TEMPLATES", icon = "" },
+			{ "<leader>t", group = "TEMPLATES", icon = "" },
 			{ "<leader>tl", "<cmd>read ~/.config/nvim/templates/Letter.tex<CR>", desc = "Letter.tex" },
 		})
 
