@@ -100,3 +100,41 @@ Each entry should include:
 
 ---
 
+### 2025-11-16 - Search Menu Reorganization & Window Separators
+
+**Task**: Reorganized FIND menu for brain-centric workflow and added window separator visibility
+
+**Changes**:
+- `lua/plugins/which-key.lua` (lines 139-159) - Reorganized FIND menu:
+  - Changed `<leader>ff` from "project files" to "brain files" (searches all of ~/SecondBrain)
+  - Changed `<leader>fb` from "all buffers" to "grep brain" (greps all of ~/SecondBrain)
+  - Changed `<leader>fb` (old all buffers) to `<leader>fo` "open buffers"
+  - Reordered: recent, brain files, grep brain, zettelkasten, literature, buffers...
+  - Created new `<leader>fd` submenu "DEV SEARCH" for cwd-relative searches:
+    - `<leader>fdf` - find files in cwd
+    - `<leader>fdg` - grep cwd
+    - `<leader>fdc` - grep nvim config
+    - `<leader>fds` - search nvim config files
+
+- `lua/core/options.lua` (line 22) - Window separator visibility:
+  - Changed `fillchars = "eob: "` to `fillchars = "eob: ,vert:█,horiz:▀"`
+  - Vertical separator: full block (`█`)
+  - Horizontal separator: upper half block (`▀`)
+  - Makes window splits more visible without being distracting
+
+**Rationale**:
+- User's primary workflow is Second Brain, not general dev work
+- With sessions per directory, needed absolute-path searches to access entire vault
+- CWD-relative searches relegated to `<leader>fd` submenu for development work
+- Window separators were too subtle (hairline), making split boundaries hard to see
+
+**Usage Notes**:
+- `<leader>ff` and `<leader>fb` now work from any directory (absolute paths)
+- Can `cd` into chapter subdirectories and still search entire Second Brain
+- Sessions save per directory, allowing different layouts for different chapters
+- Zen mode (`<leader>mz`) provides focus/unfocus toggle
+
+**Commit**: [pending]
+
+---
+

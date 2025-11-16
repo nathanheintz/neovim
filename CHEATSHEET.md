@@ -290,26 +290,30 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 
 ## Finding Files & Searching (Telescope)
 
-### File Navigation
-- `<leader>ff` - Find files (project-wide)
-- `<leader>fg` - Live grep (search content project-wide)
+### Second Brain Search (Absolute Paths)
 - `<leader>fr` - Recent files
-- `Ctrl+p` - Quick file finder
-
-### Zettelkasten Search (Directory-Specific)
-- `<leader>fz` - Grep zettelkasten notes (`~/SecondBrain/4-Zettelkasten/`)
+- `<leader>ff` - Brain files (all of ~/SecondBrain)
+- `<leader>fb` - Grep brain (search all of ~/SecondBrain)
+- `<leader>fz` - Grep zettelkasten (`~/SecondBrain/4-Zettelkasten/`)
 - `<leader>fl` - Grep literature notes (`~/SecondBrain/Literature/`)
 
 ### Buffer & Context Search
 - `<leader>fc` - Search current buffer
-- `<leader>fb` - Search all open buffers
+- `<leader>fo` - Search all open buffers
 - `<leader>fw` - Search project for word under cursor
+
+### Dev Search (CWD-Relative) - `<leader>fd` submenu
+- `<leader>fdf` - Find files in current working directory
+- `<leader>fdg` - Grep current working directory
+- `<leader>fdc` - Grep nvim config (`~/.config/nvim`)
+- `<leader>fds` - Search nvim config files
 
 ### Utility Searches
 - `<leader>fp` - Resume previous search
 - `<leader>fy` - Yank history
 - `<leader>fk` - Search keymaps
 - `<leader>fh` - Search help docs
+- `Ctrl+p` - Quick file finder (cwd)
 
 
 ## Search and Replace
@@ -352,6 +356,14 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 ## Window Management
 
 In Neovim, "windows" (also called panes in other tools like tmux) are viewports into buffers. Multiple windows can show different buffers, or the same buffer from different positions.
+
+### Session Management
+- `<leader>ss` - Save current session (saves layout, buffers, positions)
+- `<leader>sl` - Load session (Telescope picker)
+- `<leader>sd` - Delete session
+- `<leader>mz` - Zen mode (focus current window, toggle to restore layout)
+
+**Note**: Sessions are saved per directory. Use different cwds for different sessions in the same project.
 
 ### Creating Windows (Splits)
 

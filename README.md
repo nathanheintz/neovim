@@ -92,16 +92,30 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 **Leader key**: `<Space>`
 
 **Quick reference**:
-- `<leader>e` - Toggle file explorer
-- `<leader>mz` - Toggle zen mode
+
+*Writing & AI*:
+- `<leader>mz` - Toggle zen mode (focus/unfocus window)
 - `<leader>md` - Dictate (speech-to-text)
 - `<leader>mn` - Create new Lectic file (Homie)
 - `<leader>ml` - Run Lectic on current file
 - `<leader>mc` - Insert context link
 - `<leader>mp` - Switch Lectic persona
-- `<leader>mt` - Toggles submenu (completion, folding)
-- `<leader>ff` - Find files
-- `<leader>fg` - Live grep
+
+*Search & Navigation* (Second Brain):
+- `<leader>ff` - Find files in entire Second Brain
+- `<leader>fb` - Grep entire Second Brain
+- `<leader>fz` - Grep zettelkasten
+- `<leader>fl` - Grep literature notes
+- `<leader>fd` - Dev search submenu (cwd, config)
+- `<leader>e` - Toggle file explorer
+
+*Window & Sessions*:
+- `<leader>wl/wh/wj/wk` - Split window (right/left/below/above)
+- `<leader>wx` - Close window
+- `<leader>ss/sl` - Save/load session
+- `Ctrl+h/j/k/l` - Navigate windows
+
+*Git*:
 - `<leader>gg` - Open LazyGit
 
 ## Plugin List

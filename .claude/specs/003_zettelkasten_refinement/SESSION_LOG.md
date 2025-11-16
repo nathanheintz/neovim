@@ -245,6 +245,109 @@ Changed patch trigger from `VimEnter` autocmd to `vim.schedule()`:
 
 ---
 
+## Task Batch 3: Search Menu Reorganization & Sessions
+
+**Date**: 2025-11-16
+
+### Discussion
+
+User discovered workflow issues with directory-specific sessions:
+- Wanted to save different sessions per chapter (Ch-1, Ch-2, etc.)
+- Sessions are saved per cwd, so can `cd` to different directories
+- Problem: `<leader>ff` and `<leader>fg` only searched cwd, not entire SecondBrain
+- With cwd in `~/SecondBrain/Book/Ch-1/`, couldn't search zettelkasten (parent directory)
+- Needed: Absolute-path searches for brain-wide access, cwd-relative for dev work
+
+Also discovered zen mode provides window zoom/focus functionality.
+
+Key decisions:
+- Make `<leader>ff` and `<leader>fb` search entire SecondBrain (absolute paths)
+- Move cwd-relative searches to new `<leader>fd` submenu "DEV SEARCH"
+- Add nvim config searches to dev submenu
+- Improved window separator visibility (was too subtle)
+
+### Implementation
+
+**1. FIND Menu Reorganization** (`lua/plugins/which-key.lua` lines 139-159):
+
+Main FIND menu (absolute paths for Second Brain):
+- `<leader>fr` - recent files
+- `<leader>ff` - brain files (searches all of `~/SecondBrain`)
+- `<leader>fb` - grep brain (greps all of `~/SecondBrain`)
+- `<leader>fz` - grep zettelkasten
+- `<leader>fl` - grep lit notes
+- `<leader>fc` - current buffer
+- `<leader>fo` - open buffers (renamed from `<leader>fb`)
+- `<leader>fw` - word project
+- `<leader>fp` - previous search
+- `<leader>fy` - yanks
+- `<leader>fk` - keymaps
+- `<leader>fh` - help
+
+New DEV SEARCH submenu (`<leader>fd`) for cwd-relative:
+- `<leader>fdf` - find files in cwd
+- `<leader>fdg` - grep cwd
+- `<leader>fdc` - grep nvim config
+- `<leader>fds` - search nvim config files
+
+**2. Window Separator Visibility** (`lua/core/options.lua` line 22):
+
+Changed from:
+```lua
+fillchars = "eob: "
+```
+
+To:
+```lua
+fillchars = "eob: ,vert:█,horiz:▀"
+```
+
+- Vertical: full block (`█`)
+- Horizontal: upper half block (`▀`)
+
+### Files Modified
+
+- `lua/plugins/which-key.lua` (lines 139-159) - FIND menu reorganization
+- `lua/core/options.lua` (line 22) - Window separators
+- `CHEATSHEET.md` (lines 291-316, 360-366) - Updated search section, added session management
+- `.claude/specs/000_maintenance_debug/MAINTENANCE_LOG.md` - Added maintenance entry
+
+### Testing
+
+- ✅ `<leader>ff` searches entire SecondBrain from any directory
+- ✅ `<leader>fb` greps entire SecondBrain from any directory
+- ✅ `<leader>fz` and `<leader>fl` still work (absolute paths)
+- ✅ `<leader>fd` submenu provides cwd-relative searches
+- ✅ Window separators more visible
+
+### Workflow Benefits
+
+**Session per directory**:
+1. `cd ~/SecondBrain/Book/Ch-1`
+2. Set up 3-window layout
+3. `<leader>ss` - Save "Ch-1" session
+4. `<leader>ff` - Still searches ALL SecondBrain files
+5. `<leader>fz` - Still searches ALL zettelkasten
+6. `<leader>fdf` - Only searches Ch-1 directory (dev work)
+
+**Zen mode discovery**:
+- `<leader>mz` - Toggle zen mode (focus/unfocus window)
+- Provides window zoom functionality without needing separate plugin
+- Restores layout on toggle
+
+### Decisions
+
+- Brain-centric searches use absolute paths (always access entire vault)
+- Dev-centric searches in submenu (cwd-relative when needed)
+- Sessions remain directory-based (simple, works well for chapters)
+- Window separators: full block vertical, half block horizontal (good visibility balance)
+
+### Git Commit
+
+[pending]
+
+---
+
 ## Next Steps
 
 Continue with Phase 1 remaining tasks:
@@ -253,3 +356,5 @@ Continue with Phase 1 remaining tasks:
 - Configure Telescope preview for markdown
 - Test which-key cache workaround after next plugin update
 - Continue to Phase 2: Citation insertion workflows
+
+**Note**: File search (not grep) may be less critical now that `<leader>ff` searches entire brain. Consider if still needed or if just zettelkasten/literature file search would be sufficient.

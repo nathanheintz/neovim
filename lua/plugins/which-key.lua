@@ -138,18 +138,25 @@ return {
 
 			-- FIND
 			{ "<leader>f", group = "FIND" },
-			{ "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "project files" },
-			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
 			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
+			{ "<leader>ff", "<cmd>lua require('telescope.builtin').find_files({search_dirs={'~/SecondBrain'}})<CR>", desc = "brain files" },
+			{ "<leader>fb", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain'}})<CR>", desc = "grep brain" },
 			{ "<leader>fz", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/4-Zettelkasten'}})<CR>", desc = "grep zettelkasten" },
 			{ "<leader>fl", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/Literature'}})<CR>", desc = "grep lit notes" },
 			{ "<leader>fc", "<cmd>lua SearchCurrentBuffer()<CR>", desc = "current buffer" },
-			{ "<leader>fb", "<cmd>lua SearchAllBuffers()<CR>", desc = "all buffers" },
+			{ "<leader>fo", "<cmd>lua SearchAllBuffers()<CR>", desc = "open buffers" },
 			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word project" },
 			{ "<leader>fp", "<cmd>Telescope resume<CR>", desc = "previous search" },
 			{ "<leader>fy", "<cmd>YankyRingHistory<CR>", desc = "yanks" },
 			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
 			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
+
+			-- DEV SEARCH
+			{ "<leader>fd", group = "DEV SEARCH" },
+			{ "<leader>fdf", "<cmd>Telescope find_files<CR>", desc = "find files cwd" },
+			{ "<leader>fdg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "grep cwd" },
+			{ "<leader>fdc", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/.config/nvim'}})<CR>", desc = "grep config" },
+			{ "<leader>fds", "<cmd>lua require('telescope.builtin').find_files({search_dirs={'~/.config/nvim'}})<CR>", desc = "search config" },
 
 			-- GIT
 			{ "<leader>g", group = "GIT" },
