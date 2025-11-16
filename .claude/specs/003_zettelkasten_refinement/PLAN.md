@@ -1,7 +1,7 @@
 # Implementation Plan: Zettelkasten Refinement - Search & Citations
 
 **Created**: 2025-11-11
-**Status**: Not Started
+**Status**: In Progress
 **Complexity**: 6/10 (Medium-High)
 **Estimated Duration**: 6-8 hours
 
@@ -109,29 +109,30 @@ end
   - Ensure descriptions are clear and concise
   - Test all existing commands to verify they work
 
+- [x] Create zettelkasten content search function
+  - ~~Add `search_zettelkasten_grep()` to `lua/core/functions.lua`~~
+  - ~~Use `telescope.live_grep` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`~~
+  - Implemented directly in which-key.lua
+  - Keybinding: `<leader>fz` (grep zettelkasten)
+  - **Note**: Directory is `4-Zettelkasten` not `3-Zettelkasten`
+
+- [x] Create literature content search function
+  - ~~Add `search_literature_grep()` to `lua/core/functions.lua`~~
+  - ~~Use `telescope.live_grep` with `search_dirs = {"~/SecondBrain/Literature/"}`~~
+  - Implemented directly in which-key.lua
+  - Keybinding: `<leader>fl` (grep lit notes)
+
 - [ ] Create zettelkasten file search function
   - Add `search_zettelkasten_files()` to `lua/core/functions.lua`
-  - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`
+  - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/4-Zettelkasten/"}`
   - Configure markdown preview
-  - Keybinding: `<leader>fzf` (find → zettelkasten → files)
-
-- [ ] Create zettelkasten content search function
-  - Add `search_zettelkasten_grep()` to `lua/core/functions.lua`
-  - Use `telescope.live_grep` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`
-  - Show context lines (before/after match)
-  - Keybinding: `<leader>fzg` (find → zettelkasten → grep)
+  - Keybinding: TBD (maybe `<leader>fzf` or submenu)
 
 - [ ] Create literature file search function
   - Add `search_literature_files()` to `lua/core/functions.lua`
   - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/Literature/"}`
   - Configure markdown preview
-  - Keybinding: `<leader>flf` (find → literature → files)
-
-- [ ] Create literature content search function
-  - Add `search_literature_grep()` to `lua/core/functions.lua`
-  - Use `telescope.live_grep` with `search_dirs = {"~/SecondBrain/Literature/"}`
-  - Show context lines
-  - Keybinding: `<leader>flg` (find → literature → grep)
+  - Keybinding: TBD (maybe `<leader>flf` or submenu)
 
 - [ ] Configure Telescope preview
   - Edit `lua/plugins/telescope.lua` or create telescope config
@@ -139,12 +140,13 @@ end
   - Set preview window size and position
   - Test with various file types
 
-- [ ] Add which-key menu structure
-  - Edit `lua/plugins/which-key.lua`
-  - Organize under `<leader>f` (FIND menu)
-  - Create `<leader>fz` submenu (Zettelkasten)
-  - Create `<leader>fl` submenu (Literature)
-  - Add descriptions for each command
+- [x] Add which-key menu structure
+  - ~~Edit `lua/plugins/which-key.lua`~~
+  - ~~Organize under `<leader>f` (FIND menu)~~
+  - Simplified: `<leader>fz` and `<leader>fl` are direct commands (not submenus)
+  - Added descriptions for each command
+  - Also added window management keybindings (`<leader>w` menu)
+  - Fixed sort order to use "manual" instead of "alphanum"
 
 **Success Criteria**:
 - All four search commands return results

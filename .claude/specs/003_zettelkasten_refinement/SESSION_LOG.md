@@ -110,12 +110,146 @@ b9ac389
 
 ---
 
+---
+
+## Task Batch 2: Window Management & Directory-Specific Grep
+
+**Date**: 2025-11-15
+
+### Discussion
+
+User needed to learn window/buffer navigation for zettelkasten workflow:
+- Goal: 3-window layout (writing left | literature upper-right | zettelkasten lower-right)
+- Existing `<leader>w` menu insufficient (only had create split, close, maximize)
+- Needed directional split commands
+- Realized `<leader>ff` searches entire project, not vault-specific
+- Needed directory-specific grep for `~/SecondBrain/4-Zettelkasten/` and `~/SecondBrain/Literature/`
+
+Key decisions:
+- Implement directional window splits (left, right, above, below)
+- Remove maximize command (destructive, not useful)
+- Add directory-specific grep commands directly in which-key (no separate functions needed)
+- Fix which-key sort order to preserve custom menu ordering
+
+### Implementation
+
+**1. Window Management Keybindings** (`lua/plugins/which-key.lua` lines 103-110):
+
+Created directional split commands:
+- `<leader>wl` - new win right (`:rightbelow vsplit`)
+- `<leader>wh` - new win left (`:leftabove vsplit`)
+- `<leader>wj` - new win below (`:rightbelow split`)
+- `<leader>wk` - new win above (`:leftabove split`)
+- `<leader>wx` - close window (`:close`)
+- `<leader>ws` - buffer split (`:vert sb`)
+
+Removed:
+- Old `<leader>wc` (create split)
+- Old `<leader>wk` (maximize/`:only`)
+
+**2. Directory-Specific Grep** (`lua/plugins/which-key.lua` lines 139-140):
+
+Added inline Telescope calls:
+- `<leader>fz` - grep zettelkasten (`~/SecondBrain/4-Zettelkasten/`)
+- `<leader>fl` - grep lit notes (`~/SecondBrain/Literature/`)
+- `<leader>fp` - previous search (renamed from "last search")
+- `<leader>fw` - renamed to "word project"
+
+Implementation:
+```lua
+require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/4-Zettelkasten'}})
+```
+
+**3. Which-Key Sort Order Fix** (`lua/plugins/which-key.lua` line 61):
+
+Changed from:
+```lua
+sort = { "local", "order", "group", "alphanum", "mod" }
+```
+
+To:
+```lua
+sort = { "local", "order", "group", "manual", "mod" }
+```
+
+This preserves custom menu ordering instead of alphabetically sorting.
+
+**4. Which-Key Space Patch Improvements** (`lua/plugins/which-key.lua` lines 71-99):
+
+Changed patch trigger from `VimEnter` autocmd to `vim.schedule()`:
+- Runs immediately when which-key config loads
+- Applies every time which-key loads, not just on startup
+- Added commented-out cache deletion code (pending testing)
+
+### Files Modified
+
+- `lua/plugins/which-key.lua` (lines 61, 71-99, 103-110, 132-144)
+- `.claude/specs/000_maintenance_debug/MAINTENANCE_LOG.md` - Added maintenance entry
+- `.claude/specs/003_zettelkasten_refinement/PLAN.md` - Checked off completed tasks
+- `CHEATSHEET.md` (lines 332-350, 291-313) - Added Window Management and Telescope sections
+- `README.md` (lines 52-62) - Updated which-key bug documentation
+- `.claude/PROJECT_CONTEXT.md` (lines 141-144) - Updated known bugs section
+
+### Testing
+
+- ✅ Window splits create in correct directions
+- ✅ Directory-specific grep returns correct results
+- ✅ Menu ordering preserved (not alphabetical)
+- ✅ Space patch applies on nvim startup
+
+### Troubleshooting
+
+**Issue 1**: Which-key changes not appearing after restart
+
+**Root cause**:
+- Neovim compiles `.lua` files to `.luac` bytecode
+- Cache stored in `~/.cache/nvim/luac/`
+- Cached bytecode persists across restarts
+- Changes to source files don't invalidate cache
+
+**Solution**:
+- Deleted cache file: `~/.cache/nvim/luac/.../which-key.luac`
+- Restarted nvim
+- Changes appeared correctly
+
+**Issue 2**: Space patch not working after config changes
+
+**Root cause**:
+- Patch was using `VimEnter` autocmd with `once = true`
+- Wouldn't re-run after which-key reload
+- Compiled cache prevented patched code from running
+
+**Solution**:
+- Changed to `vim.schedule()` trigger
+- Patch now applies every time which-key loads
+- Added manual cache deletion workaround for after `:Lazy update`
+
+### Known Issues
+
+**Cache Issue After Plugin Updates**:
+- After `:Lazy update` on which-key, patch may not take effect
+- Cached `.luac` file may prevent patched code from running
+- Manual workaround: Delete `~/.cache/nvim/luac/.../state.luac` and restart
+- Auto-deletion code commented out at lines 88-91, pending testing
+
+### Decisions
+
+- Implemented grep directly in which-key.lua instead of separate functions
+- Simpler approach - inline calls work fine, can refactor later if needed
+- Commented out cache auto-deletion until tested after next which-key update
+- Directory is `4-Zettelkasten` not `3-Zettelkasten` (plan corrected)
+
+### Git Commit
+
+[pending]
+
+---
+
 ## Next Steps
 
 Continue with Phase 1 remaining tasks:
-- Create zettelkasten file search function
-- Create zettelkasten content search function
-- Create literature file search function
-- Create literature content search function
+- Create zettelkasten file search function (not just grep)
+- Create literature file search function (not just grep)
 - Configure Telescope preview for markdown
-- Add which-key submenu structure for vault searches
+- Test which-key cache workaround after next plugin update
+- Continue to Phase 2: Citation insertion workflows

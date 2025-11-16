@@ -288,6 +288,30 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 **Context Files**: Add markdown links in document body: `[Context](/absolute/path.md)` - use `<leader>mc` for quick insertion
 
 
+## Finding Files & Searching (Telescope)
+
+### File Navigation
+- `<leader>ff` - Find files (project-wide)
+- `<leader>fg` - Live grep (search content project-wide)
+- `<leader>fr` - Recent files
+- `Ctrl+p` - Quick file finder
+
+### Zettelkasten Search (Directory-Specific)
+- `<leader>fz` - Grep zettelkasten notes (`~/SecondBrain/4-Zettelkasten/`)
+- `<leader>fl` - Grep literature notes (`~/SecondBrain/Literature/`)
+
+### Buffer & Context Search
+- `<leader>fc` - Search current buffer
+- `<leader>fb` - Search all open buffers
+- `<leader>fw` - Search project for word under cursor
+
+### Utility Searches
+- `<leader>fp` - Resume previous search
+- `<leader>fy` - Yank history
+- `<leader>fk` - Search keymaps
+- `<leader>fh` - Search help docs
+
+
 ## Search and Replace
 
 ### Basic Search
@@ -330,6 +354,16 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 In Neovim, "windows" (also called panes in other tools like tmux) are viewports into buffers. Multiple windows can show different buffers, or the same buffer from different positions.
 
 ### Creating Windows (Splits)
+
+**Custom keybindings** (directional):
+- `<leader>wl` - New window right (vertical split)
+- `<leader>wh` - New window left (vertical split)
+- `<leader>wj` - New window below (horizontal split)
+- `<leader>wk` - New window above (horizontal split)
+- `<leader>ws` - Buffer split (same buffer in new window)
+- `<leader>wx` - Close current window
+
+**Native Vim commands**:
 - `:sp` or `:split` - Split horizontally (new window below)
 - `:vsp` or `:vsplit` - Split vertically (new window right)
 - `:new` - Create new horizontal split with empty buffer

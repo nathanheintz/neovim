@@ -15,7 +15,7 @@ M.preset = {
     { icon = "󰯂 ", key = "l", desc = "Search Lit Notes", action = ":lua Snacks.dashboard.pick('live_grep', {cwd = '~/SecondBrain/4-Resources/Literature'})", },
 		{ icon = " ", key = "c", desc = "Config", action = ":Neotree toggle ~/.config" },
     { icon = " ", key = "a", desc = "About", action = ":e ~/.config/nvim/README.md" },
-		{ icon = "  ", key = "i", desc = "Cheatsheet", action = ":e ~/.config/nvim/cheatsheet-readme/nvim-cheatsheet.md", },
+		{ icon = " ", key = "i", desc = "Cheatsheet", action = ":e ~/.config/nvim/CHEATSHEET.md", },
 		{ icon = " ", key = "m", desc = "Manage Plugins", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
 		{ icon = " ", key = "q", desc = "Quit", action = ":qa!" },
 		--    { icon = " ", key = "h", desc = "Checkhealth", action = ":checkhealth" },

@@ -139,8 +139,9 @@ Based on current working directory (see `lua/core/options.lua`):
 
 ### Known Bugs & Patches
 - **Which-key + Kitty terminal**: Space key in submenus triggers dashboard actions
-- **Fix**: Auto-patch on VimEnter treats Space as Escape (see `lua/plugins/which-key.lua`)
-- **Bug report**: `.claude/bug-reports/which-key-space-feedkeys.md`
+- **Fix**: Auto-patch via vim.schedule() treats Space as Escape (see `lua/plugins/which-key.lua:71-99`)
+- **Cache issue**: After `:Lazy update`, may need to delete `~/.cache/nvim/luac/.../state.luac` for patch to work
+- **Bug report**: `.claude/specs/000_maintenance_debug/bug-reports/which-key-space-feedkeys.md`
 
 ---
 

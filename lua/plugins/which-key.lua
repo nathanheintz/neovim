@@ -58,7 +58,7 @@ return {
 			scroll_down = "<c-d>",
 			scroll_up = "<c-u>",
 		},
-		sort = { "local", "order", "group", "alphanum", "mod" },
+		sort = { "local", "order", "group", "manual", "mod" },
 		disable = {
 			bt = { "help", "quickfix", "terminal", "prompt" },
 			ft = { "neo-tree" },
@@ -70,25 +70,33 @@ return {
 
 		-- PATCH: Fix Kitty terminal bug where Space in which-key menus gets corrupted
 		-- See README.md for details on this patch
-		vim.api.nvim_create_autocmd("VimEnter", {
-			once = true,
-			callback = function()
-				local state_file = vim.fn.stdpath("data") .. "/lazy/which-key.nvim/lua/which-key/state.lua"
-				local lines = vim.fn.readfile(state_file)
-				local content = table.concat(lines, "\n")
+		local function apply_patch()
+			local state_file = vim.fn.stdpath("data") .. "/lazy/which-key.nvim/lua/which-key/state.lua"
+			-- local cache_file = vim.fn.stdpath("cache") .. "/luac/%2fUsers%2fnathanheintz%2f.local%2fshare%2fnvim%2flazy%2fwhich-key.nvim%2flua%2fwhich-key%2fstate.luac"
 
-				-- Patch: Treat Space like Escape (close menu instead of buggy feedkeys)
-				local patched = content:gsub(
-					'elseif key == "<Esc>" then',
-					'elseif key == "<Esc>" or key == "<Space>" then'
-				)
+			local lines = vim.fn.readfile(state_file)
+			local content = table.concat(lines, "\n")
 
-				if content ~= patched then
-					vim.fn.writefile(vim.split(patched, "\n"), state_file)
-					vim.notify("which-key patched: Space closes menus", vim.log.levels.INFO)
-				end
-			end,
-		})
+			-- Patch: Treat Space like Escape (close menu instead of buggy feedkeys)
+			local patched = content:gsub(
+				'elseif key == "<Esc>" then',
+				'elseif key == "<Esc>" or key == "<Space>" then'
+			)
+
+			if content ~= patched then
+				vim.fn.writefile(vim.split(patched, "\n"), state_file)
+				-- Delete cache so it recompiles from patched source (commented out for now)
+				-- if vim.fn.filereadable(cache_file) == 1 then
+				-- 	vim.fn.delete(cache_file)
+				-- end
+				vim.notify("which-key patched: Space closes menus", vim.log.levels.INFO)
+			else
+				vim.notify("which-key: patch already applied", vim.log.levels.DEBUG)
+			end
+		end
+
+		-- Apply patch immediately when which-key config loads
+		vim.schedule(apply_patch)
 
 		-- Add mappings using v3 format
 		wk.add({
@@ -102,9 +110,12 @@ return {
 
 			-- WINDOW
 			{ "<leader>w", group = "WINDOW" },
-			{ "<leader>wc", "<cmd>vert sb<CR>", desc = "create split" },
-			{ "<leader>wj", "<cmd>clo<CR>", desc = "close split" },
-			{ "<leader>wk", "<cmd>only<CR>", desc = "maximize split" },
+			{ "<leader>wl", "<cmd>rightbelow vsplit<CR>", desc = "new win right" },
+			{ "<leader>wh", "<cmd>leftabove vsplit<CR>", desc = "new win left" },
+			{ "<leader>wj", "<cmd>rightbelow split<CR>", desc = "new win below" },
+			{ "<leader>wk", "<cmd>leftabove split<CR>", desc = "new win above" },
+			{ "<leader>wx", "<cmd>close<CR>", desc = "close window" },
+			{ "<leader>ws", "<cmd>vert sb<CR>", desc = "buffer split" },
 
 			-- CODE
 			{ "<leader>c", group = "CODE" },
@@ -128,12 +139,14 @@ return {
 			-- FIND
 			{ "<leader>f", group = "FIND" },
 			{ "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "project files" },
+			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
 			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
+			{ "<leader>fz", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/4-Zettelkasten'}})<CR>", desc = "grep zettelkasten" },
+			{ "<leader>fl", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/Literature'}})<CR>", desc = "grep lit notes" },
 			{ "<leader>fc", "<cmd>lua SearchCurrentBuffer()<CR>", desc = "current buffer" },
 			{ "<leader>fb", "<cmd>lua SearchAllBuffers()<CR>", desc = "all buffers" },
-			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word" },
-			{ "<leader>fg", "<cmd>Telescope live_grep theme=ivy<CR>", desc = "project grep" },
-			{ "<leader>fl", "<cmd>Telescope resume<CR>", desc = "last search" },
+			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word project" },
+			{ "<leader>fp", "<cmd>Telescope resume<CR>", desc = "previous search" },
 			{ "<leader>fy", "<cmd>YankyRingHistory<CR>", desc = "yanks" },
 			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
 			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
