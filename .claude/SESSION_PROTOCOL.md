@@ -261,6 +261,70 @@ After all phases done:
 - When searching returns nothing: say "I don't have that information" or use WebFetch to check official docs
 - For questions about official features: MUST use WebFetch on official documentation, not rely on absence in local files
 
+### Verification Requirements for Technical Recommendations
+
+**NEVER suggest solutions without verification**:
+
+1. **Check official documentation first**:
+   - Use WebFetch to read actual plugin/tool documentation
+   - Verify installation instructions are from the developer, not assumptions
+   - Look for OS-specific instructions (macOS vs Linux behaves differently)
+   - Check repository age and maintenance status before recommending
+
+2. **Verify against user's actual stack**:
+   - **OS**: macOS (Darwin 24.1.0) - NOT Linux, paths/behavior differ
+   - **Shell**: Fish - NOT bash/zsh, syntax differs
+   - **Terminal**: Kitty - may have specific compatibility issues
+   - **Python**: Homebrew-managed, externally-managed environment
+   - When in doubt about system behavior: RUN A COMMAND to verify, don't assume
+
+3. **Never offer "general best practices" without source**:
+   - ❌ "Here are 3 options you could try..."
+   - ❌ "This is the recommended approach..."
+   - ❌ "Best practice is to..."
+   - ✅ "The documentation says to do X"
+   - ✅ "I need to check the documentation - let me verify"
+   - ✅ "I don't have enough information to recommend. Can you help me find X?"
+
+4. **Don't suggest "not recommended" approaches**:
+   - If you mention an option, you're implicitly endorsing it
+   - Never list approaches you wouldn't actually recommend
+   - If documentation mentions risky flags (like --break-system-packages), don't repeat them unless that's the actual documented solution
+
+5. **OS-specific verification**:
+   - Linux paths ≠ macOS paths (example: `~/.local` vs `~/Library`)
+   - Always verify system-specific behavior with commands when possible
+   - Use `python3 -m site --user-site` not assumptions about paths
+   - Check `uname` or other system commands when OS behavior matters
+
+**When you lack information**:
+- Say "I don't know"
+- Say "Let me check the documentation"
+- Say "I need to verify this on your system first"
+- Ask user for help finding official sources
+- Run verification commands before making claims
+
+**Example - BAD**:
+```
+Here are 3 options:
+1. Use --user flag (recommended)
+2. Use virtual environment
+3. Use --break-system-packages (not recommended)
+
+I recommend option 1.
+```
+
+**Example - GOOD**:
+```
+Let me check the official documentation to see what the developer recommends.
+[Uses WebFetch]
+The documentation says: [exact quote]
+However, this was written before Python 3.13's PEP 668.
+Let me verify what --user does on your macOS system.
+[Runs python3 -m site --user-site]
+Based on verification, --user installs to [actual path].
+```
+
 **Example - GOOD**:
 ```
 I see in PROJECT_CONTEXT.md you use Deckset for presentations,
@@ -409,13 +473,15 @@ Do you use Deckset?
 
 ## Communication Style
 
-### Be Concise
+### Be Concise and Technical
 
 **User is working in terminal** - keep responses short:
-- Brief explanations
+- Brief, technical explanations only
 - Code snippets when relevant
 - Don't repeat what user already knows
 - Ask questions clearly
+- No apologies, no performance, no emotional content
+- State facts, provide solutions, move on
 
 ### Be Helpful
 

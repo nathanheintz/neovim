@@ -231,9 +231,12 @@ return {
 
 ## Terminal & Shell
 
-- **Terminal**: Kitty (with enhanced keyboard protocol)
-- **Shell**: Fish
 - **OS**: macOS (Darwin 24.1.0)
+- **Terminal**: Kitty
+- **Shell**: Fish
+- **Python**: Homebrew 3.13 (externally-managed)
+  - User packages: `~/Library/Python/3.13/lib/python/site-packages/`
+  - Install with: `pip3 install --user`
 
 ---
 

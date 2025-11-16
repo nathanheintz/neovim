@@ -157,8 +157,9 @@ return {
 			{ "<leader>mw", "<cmd>wa!<CR>", desc = "write all" },
 			{ "<leader>ml", "<cmd>Lectic<CR>", desc = "run lectic on file" },
 			{ "<leader>mn", "<cmd>lua CreateNewLecticFile()<CR>", desc = "new lectic file (multiparty)" },
-			{ "<leader>mS", "<cmd>lua SubmitLecticSelection()<CR>", desc = "submit selection with message" },
+			{ "<leader>ms", "<cmd>lua SubmitLecticSelection()<CR>", desc = "submit selection with message" },
 			{ "<leader>mc", "<cmd>lua InsertContextLink()<CR>", desc = "insert context link" },
+			{ "<leader>md", "<cmd>Vocal<CR>", desc = "dictate (speech-to-text)" },
 			{ "<leader>mv", "<cmd>MarkdownPreviewToggle<CR>", desc = "markdown preview" },
 			{ "<leader>mu", "<cmd>lua OpenUrlUnderCursor()<CR>", desc = "open URL under cursor" },
 

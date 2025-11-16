@@ -271,12 +271,12 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 - `<leader>mw` - Write all buffers
 - `<leader>mn` - New Lectic file (creates with Homie persona)
 - `<leader>ml` - Run Lectic on current file
+- `<leader>ms` - Submit visual selection with message
 - `<leader>mc` - Insert context link template (use Ctrl+x Ctrl+f for path completion)
-- `<leader>mp` - Switch persona submenu (see below)
-- `<leader>mS` - Submit visual selection with message
+- `<leader>md` - Dictate (speech-to-text) - press once to start, again to stop/transcribe
 - `<leader>mv` - Markdown preview toggle
 - `<leader>mu` - Open URL under cursor
-- `<leader>ms` - Surround submenu
+- `<leader>mp` - Switch persona submenu (see below)
 - `<leader>mt` - Toggles submenu (completion, folding)
 
 **Persona Switching (`<leader>mp`)**:

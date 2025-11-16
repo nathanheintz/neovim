@@ -13,6 +13,7 @@ This configuration prioritizes:
 ## Features
 ### Writing & Note-Taking
 - Zen mode for distraction-free writing (Snacks.nvim)
+- Speech-to-text dictation with [vocal.nvim](https://github.com/kyza0d/vocal.nvim) (local Whisper model, fully offline)
 - Markdown rendering and preview
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
@@ -86,6 +87,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 **Quick reference**:
 - `<leader>e` - Toggle file explorer
 - `<leader>mz` - Toggle zen mode
+- `<leader>md` - Dictate (speech-to-text)
 - `<leader>mn` - Create new Lectic file (Homie)
 - `<leader>ml` - Run Lectic on current file
 - `<leader>mc` - Insert context link
@@ -113,6 +115,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 
 ### Writing & Note-Taking
 - **Lectic** - AI writing assistant with frontmatter support
+- **vocal.nvim** - Speech-to-text dictation (local Whisper model)
 - **obsidian.nvim** - Obsidian vault integration
 - **render-markdown.nvim** - Live markdown rendering
 - **markdown-preview.nvim** - Markdown preview in browser
