@@ -47,19 +47,15 @@ This configuration prioritizes:
 
 ## Known Issues & Patches
 ### Which-Key + Kitty Terminal Bug
-**Issue**: When using Kitty terminal, pressing `<Space>` (leader key) while a which-key menu is open causes corrupted key handling. The space keypress gets converted to the first-tier menu character (e.g., pressing `<leader>a<Space>` executes dashboard action `a` instead of closing the menu).
+**Issue**: When using Kitty terminal, pressing `<Space>` while a which-key menu is open causes corrupted key handling — the space keypress triggers a dashboard action instead of closing the menu.
+
 **Root Cause**: Kitty's enhanced keyboard protocol sends special terminal codes that get corrupted when which-key uses `nvim_replace_termcodes()` + `nvim_feedkeys()` to handle unmapped keys.
-**Fix**: This config includes an automatic patch (applied via `vim.schedule()` when which-key loads) that modifies which-key's `state.lua` to treat `<Space>` the same as `<Esc>` - closing the menu cleanly instead of attempting to feed the key back.
 
-**Location**: `lua/plugins/which-key.lua` lines 71-99
+**Fix**: This config applies an in-memory monkey-patch to `which-key.state.check()` that treats `<Space>` the same as `<Esc>`, closing the menu cleanly. The patch runs every time which-key loads and never modifies any plugin files on disk.
 
-**Behavior**: Pressing `<Space>` while any which-key menu is open will now close the menu (same as pressing `<Esc>`).
+**Location**: `lua/plugins/which-key.lua`
 
-**Known Issue**: After running `:Lazy update` to update which-key, the compiled bytecode cache may prevent the patch from taking effect. If Space starts causing issues again after an update:
-1. Delete the cache file: `rm ~/.cache/nvim/luac/%2fUsers%2fnathanheintz%2f.local%2fshare%2fnvim%2flazy%2fwhich-key.nvim%2flua%2fwhich-key%2fstate.luac`
-2. Restart nvim
-
-**Future**: Auto-deletion of cache file after patching is commented out at lines 88-91, pending testing.
+**Behavior**: Pressing `<Space>` while any which-key menu is open closes the menu (same as `<Esc>`). The initial `<Space>` keypress that opens menus is unaffected.
 
 ## Installation
 1. **Backup existing config**:
@@ -80,11 +76,11 @@ This configuration prioritizes:
    nvim
    ```
    Lazy.nvim will automatically install plugins on first launch.
-5. **Set up Lectic** (optional):
+5. **Install the Lectic binary** (required for Lectic AI):
    ```bash
-   cd ~/.local/share/nvim/lazy/lectic/extra/lectic.nvim
-   npm install
+   curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | sh
    ```
+   To update the binary in future, rerun the same command.
 ## Key Mappings
 
 See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
@@ -140,7 +136,10 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 - **obsidian.nvim** - Obsidian vault integration
 - **render-markdown.nvim** - Live markdown rendering
 - **markdown-preview.nvim** - Markdown preview in browser
-- **vimtex** - LaTeX support
+- **vimtex** - LaTeX support (PDF viewer: Skim)
+
+### Sessions
+- **resession.nvim** - Session management (save/load/rename sessions per directory)
 
 ### Navigation & UI
 - **telescope.nvim** - Fuzzy finder
