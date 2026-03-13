@@ -138,3 +138,105 @@ Each entry should include:
 
 ---
 
+### 2026-03-13 - which-key Kitty Patch: File-write → In-memory Monkey-patch
+
+**Task**: Replaced file-writing which-key Space patch with in-memory monkey-patch to stop `:Lazy update` conflicts
+
+**Problem**: The old patch wrote directly to `~/.local/share/nvim/lazy/which-key.nvim/lua/which-key/state.lua` on every nvim startup. This caused a tracked-file conflict that blocked every `:Lazy update`.
+
+**Old approach** (file-writing — blocked updates):
+```lua
+local function apply_patch()
+  local state_file = vim.fn.stdpath("data") .. "/lazy/which-key.nvim/lua/which-key/state.lua"
+  local lines = vim.fn.readfile(state_file)
+  local content = table.concat(lines, "\n")
+  local patched = content:gsub(
+    'elseif key == "<Esc>" then',
+    'elseif key == "<Esc>" or key == "<Space>" then'
+  )
+  if content ~= patched then
+    vim.fn.writefile(vim.split(patched, "\n"), state_file)
+    vim.notify("which-key patched: Space closes menus", vim.log.levels.INFO)
+  else
+    vim.notify("which-key: patch already applied", vim.log.levels.DEBUG)
+  end
+end
+vim.schedule(apply_patch)
+```
+
+**New approach** (in-memory monkey-patch — no file changes):
+```lua
+local state = require("which-key.state")
+local original_check = state.check
+state.check = function(s, key)
+  if key == "<Space>" then key = "<Esc>" end
+  return original_check(s, key)
+end
+```
+
+**Why it's safe**: `state.check` is only called when a which-key menu is already open. The initial `<Space>` keypress that opens the menu goes through a different code path and is unaffected.
+
+**Files Modified**:
+- `lua/plugins/which-key.lua` (lines ~73-82) - Replaced patch block
+
+---
+
+### 2026-03-13 - Lectic Binary/Plugin Sync Fix
+
+**Task**: Fixed lectic broken after long period without updates
+
+**Problem chain**:
+1. lectic binary was alpha6 (2025-04-04), defaulting to `claude-3-7-sonnet-latest` → 404 error
+2. `version = false` in lectic.lua was pulling main branch (beta dev code) instead of releases
+3. Main branch plugin used `lectic --format block` flag which the 0.0.2 binary doesn't support
+4. Build step ran `npm install` on every update, modifying `package-lock.json` → blocked every `:Lazy update`
+
+**Fixes applied**:
+- Updated lectic binary to 0.0.2 via: `curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | sh`
+- Changed `version = false` → `version = "*"` in `lua/plugins/lectic.lua` (pins to releases, not main)
+- Replaced `build` npm install step with a `vim.notify` reminder to update binary via terminal
+- Changed `vim.g.lectic_model` from `"claude-4-sonnet"` to `"claude-sonnet-4-6"` (note: this var is unused by the plugin — model comes from frontmatter or binary default)
+
+**To update lectic in future**:
+1. Run `:Lazy update` in nvim (updates plugin)
+2. Run in terminal: `curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | sh` (updates binary)
+
+**Files Modified**:
+- `lua/plugins/lectic.lua` - version, build step, lectic_model
+
+---
+
+### 2025-11-19 - Insert Mode Navigation & Markdown Folding
+
+**Task**: Added Ctrl+Up/Down keybindings for actual line navigation, swapped paragraph navigation to Ctrl+Opt, fixed markdown folding to only fold on headers
+
+**Changes**:
+- `lua/core/keymaps.lua` (lines 306-307, 313-315) - Navigation keybindings:
+  - `<M-Up>` / `<M-Down>` - Changed to actual line navigation (was paragraph)
+  - `<C-M-Up>` / `<C-M-Down>` - Changed to paragraph navigation (was unused)
+  - Removed `<C-Up>` / `<C-Down>` to free for macOS window switching
+
+- `lua/core/functions.lua` (lines 162-179) - Markdown folding function:
+  - Removed setext-style heading checks (underline with `===` or `---`)
+  - Now only folds on ATX-style headers (`#`, `##`, `###`)
+  - Added default fold setup when no state file exists (lines 296-302)
+
+- `lua/core/autocmds.lua` (lines 74-80) - Added markdown autocmd:
+  - Calls `LoadFoldingState()` when markdown files open
+  - Ensures regex-based fold function loads on startup
+
+**Rationale**:
+- Treesitter folding had unstable cache during editing, reverted to regex
+- Regex function only checks for explicit headers, ignores all other patterns (YAML, indentation, etc.)
+- LoadFoldingState() wasn't being called, so fold config never applied on startup
+- Added autocmd to ensure function runs when markdown files open
+
+**Testing**:
+- Verified markdown files fold only on headers (`#`, `##`, `###`)
+- Confirmed YAML frontmatter and indented content don't create folds
+- Tested navigation keybindings work correctly
+
+**Commit**: [pending]
+
+---
+

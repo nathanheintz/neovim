@@ -12,7 +12,9 @@ return {
 		show_help = false,
 		show_keys = true,
 		notify = false,
-		-- triggers = auto by default
+    triggers = {
+      { "<leader>", mode = { "n", "v" } },
+  },
 		plugins = {
 			presets = {
 				marks = false,
@@ -58,7 +60,7 @@ return {
 			scroll_down = "<c-d>",
 			scroll_up = "<c-u>",
 		},
-		sort = { "local", "order", "group", "manual", "mod" },
+		sort = { "mod", "local", "order", "group", "manual" },
 		disable = {
 			bt = { "help", "quickfix", "terminal", "prompt" },
 			ft = { "neo-tree" },
@@ -69,34 +71,16 @@ return {
 		wk.setup(opts)
 
 		-- PATCH: Fix Kitty terminal bug where Space in which-key menus gets corrupted
-		-- See README.md for details on this patch
-		local function apply_patch()
-			local state_file = vim.fn.stdpath("data") .. "/lazy/which-key.nvim/lua/which-key/state.lua"
-			-- local cache_file = vim.fn.stdpath("cache") .. "/luac/%2fUsers%2fnathanheintz%2f.local%2fshare%2fnvim%2flazy%2fwhich-key.nvim%2flua%2fwhich-key%2fstate.luac"
-
-			local lines = vim.fn.readfile(state_file)
-			local content = table.concat(lines, "\n")
-
-			-- Patch: Treat Space like Escape (close menu instead of buggy feedkeys)
-			local patched = content:gsub(
-				'elseif key == "<Esc>" then',
-				'elseif key == "<Esc>" or key == "<Space>" then'
-			)
-
-			if content ~= patched then
-				vim.fn.writefile(vim.split(patched, "\n"), state_file)
-				-- Delete cache so it recompiles from patched source (commented out for now)
-				-- if vim.fn.filereadable(cache_file) == 1 then
-				-- 	vim.fn.delete(cache_file)
-				-- end
-				vim.notify("which-key patched: Space closes menus", vim.log.levels.INFO)
-			else
-				vim.notify("which-key: patch already applied", vim.log.levels.DEBUG)
-			end
+		-- In-memory monkey-patch: intercepts state.check() and treats Space as Escape
+		-- Only fires when a menu is already open (does NOT interfere with <leader> Space trigger)
+		-- NOTE: Previous approach wrote directly to state.lua on disk (caused :Lazy update conflicts)
+		-- To revert to file-writing approach, see specs/000_maintenance_debug/MAINTENANCE_LOG.md
+		local state = require("which-key.state")
+		local original_check = state.check
+		state.check = function(s, key)
+			if key == "<Space>" then key = "<Esc>" end
+			return original_check(s, key)
 		end
-
-		-- Apply patch immediately when which-key config loads
-		vim.schedule(apply_patch)
 
 		-- Add mappings using v3 format
 		wk.add({
@@ -215,9 +199,10 @@ return {
 
 			-- SESSIONS
 			{ "<leader>s", group = "SESSIONS" },
-			{ "<leader>ss", "<cmd>SessionManager save_current_session<CR>", desc = "save session" },
-			{ "<leader>sd", "<cmd>SessionManager delete_session<CR>", desc = "delete session" },
-			{ "<leader>sl", "<cmd>SessionManager load_session<CR>", desc = "load session" },
+			{ "<leader>ss", "<cmd>lua require('resession').save()<CR>", desc = "save session" },
+			{ "<leader>sl", "<cmd>lua require('resession').load()<CR>", desc = "load session" },
+			{ "<leader>sd", "<cmd>lua require('resession').delete()<CR>", desc = "delete session" },
+			{ "<leader>sr", "<cmd>lua RenameSession()<CR>", desc = "rename session" },
 
 			-- PUBLISHING
 			{ "<leader>p", group = "PUBLISHING", icon = "" },
@@ -252,7 +237,12 @@ return {
 
 			-- TEMPLATES
 			{ "<leader>t", group = "TEMPLATES", icon = "" },
-			{ "<leader>tl", "<cmd>read ~/.config/nvim/templates/Letter.tex<CR>", desc = "Letter.tex" },
+			{ "<leader>tp", "<cmd>read ~/.config/nvim/templates/PersonalLetter.tex<CR>", desc = "personal letter" },
+			{ "<leader>tl", "<cmd>read ~/.config/nvim/templates/ProfessionalLetter.tex<CR>", desc = "professional letter" },
+			{ "<leader>tb", "<cmd>read ~/.config/nvim/templates/SimpleBook.tex<CR>", desc = "simple book" },
+			{ "<leader>ts", "<cmd>read ~/.config/nvim/templates/Screenplay.tex<CR>", desc = "screenplay" },
+		{ "<leader>tc", "<cmd>read ~/.config/nvim/templates/CoachingAgreement.tex<CR>", desc = "coaching agreement" },
+      { "<leader>tj", "<cmd>read ~/.config/nvim/templates/TherapeuticJournal.md<CR>", desc = "therapeutic journal" },
 		})
 
 	end,

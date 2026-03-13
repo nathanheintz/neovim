@@ -1,13 +1,14 @@
 return {
   "gleachkr/Lectic",
   name = "lectic",
-  version = false,
+  version = "*",
   lazy = true,
   ft = { "markdown", "lectic.markdown" },
   build = function()
-    -- Change to the correct directory before running npm install
-    local install_dir = vim.fn.stdpath('data') .. '/lazy/lectic'
-    vim.fn.system('cd ' .. install_dir .. '/extra/lectic.nvim && npm install')
+    vim.notify(
+      "lectic updated! Also update the binary via terminal:\ncurl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | sh",
+      vim.log.levels.WARN
+    )
   end,
   init = function()
     -- Create the autocmd group early
@@ -445,7 +446,7 @@ return {
     )
 
     -- Configure Lectic
-    vim.g.lectic_model = "claude-3-7-sonnet"
+    vim.g.lectic_model = "claude-sonnet-4-6"
 
     -- Lectic file settings
     vim.api.nvim_create_autocmd("FileType", {

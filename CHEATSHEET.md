@@ -204,6 +204,38 @@ You can replace `c` (change) with:
 - `y` for yank (copy)
 - `v` for select
 
+### Surround (nvim-surround)
+
+Add, delete, or change surrounding pairs like `"..."`, `(...)`, `[...]`, `{...}`.
+
+**Add surrounds** (normal mode):
+- `ys` + motion + char — surround a motion (e.g. `ysiw"` wraps inner word in `"`)
+- `yss` + char — surround current line
+- `yS` + motion + char — surround a motion, putting pair on new lines
+- `ySS` + char — surround current line, putting pair on new lines
+
+**Add surrounds** (visual mode):
+- `S` + char — surround selection
+- `gS` + char — surround selection, putting pair on new lines
+
+**Delete/change surrounds** (normal mode):
+- `ds` + char — delete surrounding pair (e.g. `ds"` removes `"..."`)
+- `cs` + char + char — change surrounding pair (e.g. `cs"(` changes `"..."` to `(...)`)
+- `cS` + char + char — change surrounding pair, putting replacement on new lines
+
+**Insert mode**:
+- `Ctrl-g s` + char — surround around cursor
+- `Ctrl-g S` + char — surround around cursor, on new lines
+
+**Common examples**:
+- `ysiw"` — surround word under cursor with quotes → `"word"`
+- `ysiw(` — surround word with parens → `(word)`
+- `ysip"` — surround paragraph with quotes
+- `ds"` — remove surrounding quotes
+- `cs"'` — change `"hello"` to `'hello'`
+- `cs"(` — change `"hello"` to `(hello)`
+- Select text, press `S"` — wrap selection in quotes
+
 ## File Information
 
 ### Showing File Path and Status
