@@ -303,5 +303,13 @@ map("i", "<S-M-Left>", "←", {}, "Insert left arrow")
 -- Mac-style movement in insert mode
 map("i", "<M-Left>", "<C-o>g^", {}, "Move to start of row")
 map("i", "<M-Right>", "<C-o>g$", {}, "Move to end of row")
-map("i", "<M-Up>", "<C-o>{", {}, "Move to start of paragraph")
-map("i", "<M-Down>", "<C-o>}", {}, "Move to end of paragraph")
+map("i", "<M-Up>", "<C-o>k", {}, "Move up actual line")
+map("i", "<M-Down>", "<C-o>j", {}, "Move down actual line")
+
+-- Insert mode visual line navigation
+map("i", "<Up>", "<C-o>gk", {}, "Move up visual line")
+map("i", "<Down>", "<C-o>gj", {}, "Move down visual line")
+
+-- Insert mode paragraph navigation
+map("i", "<C-M-Up>", "<C-o>{", {}, "Move to start of paragraph")
+map("i", "<C-M-Down>", "<C-o>}", {}, "Move to end of paragraph")

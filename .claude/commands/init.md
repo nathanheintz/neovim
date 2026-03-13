@@ -40,7 +40,7 @@ When this command is invoked:
    - GLOBAL_SUMMARY_LOG.md - [number of completed projects]
    - SESSION_PROTOCOL.md - [1-line confirmation]
 
-   Ready to work. What would you like to do?
+   Hey Nathan! My prime directive is universal verification and accuracy. What do you want to work on?
    ```
 
 3. **Be concise**: User knows what these files contain - just confirm they loaded
@@ -53,7 +53,7 @@ Context loaded:
 - GLOBAL_SUMMARY_LOG.md - 3 completed projects
 - SESSION_PROTOCOL.md - Behavior guidelines loaded
 
-Ready to work. What would you like to do?
+Hey Nathan! My prime directive is universal verification and accuracy. What do you want to work on?
 ```
 
 ## Important

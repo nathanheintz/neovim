@@ -1,43 +1,51 @@
 # Implementation Plan: Publishing Workflows
 
 **Created**: 2025-11-11
-**Status**: Not Started
-**Complexity**: 7/10 (High)
-**Estimated Duration**: 6-8 hours
+**Status**: In Progress
+**Last Updated**: 2025-12-11
+**Complexity**: 5/10 (Medium)
+**Estimated Duration**: 3-4 hours remaining
 
 ## Executive Summary
 
-This plan implements comprehensive publishing workflows from Neovim to multiple output formats: LaTeX/PDF (academic), EPUB/MOBI (e-books), HTML presentations (Marp/Reveal.js), and Ghost.org (blogging). The system includes template selection, format conversion, preview, and platform-specific optimization.
+This plan implements publishing workflows from Neovim to multiple output formats: LaTeX/PDF (letters, books, screenplays), EPUB/MOBI (e-books), and HTML presentations (Marp/Reveal.js). The system includes LaTeX templates, format conversion, and preview workflows.
 
 ## Project Goals
 
 ### Primary Objectives
-1. **LaTeX Publishing**: Academic papers, books, presentations
-2. **E-Book Publishing**: EPUB and MOBI export with metadata
-3. **Presentation Export**: Marp and Reveal.js slides
-4. **Ghost Publishing**: Blog-ready markdown optimization
+1. **LaTeX Publishing**: Letters, books, screenplays ✅ COMPLETED
+2. **E-Book Publishing**: EPUB and MOBI export with metadata ⏳ REMAINING
+3. **Presentation Export**: Marp and Reveal.js slides ⏳ REMAINING
+4. **Menu Organization**: Clean submenu structure ⏳ REMAINING
 
 ### Secondary Objectives
-- Quick format conversions (MD → Word, HTML, etc.)
-- Template system for common document types
+- ✅ Quick format conversions (MD → Word, HTML, etc.) - Already implemented
+- ✅ Template system for common document types - Four templates created
 - Preview workflows for each output format
-- Platform-specific optimization tools
 
 ## Current State
 
-**What Works**:
-- VimTeX installed for LaTeX editing
-- Pandoc likely available for conversions
-- LaTeX templates exist in `~/.config/nvim/templates/`
-- Basic Pandoc conversions in which-key menu
+**What Works** (as of 2025-12-11):
+- ✅ VimTeX installed and tested (compile, view working)
+- ✅ Skim configured as PDF viewer
+- ✅ Four LaTeX templates created and accessible via `<leader>t`:
+  - PersonalLetter.tex (informal letters)
+  - ProfessionalLetter.tex (letterhead in margin)
+  - SimpleBook.tex (A5 book format)
+  - Screenplay.tex (industry-standard screenplay formatting)
+- ✅ Pandoc conversions in which-key menu (Word, HTML, Markdown, LaTeX, PDF)
+- ✅ Template insertion system via which-key
 
-**What's Missing**:
-- Organized publishing menu structure
-- E-book export with metadata
-- Presentation export workflows
-- Ghost markdown optimization
-- Template selection system
-- Preview functions
+**What's Remaining**:
+- Menu organization (currently flat under `<leader>p`)
+- E-book export with metadata (EPUB/MOBI)
+- Presentation export workflows (Marp/Reveal.js)
+- Preview functions for e-books and presentations
+
+**Not Needed** (per user):
+- MD → LaTeX conversion (can request from Claude as needed)
+- Ghost markdown optimization (workflow already working well)
+- Dynamic template selection function (current which-key approach works fine)
 
 ## Publishing Workflows
 
@@ -145,50 +153,41 @@ This plan implements comprehensive publishing workflows from Neovim to multiple 
 
 ---
 
-### Phase 2: LaTeX Publishing Workflow (2-3 hours)
+### Phase 2: LaTeX Publishing Workflow (2-3 hours) [✅ COMPLETED]
 
-**Objective**: Implement LaTeX template selection and MD → LaTeX conversion.
+**Objective**: Create LaTeX templates for common document types.
 
 **Tasks**:
-- [ ] Create LaTeX template selection function
-  - Add `select_latex_template()` to `lua/core/functions.lua`
-  - Use `vim.ui.select` with template categories
-  - Categories: Articles, Letters, Presentations
-  - Templates: PhilPaper, HandOut, Letter, PhilBeamer
-  - Copy template to new buffer, set filetype `tex`
+- [x] **Create new LaTeX templates from user's documents** (2025-12-04, 2025-12-11)
+  - Created PersonalLetter.tex (EB Garamond, informal)
+  - Created ProfessionalLetter.tex (letterhead in top margin with fancyhdr)
+  - Created SimpleBook.tex (A5 format, custom TOC)
+  - Created Screenplay.tex (industry-standard screenplay formatting with screenplay class)
+  - Added to which-key menu: `<leader>tp`, `<leader>tl`, `<leader>tb`, `<leader>ts`
+- [x] **Test basic VimTeX functionality** (2025-12-04)
+  - Verified compile (`<leader>pc`) works
+  - Verified view (`<leader>pv`) works with Skim
+  - Context menu (`<leader>pV`) has bug but not needed
+- [x] **NOT NEEDED: Template selection function**
+  - Current which-key approach works well
+  - Don't need dynamic selection
+- [x] **NOT NEEDED: MD → LaTeX conversion**
+  - Can request from Claude as needed for large conversions
+  - Pandoc command already available: `<leader>pl`
 
-- [ ] Implement markdown to LaTeX conversion
-  - Add `convert_markdown_to_latex()` function
-  - Use Pandoc: `pandoc %:p -o %:p:r.tex`
-  - Add options for LaTeX engine (pdflatex, xelatex, lualatex)
-  - Open resulting .tex file
+- [x] **LaTeX menu organization** - Will be handled in Phase 1 (Menu Structure)
+  - VimTeX commands already accessible under `<leader>p`
+  - Will reorganize into submenu in Phase 1
 
-- [ ] Add LaTeX compilation shortcuts
-  - Verify VimTeX compile works: `:VimtexCompile`
-  - Add `<leader>plc` - Compile current LaTeX
-  - Add `<leader>plv` - View PDF
-  - Add `<leader>plk` - Clean aux files
-
-- [ ] Create LaTeX submenu in which-key
-  - `<leader>pl` - LaTeX submenu
-  - `<leader>pla` - Article template
-  - `<leader>pll` - Letter template
-  - `<leader>plp` - Presentation template
-  - `<leader>plm` - Convert MD → LaTeX
-  - `<leader>plc` - Compile
-  - `<leader>plv` - View PDF
-  - `<leader>plk` - Clean aux
-
-**Success Criteria**:
-- Can select and insert LaTeX templates
-- MD → LaTeX conversion works
-- VimTeX compilation works from menu
-- PDF viewer opens correctly
-- LaTeX submenu organized and functional
+**Success Criteria**: ✅ COMPLETED
+- ✅ Can select and insert LaTeX templates (via `<leader>t`)
+- ✅ VimTeX compilation works (`<leader>pc`, `<leader>pv`)
+- ✅ PDF viewer opens correctly (Skim)
+- LaTeX submenu - deferred to Phase 1
 
 **Files Modified**:
-- `lua/core/functions.lua` - Template selection
-- `lua/plugins/which-key.lua` - LaTeX submenu
+- `templates/*.tex` - Four templates created
+- `lua/plugins/which-key.lua` - Template keybindings added
 
 ---
 
@@ -301,11 +300,13 @@ This plan implements comprehensive publishing workflows from Neovim to multiple 
 
 ---
 
-### Phase 5: Ghost Publishing Workflow (1 hour)
+### Phase 5: Ghost Publishing Workflow [❌ NOT NEEDED]
 
-**Objective**: Optimize markdown for Ghost.org and copy to clipboard.
+**Objective**: ~~Optimize markdown for Ghost.org and copy to clipboard.~~
 
-**Tasks**:
+**Status**: User reports Ghost workflow already working well from previous theme development work. No additional tooling needed in Neovim.
+
+**Tasks** (not implementing):
 - [ ] Create Ghost optimization function
   - Add `optimize_for_ghost()` to `lua/core/functions.lua`
   - Remove Obsidian-specific frontmatter
@@ -529,20 +530,30 @@ This plan implements comprehensive publishing workflows from Neovim to multiple 
    - Integrate Ghost API for direct publishing?
    - **Recommendation**: No, clipboard workflow simpler
 
-## Next Steps
+## Project Status
 
-**Immediate**:
-1. Begin Phase 1: Menu structure and quick conversions
-2. Test with real documents
-3. Gather user feedback
+### ✅ Completed Phases:
+- **Phase 2: LaTeX Publishing** - Four templates created (PersonalLetter, ProfessionalLetter, SimpleBook, Screenplay)
 
-**Future Enhancements**:
-- Bibliography management integration
-- Multi-file book compilation
-- Custom LaTeX/Marp themes
-- Ghost API integration (if requested)
+### ⏳ Remaining Phases:
+1. **Phase 1: Menu Structure & Quick Conversions** (1-2 hours)
+   - Reorganize `<leader>p` into clean submenus
+   - Add conversion functions with notifications
+
+2. **Phase 3: E-Book Publishing** (2-3 hours)
+   - EPUB/MOBI export with metadata
+   - Preview workflows
+
+3. **Phase 4: Presentation Publishing** (1-2 hours)
+   - Marp and Reveal.js export
+   - Preview workflows
+
+### ❌ Not Needed (per user):
+- **Phase 5: Ghost Publishing** - Workflow already working well
+- MD → LaTeX conversion - Can request from Claude as needed
+- Template selection function - Which-key approach works fine
 
 ---
 
-**Plan Status**: Ready for Implementation
-**Next Session**: Phase 1 - Menu Structure & Quick Conversions
+**Plan Status**: ~40% Complete (1 of 4 needed phases done)
+**Next Session**: User's choice - Phase 1 (Menu), Phase 3 (E-books), or Phase 4 (Presentations)

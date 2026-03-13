@@ -1,0 +1,328 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a5paper,11pt]{book}
+\usepackage[a5paper, inner=1.3in, outer=1.3in, top=1.3in, bottom=1.5in]{geometry}
+\usepackage{blindtext} % Inserts Lorem Ipsum text
+\usepackage{microtype} % Improves Typesetting
+\usepackage{titling} % Custom Titles, Author, Date etc.
+\usepackage{titlesec} % Custom section titles/headers
+\usepackage{titletoc} % Custom TOC
+\usepackage{tocloft} % More features for TOC !! Careful - can conflict with \titletoc !!
+% \usepackage{hyperref}
+
+\usepackage{graphicx} % Insert images
+\usepackage{wrapfig} % Wrap text around figures/images
+\usepackage{fancyhdr} % Custom Headers & Footers
+\usepackage{enumitem} % Improves numbered & bulleted lists
+\usepackage{index}
+\makeindex
+
+\usepackage[cmintegrals,cmbraces]{newtxmath} % Use the Garamond EB Font
+\usepackage{ebgaramond-maths}
+\usepackage[T1]{fontenc}
+\usepackage{secnum}
+
+\newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage} % Command to insert a blank page
+\newcommand{\monthyear}{\ifcase\month\or January\or February\or March\or April\or May\or June\or July\or August\or September\or October\or November\or December\fi\space\number\year} % A command to print the current month and year
+
+% Command for chapter opening - first few words in small caps, no indent
+\newcommand{\openingwords}[1]{\noindent\textsc{#1}}
+
+% Command for chapter epigraph/quote - indented, italicized, left-aligned
+\newcommand{\chapterquote}[1]{%
+  \begin{quote}
+    \itshape #1
+  \end{quote}
+}
+
+% Reduce space between title and author on title page
+\setlength{\droptitle}{-2em} % Moves title up
+\preauthor{\begin{center}\large\vspace{-1em}} % Reduces space before author
+\postauthor{\end{center}}
+
+
+%----------------------------------------------------------------------------------------
+%	NEW PAGE STYLE - HEADER CUSTOMIZATION \fancyhdr
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{0pt} % No line in header
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{\MakeLowercase{#1}}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\textsc{\MakeLowercase{#1}}}}
+
+\fancyhead[CE]{\footnotesize{{\leftmark}}} % Header is centered on even pages - chapter in small caps
+\fancyhead[CO]{\footnotesize{\itshape{\rightmark}}} % Header is centered on odd pages - section in italic small caps
+\fancyfoot[CE,CO]{\thepage} % Footer has centered page numbers on both odd and even pages.
+
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	CREATE COVERPAGE ENVIRONMENT
+%----------------------------------------------------------------------------------------
+
+\newenvironment{coverpage}
+  {\clearpage % we want a new page
+  \thispagestyle{empty}% no header and footer
+   \vspace*{\stretch{.6}}% some space at the top
+   \flushright          % Right orientation
+  }
+  {\par % end the paragraph
+   \vspace{\stretch{4}} % space at bottom is four times that at the top
+  \clearpage           % finish off the page
+  }
+
+
+
+%----------------------------------------------------------------------------------------
+%	TOC & CHAPTER HEADINGS CUSTOMIZATION
+%----------------------------------------------------------------------------------------
+
+\renewcommand{\contentsname}{\scshape\Large Contents} % Rename TOC Heading
+
+\setcounter{secnumdepth}{0} % Remove Section #s in TOC and in document!
+
+
+%   TITLESEC TITLE HEADING FORMAT \titleformat{⟨command⟩}[⟨shape⟩]{⟨format⟩}{⟨label⟩}{⟨sep⟩}{⟨before-code⟩}[⟨after-code⟩]
+%
+%   TITLETOC TOC FORMAT \titlecontents{⟨section⟩}[⟨left⟩]{⟨above⟩}{⟨before with label⟩}{⟨before without label⟩}{⟨filler and page⟩}[⟨after⟩]
+
+
+\titlecontents{chapter}[1.2em]
+	{\vspace{1ex}\fontsize{10.2}{11.9}\selectfont\bfseries} % Chapter Heading numbers inside TOC
+	{\contentslabel{1.3em}\bfseries\small} % Chapter Headings in TOC
+	{\MakeUppercase} %
+	{\titlerule*[1pc]{}\contentspage} %
+%
+\titlecontents{section}[1.2em]
+	{\vspace{0.5ex}\fontsize{10.2}{11.9}\selectfont}%
+	{\contentslabel{1.8em}\scshape} % Makes sections titles in TOC smallcaps?
+	{\scshape} % Makes sections titles in TOC smallcaps
+	{\titlerule*[1pc]{}} % Section dots and pagenumbers in TOC
+
+\titleformat{\chapter}[hang] % Customizes Chapter headings in book text
+	{\normalfont\bfseries\Large}{\thechapter}{18pt}{\scshape\Large}
+
+\titleformat{\section}[hang] % Customizes Section headings in book text
+	{\normalfont\bfseries\large}{}{}{}
+
+%----------------------------------------------------------------------------------------
+%	PREAMBLE SECTIONS (Foreword, Preface, Introduction, etc.)
+%----------------------------------------------------------------------------------------
+
+% Create a new counter for preamble sections
+\newcounter{preamble}
+
+% Define preamble command - similar to chapter but with italic TOC entry
+\newcommand{\preamble}[1]{%
+  \refstepcounter{preamble}%
+  \cleardoublepage% Clear any previous content and start on odd page
+  \chapter*{#1}% Creates unnumbered chapter
+  \addcontentsline{toc}{preamble}{#1}% Add to TOC with preamble formatting
+  \markboth{\textsc{\MakeLowercase{#1}}}{}% Update running header to show preamble in small caps
+}
+
+% Format preamble entries in TOC - italic, sentence case, no dots/page numbers
+\titlecontents{preamble}[1.2em]
+  {\vspace{1ex}\fontsize{10.2}{11.9}\selectfont\itshape} % Italic formatting
+  {} % No label
+  {} % No before without label
+  {} % No filler or page number
+
+%----------------------------------------------------------------------------------------
+% \usepackage{tocloft} !Careful this can conflict with titletoc & titlesec
+%----------------------------------------------------------------------------------------
+%
+\setlength{\cftbeforetoctitleskip}{2em} % Removes whitespace at top of TOC title.
+% \addtocontents{toc}{\cftpagenumbersoff{section}} % Removes dots and page numbers from sections in TOC
+% \renewcommand{\cfttoctitlefont}{\hfill\huge\bfseries} % TOC Heading Style
+% \renewcommand{\cftchapfont}{} % TOC Chapter Style
+% \renewcommand{\cftsecfont}{\scshape} % Makes Section Headings in TOC SMALLCAPS
+
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	BOOK META-INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{\textbf{BOOK TITLE}} % Title of the book (bold for cover/title pages)
+\author{Author Name} % Author
+\date{} % Date
+
+
+
+%----------------------------------------------------------------------------------------
+%	BOOK FRONT MATTER
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+\pagenumbering{gobble} % Eat the pagenumbers
+
+\makeatletter % Allow @ symbol in command names
+\begin{coverpage}
+\emph{Series Name \& Number}\\
+\line(1,0){175}\\
+\medskip
+\@title\\
+\smallskip
+\@author
+\end{coverpage}
+\makeatother % Restore @ symbol behavior
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\maketitle % Prints the title page
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT/ISBN PAGE (verso of title page)
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{empty}
+\vspace*{\fill} % Push content to bottom of page
+
+\makeatletter % Allow @ symbol in command names
+{\footnotesize
+\setlength{\parindent}{0pt} % Remove all paragraph indentation
+\noindent\textit{Book Title}\\ % Title in italic only (manually update when changing book title)
+\noindent Copyright \textcopyright{} 2025 by \@author.\\
+\noindent All rights reserved.
+
+\vspace{1em}
+
+\noindent Published by Ground Center Internal Arts LLC\\
+\noindent 952 Flushing Avenue\\
+\noindent Brooklyn, NY 11206\\
+\noindent United States of America
+
+\vspace{1em}
+
+\noindent No part of this publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, or otherwise, without the prior written permission of the publisher.
+
+\vspace{1em}
+
+\noindent ISBN 978-X-XXXX-XXXX-X (paperback)\\ % 13-digit ISBN for paperback edition
+\noindent ISBN 978-X-XXXX-XXXX-X (ebook)\\ % 13-digit ISBN for ebook edition
+\noindent ISBN 978-X-XXXX-XXXX-X (hardcover) % 13-digit ISBN for hardcover edition (if applicable)
+
+\vspace{1em}
+
+\noindent First Edition: [Month Year] % Date of first publication
+
+\vspace{1em}
+
+\noindent Cover design by [Designer Name]\\ % Cover designer credit
+\noindent Interior design by [Designer Name] % Interior designer credit
+
+\vspace{1em}
+
+\noindent Printed in the United States of America % Country where printed
+}
+\makeatother % Restore @ symbol behavior
+
+%----------------------------------------------------------------------------------------
+%	DEDICATION PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+\thispagestyle{empty}
+\vspace*{0.33\textheight} % Push to 1/3 down the page
+
+\begin{center}
+{\large\textit{Dedicated to my mother.}}
+\end{center}
+
+\vspace*{\fill} % Fill remaining space to bottom
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Create TOC
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	PREAMBLE SECTIONS
+%----------------------------------------------------------------------------------------
+
+\preamble{Foreword}
+
+This is an example foreword. Preamble sections appear in the table of contents in italic text without page numbers or dots. They are unnumbered and formatted differently from regular chapters.
+
+\newpage
+
+\preamble{Preface}
+
+This is an example preface. You can add as many preamble sections as you need: forewords, prefaces, introductions, acknowledgments, etc. Just use \texttt{\textbackslash preamble\{Section Title\}} for each one.
+
+\newpage
+
+\preamble{Introduction}
+
+This is an example introduction. After the preamble sections, your numbered chapters begin. Delete these example preambles and add your own, or remove them entirely if not needed.
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	BOOK WRITING
+%----------------------------------------------------------------------------------------
+
+
+\chapter{Chapter 1 Name}
+
+\pagenumbering{arabic} % Begin Page Numbers
+
+\chapterquote{Quote text goes here. This will be indented, italicized, and left-aligned.}
+
+\openingwords{The first few words} of your chapter opening paragraph go here. This creates an elegant start to each chapter with small caps for emphasis. Continue writing your paragraph normally after the opening words.
+
+\section{Section 1}
+
+\openingwords{Each section can also} have opening words in small caps if desired, though this is typically reserved for chapter openings in most books.
+
+\section{Section 2}
+
+More content here. You can use \texttt{\textbackslash openingwords\{text\}} at the start of any paragraph to create the small caps effect with no indentation.
+
+\chapter{Chapter 2 Name}
+
+\openingwords{Another chapter begins} with elegant small caps opening. This is a common typographic convention in traditional book design.
+
+\section{Section 1}
+Regular paragraph text here.
+
+\section{Section 2}
+More regular text.
+
+\chapter{Chapter 3 Name}
+
+\openingwords{The pattern continues} for each chapter. You can adjust how many words you want in small caps based on your preference.
+
+\section{Section 1}
+Content here.
+
+\section{Section 2}
+More content.
+
+\chapter{Chapter 4 Name}
+
+\openingwords{Final chapter example} showing the opening words style. Delete these example chapters and write your own content.
+
+\section{Section 1}
+Your content.
+
+\section{Section 2}
+Your final section.
+
+
+\end{document}

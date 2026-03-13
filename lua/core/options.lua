@@ -54,11 +54,6 @@ local options = {
 	virtualedit = "block", -- vitualblock mode doesn't get stuck at the end of line
 	inccommand = "split", -- shows all inline replacements in split
 	autoread = true,
-
-	-- FOLDING
-	foldenable = true, -- Disable folding by default
-	foldmethod = "manual", -- Set manual folding
-	foldlevel = 99, -- Open all folds by default
 }
 
 -- turns on all values in options table above
@@ -71,15 +66,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = { "markdown", "lectic.markdown" },
 	callback = function()
 		vim.opt_local.tagfunc = ""
-	end,
-})
-
--- Load the persistent folding state when entering any buffer
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-	pattern = { "*" },
-	callback = function()
-		-- Call the function to load the folding state
-		require("core.functions").LoadFoldingState()
 	end,
 })
 

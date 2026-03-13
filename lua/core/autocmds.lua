@@ -73,7 +73,10 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre", "BufNewFile", "FileType" }, {
   pattern = { "*.md", "markdown" },  -- Also add "markdown" for FileType event
-  command = "lua set_markdown_keymaps()",
+  callback = function()
+    set_markdown_keymaps()
+    require("core.functions").LoadFoldingState()
+  end,
 })
 
 -- Ensure .hbs files are detected as handlebars

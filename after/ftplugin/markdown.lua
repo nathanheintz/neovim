@@ -22,5 +22,7 @@ require("nvim-surround").buffer_setup({
 -- prevents markdown from changing tabs to 4 spaces
 -- vim.g.markdown_recommended_style = 0
 
--- Load the saved folding state for markdown
-require("core.functions").LoadFoldingState()
+-- Set up folding based on Treesitter (folds at markdown headers)
+vim.opt_local.foldmethod = "expr"
+vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt_local.foldlevel = 99  -- Start with all folds open

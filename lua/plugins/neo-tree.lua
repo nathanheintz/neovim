@@ -55,8 +55,26 @@ return {
         mappings = {
           -- Vim-style navigation matching nvim-tree
           ["<CR>"] = "open",
-          ["l"] = "open",
-          ["h"] = "close_node",
+          ["h"] = function(state)
+            local node = state.tree:get_node()
+            if node.type == 'directory' and node:is_expanded() then
+              state.commands.toggle_node(state)
+            else
+              require('neo-tree.ui.renderer').focus_node(state, node:get_parent_id())
+            end
+          end,
+          ["l"] = function(state)
+            local node = state.tree:get_node()
+            if node.type == 'directory' or node:has_children() then
+              if not node:is_expanded() then
+                state.commands.toggle_node(state)
+              else
+                require('neo-tree.ui.renderer').focus_node(state, node:get_child_ids()[1])
+              end
+            else
+              require('neo-tree.sources.filesystem.commands').open(state)
+            end
+          end,
           ["-"] = "navigate_up",
           ["a"] = "add",
           ["d"] = "delete",

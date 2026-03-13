@@ -163,23 +163,21 @@ function _G.MarkdownFoldLevel()
   local line = vim.fn.getline(vim.v.lnum)
   local next_line = vim.fn.getline(vim.v.lnum + 1)
 
-  -- Check for markdown headings (### style)
+  -- Skip YAML frontmatter (lines that are just dashes or inside --- delimiters)
+  if line:match("^%-%-%-+$") then
+    return "="
+  end
+
+  -- Check for markdown headings (### style only)
   local level = line:match("^(#+)%s")
   if level then
     return ">" .. string.len(level)
   end
 
-  -- Check for markdown headings (underline style)
-  if next_line and next_line:match("^=+$") then
-    return ">1"
-  end
-  if next_line and next_line:match("^-+$") then
-    return ">2"
-  end
-
-  -- Keep current level for indented content
+  -- Keep current level for all other content
   return "="
 end
+
 
 -- Function to toggle foldenable with notification
 function M.ToggleFoldEnable()
@@ -209,7 +207,7 @@ function _G.ToggleFoldingMethod()
 
   -- Toggle the folding method
   if current_method == "manual" then
-    -- For markdown files, we use our custom expression
+    -- For markdown files, we use our custom regex-based expression
     if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
       new_method = "expr"
       vim.wo.foldmethod = "expr"
@@ -295,8 +293,13 @@ function M.LoadFoldingState()
       vim.wo.foldmethod = "manual"
     end
   else
-    -- No state file exists, default to manual folding
-    vim.wo.foldmethod = "manual"
+    -- No state file exists, set default based on filetype
+    if vim.bo.filetype == "markdown" or vim.bo.filetype == "lectic.markdown" then
+      vim.wo.foldmethod = "expr"
+      vim.wo.foldexpr = "v:lua.MarkdownFoldLevel()"
+    else
+      vim.wo.foldmethod = "manual"
+    end
   end
 
   -- Ensure foldenable is always set to true
@@ -603,6 +606,25 @@ function _G.CopyDiagnosticsToClipboard()
   local formatted = table.concat(lines, "\n")
   vim.fn.setreg('+', formatted)
   vim.notify("Copied " .. #diagnostics .. " diagnostics to clipboard", vim.log.levels.INFO)
+end
+
+-- Rename current resession session
+function RenameSession()
+  local resession = require('resession')
+  local current = resession.get_current()
+
+  if not current then
+    vim.notify("No session loaded", vim.log.levels.WARN)
+    return
+  end
+
+  vim.ui.input({ prompt = "New session name: ", default = current }, function(new_name)
+    if new_name and new_name ~= "" and new_name ~= current then
+      resession.save(new_name)
+      resession.delete(current, { notify = false })
+      vim.notify("Session renamed: " .. current .. " → " .. new_name, vim.log.levels.INFO)
+    end
+  end)
 end
 
 -- Return the module

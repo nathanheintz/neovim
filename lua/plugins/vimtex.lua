@@ -2,8 +2,8 @@ return {
   "lervag/vimtex",
   init = function()
     -- Viewer settings
-    vim.g.vimtex_view_method = 'zathura_simple'    -- For Wayland compatibility, avoid xdotool
-    vim.g.vimtex_context_pdf_viewer = 'okular'     -- External PDF viewer for the Vimtex menu
+    vim.g.vimtex_view_method = 'skim'    -- For Wayland compatibility, avoid xdotool
+    vim.g.vimtex_context_pdf_viewer = 'skim'     -- External PDF viewer for the Vimtex menu
 
     -- Formatting settings
     -- vim.g.vimtex_format_enabled = true             -- Enable formatting with latexindent

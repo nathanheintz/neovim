@@ -1,0 +1,78 @@
+\documentclass[12pt,letterpaper]{screenplay}
+
+% Title page information
+\title{Your Screenplay Title}
+\author{Your Name}
+\address{Your Street Address \\ City, State ZIP \\ Phone \\ email@example.com}
+
+\begin{document}
+
+% Use \coverpage for full title page with contact info
+% Or use \nicholl for simple title-only page
+\coverpage
+
+\fadein
+
+\intslug[day]{Location name}
+
+Action description of what happens in the scene. Describe the setting, character actions, and visual details here.
+
+\begin{dialogue}{CHARACTER NAME}
+What the character says as dialogue.
+\end{dialogue}
+
+\begin{dialogue}[emotional direction]{CHARACTER NAME}
+Dialogue with an optional direction that appears in parentheses below the character name.
+\end{dialogue}
+
+Action description of the next beat in the scene.
+
+\begin{dialogue}{CHARACTER NAME}
+First part of dialogue.
+\paren{reaction or action}
+Continuing dialogue after the parenthetical direction.
+\end{dialogue}
+
+\extslug[night]{Exterior location name}
+
+Action description for the exterior scene.
+
+\begin{dialogue}{CHARACTER ONE}
+First character's dialogue.
+\end{dialogue}
+
+\begin{dialogue}{CHARACTER TWO}
+Second character's response.
+\end{dialogue}
+
+% Use \centretitle for flashbacks, time jumps, or title cards
+\centretitle{Three Years Earlier}
+
+\intslug[day]{Flashback location}
+
+Action description in the flashback scene.
+
+\begin{dialogue}{CHARACTER NAME}
+Dialogue in the flashback.
+\end{dialogue}
+
+\extslug[night]{Another location}
+
+Action description. Use \pov\ for point-of-view shots.
+
+\pov\ Character's perspective of what they see.
+
+\revert\ Back to normal angle.
+
+More action description continuing the scene.
+
+% \intercut produces "INTERCUT WITH:" flush right
+\intercut
+
+Action description of intercutting between scenes or locations.
+
+\fadeout
+
+\theend
+
+\end{document}

@@ -3,7 +3,7 @@ local M = {}
 M.preset = {
 	pick = nil,
 	keys = {
-		{ icon = " ", key = "s", desc = "Restore Session", action = ":SessionManager load_session" },
+		{ icon = " ", key = "s", desc = "Restore Session", action = ":lua require('resession').load()" },
 		{ icon = " ", key = "e", desc = "Explorer", action = ":Neotree toggle" },
 		{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
 		{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },

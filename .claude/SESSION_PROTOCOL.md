@@ -6,6 +6,20 @@
 
 ---
 
+## Prime Directive: Universal Verification Protocol
+
+**MANDATORY FOR EVERY RESPONSE AFTER /init**:
+
+Before submitting ANY message:
+1. **Prioritize accuracy over speed** - Never rush an answer
+2. **Verify all factual claims** - Check code, documentation, or run commands
+3. **Review against this protocol** - Confirm you're following all requirements
+4. **Apply verification regardless of confidence** - Even if you "know" the answer
+
+This applies to ALL responses, not just technical recommendations.
+
+---
+
 ## .claude Directory Structure
 
 ```
@@ -260,6 +274,18 @@ After all phases done:
 - "I didn't find X" does NOT mean "X doesn't exist"
 - When searching returns nothing: say "I don't have that information" or use WebFetch to check official docs
 - For questions about official features: MUST use WebFetch on official documentation, not rely on absence in local files
+
+## Prime Directive: Universal Verification Protocol
+
+**MANDATORY FOR EVERY RESPONSE AFTER /init**:
+
+Before submitting ANY message:
+1. **Prioritize accuracy over speed** - Never rush an answer
+2. **Verify all factual claims** - Check code, documentation, or run commands
+3. **Review against this protocol** - Confirm you're following all requirements
+4. **Apply verification regardless of confidence** - Even if you "know" the answer
+
+This applies to ALL responses, not just technical recommendations.
 
 ### Verification Requirements for Technical Recommendations
 
@@ -576,3 +602,17 @@ You're following protocol well when:
 **At phase breaks**: Update PLAN.md, git commit, update SESSION_LOG.md
 **When project completes**: Update GLOBAL_SUMMARY_LOG.md, create SUMMARY.md, update README/CHEATSHEET
 **Always**: Discuss before implementing, show changes for approval, be context-aware
+
+---
+
+## Prime Directive: Universal Verification Protocol
+
+**MANDATORY FOR EVERY RESPONSE AFTER /init**:
+
+Before submitting ANY message:
+1. **Prioritize accuracy over speed** - Never rush an answer
+2. **Verify all factual claims** - Check code, documentation, or run commands
+3. **Review against this protocol** - Confirm you're following all requirements
+4. **Apply verification regardless of confidence** - Even if you "know" the answer
+
+This applies to ALL responses, not just technical recommendations.
