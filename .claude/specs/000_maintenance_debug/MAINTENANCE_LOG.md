@@ -206,6 +206,24 @@ end
 
 ---
 
+### 2026-03-20 - Fix Tab Key in Markdown: Completion, Bullet Indent, Plain Text
+
+**Task**: Tab in markdown was unconditionally running Autolist's bullet-indent behavior, breaking path completion and inserting stray spaces in plain prose.
+
+**Problem**: `set_markdown_keymaps()` used `buf_map` to set Tab → `<Esc>><cmd>AutolistRecalculate<cr>a<space>` on every markdown buffer. This buffer-local mapping overrode blink.cmp's Tab entirely. Additionally, the mapping had two bugs: `a<space>` inserted a literal space character into the document, and `>` triggered the remapped visual-select-indent sequence instead of a clean `>>`.
+
+**Fix**: Replaced the string mapping with a `vim.keymap.set` Lua function that checks context in order:
+1. Completion menu visible → `blink.select_and_accept()`
+2. Current line matches a list pattern (`^%s*%d+%.%s` or `^%s*[-*+]%s`) → `normal! >>` + `AutolistRecalculate`
+3. Otherwise → `<C-t>` (normal tab/spaces per tabstop)
+
+**Files Modified**:
+- `lua/core/keymaps.lua` (line 150) - Commented out old `buf_map` Tab mapping, added new `vim.keymap.set` function
+
+**Commit**: [pending]
+
+---
+
 ### 2025-11-19 - Insert Mode Navigation & Markdown Folding
 
 **Task**: Added Ctrl+Up/Down keybindings for actual line navigation, swapped paragraph navigation to Ctrl+Opt, fixed markdown folding to only fold on headers
