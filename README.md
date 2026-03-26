@@ -31,6 +31,7 @@ This configuration prioritizes:
 - LaTeX-specific snippets via LuaSnip
 - Omni-completion for citations and references
 - PDF compilation and viewing
+- Document templates: Personal Letter, Professional Letter (with letterhead), Simple Book
 
 ### Development
 - LSP support (lua-language-server, etc.)
@@ -96,6 +97,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 - `<leader>ml` - Run Lectic on current file
 - `<leader>mc` - Insert context link
 - `<leader>mp` - Switch Lectic persona
+- `<leader>mtt` - Toggle table mode (live markdown table editing)
 
 *Search & Navigation* (Second Brain):
 - `<leader>ff` - Find files in entire Second Brain
@@ -174,12 +176,14 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 │   │   ├── keymaps.lua     # Non-leader keymaps
 │   │   └── functions.lua   # Utility functions
 │   ├── bootstrap.lua       # Lazy.nvim setup
+│   ├── snippets/           # Lua-native LuaSnip snippets
 │   └── plugins/            # Plugin configurations
 │       ├── lsp/            # LSP-related plugins
 │       └── *.lua           # Individual plugin configs
 ├── after/
 │   └── ftplugin/           # Filetype-specific settings
-├── snippets/               # Custom LuaSnip snippets
+├── snippets/               # SnipMate-format snippets
+├── templates/              # LaTeX document templates
 └── .claude/                # Development workflow system
     ├── commands/           # Workflow commands (research, plan, implement)
     ├── agents/             # AI agent behaviors

@@ -485,3 +485,64 @@
 - Template selection function
 
 ---
+
+## Task Batch N: vim-table-mode & render-markdown Improvements
+
+**Date**: 2026-03-26
+
+### Discussion:
+- User wanted a live table editor for markdown (vim-table-mode)
+- User wanted differentiated heading colors in render-markdown's normal-mode rendering
+- User wanted smaller bullet icons with a trailing space
+- User uses render-markdown primarily in terafox colorscheme (SecondBrain cwd)
+
+### Implementation:
+
+**1. vim-table-mode**
+
+File: `lua/plugins/vim-table-mode.lua` (new file)
+
+- Plugin: `dhruvasagar/vim-table-mode`
+- Lazy-loaded for `markdown` and `lectic.markdown` filetypes
+- `vim.g.table_mode_corner = "|"` for standard markdown table corners
+- Added `<leader>mtt` keymap to toggle table mode
+- Workflow: type `||` on TWO rows (header row + separator row) to build table structure
+- Table mode recognizes existing markdown tables on activation
+
+**Table rendering notes**:
+- vim-table-mode adds a closing `|---|` row by default — this causes render-markdown to split the table visually (reads second separator as new header). Can be disabled per-table by removing the bottom row, or globally via `vim.g.table_mode_border = 0`.
+- Multi-line cells not supported in markdown — but rows without horizontal dividers render as "grouped" blocks of text, which creates a wrapped-text appearance. Use em-dashes (`——`) in a normal data row as a visual separator within a column group.
+
+**2. render-markdown.nvim: Bullet Icons**
+
+Changed from large geometric shapes to smaller `• ◦ ▸ ▹` with trailing space for visual breathing room.
+
+**3. render-markdown.nvim: Heading Colors**
+
+- Problem: all H1–H6 used the same color; background banner barely differentiated between levels
+- Solution: pull colors dynamically from nightfox palette API (`require("nightfox.palette").load(colorscheme)`) — auto-adapts to carbonfox, terafox, nightfox, nordfox without hardcoded hex values
+- Foreground color map (terafox, mirrors neo-tree directory hierarchy):
+  - H1: `orange.base` (bold, no background)
+  - H2: `orange.base` (bold, `bg4` background banner)
+  - H3: `red.base` (`bg4` background)
+  - H4: `blue.base` (`bg3` background)
+  - H5: `blue.dim` or `fg3` (`bg2` background)
+  - H6: `fg3` (`bg1` background, nearly flush)
+- Also override `@markup.heading.N.markdown` treesitter groups with the same hl — otherwise treesitter takes priority and text color doesn't match the icon color
+- Fallback for non-nightfox themes: link to treesitter heading groups
+- Re-applies on `ColorScheme` autocmd via `vim.schedule` (runs after render-markdown's own setup)
+
+### Files Created/Modified:
+- `lua/plugins/vim-table-mode.lua` — New plugin config (created)
+- `lua/plugins/render-markdown.lua` — Bullet icons, heading color system, config→fn conversion
+- `lua/plugins/which-key.lua` — Added `<leader>mtt` table mode toggle
+
+### Decisions:
+- vim-table-mode preferred over manual table formatting — works well with existing markdown tables
+- Heading colors pulled from nightfox palette API rather than hardcoded hex (adapts to all cwd colorschemes)
+- H1 has no background banner (stands alone with bold orange); H2 shares H3's banner color but has same orange text as H1
+- Background gradient uses `sel1 → bg4 → bg4 → bg3 → bg2 → bg1` (removed sel1 for H1)
+
+### Git Commit: cb7260e
+
+---

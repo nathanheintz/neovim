@@ -77,7 +77,7 @@ Each entry should include:
   - Removed: `<leader>wc` (old create split), `<leader>wk` (old maximize)
 
 - `lua/plugins/which-key.lua` (lines 132-144) - Directory-specific grep:
-  - `<leader>fz` - grep zettelkasten (`~/SecondBrain/4-Zettelkasten/`)
+  - `<leader>fz` - grep zettelkasten (`~/SecondBrain/3-Zettelkasten/`)
   - `<leader>fl` - grep lit notes (`~/SecondBrain/Literature/`)
   - `<leader>fp` - previous search (renamed from "last search")
   - `<leader>fw` - renamed to "word project" for clarity
@@ -221,6 +221,61 @@ end
 - `lua/core/keymaps.lua` (line 150) - Commented out old `buf_map` Tab mapping, added new `vim.keymap.set` function
 
 **Commit**: [pending]
+
+---
+
+### 2026-03-26 - Tab/S-Tab Markdown Keymap Overhaul
+
+**Task**: Rewrote Tab and S-Tab keymaps in markdown to fix multiple compounding bugs
+
+**Problems**:
+1. Tab was calling `feedkeys('a', 'n', false)` after `normal! >>`, inserting a literal `a` character mid-bullet
+2. Cursor landed behind the new bullet point after indent (wrong position)
+3. Tab had no LuaSnip awareness — couldn't jump forward through snippet tab stops
+4. S-Tab was a string `buf_map` (`<Esc><<cmd>AutolistRecalculate<cr>a`) — same cursor bug, no LuaSnip backward jump
+
+**Fix**: Replaced both with `vim.keymap.set` Lua functions with proper priority chains:
+- Tab: LuaSnip `jump(1)` → blink `select_and_accept` → `AutolistTab` → `<C-t>`
+- S-Tab: LuaSnip `jump(-1)` → `AutolistShiftTab` → `<C-d>`
+- Discovered AutoList has native `AutolistTab`/`AutolistShiftTab` commands that handle indent + cursor + recalculation correctly in one call
+
+**Files Modified**:
+- `lua/core/keymaps.lua` — Replaced both Tab and S-Tab mappings in `set_markdown_keymaps()`
+
+**Commit**: cb7260e
+
+---
+
+### 2026-03-26 - LuaSnip: Snippets Staying Active After Completion
+
+**Task**: After filling a snippet, Tab was jumping back into the previous snippet
+
+**Problem**: LuaSnip had no `region_check_events` configured, so active snippets were never deactivated when the cursor moved away
+
+**Fix**: Added `region_check_events = "CursorMoved"` to LuaSnip setup
+
+**Files Modified**:
+- `lua/plugins/luasnip.lua` — Added `config.setup({ region_check_events = "CursorMoved" })`
+
+**Commit**: cb7260e
+
+---
+
+### 2026-03-26 - Snippet Completion Triggering Mid-Sentence
+
+**Task**: Typing normal prose words (e.g. "one" at end of "List item one") was popping up the "triangle" snippet in the completion menu
+
+**Problem**: blink.cmp's fuzzy matching was finding "triangle" as a subsequence match for "one" (tria**n**gl**e** contains n and e). `min_keyword_length = 3` wasn't enough protection — any 3-char word could fuzzy-match any snippet.
+
+**Fix**: Added `transform_items` to the snippets provider in blink.cmp that:
+1. Checks the line before cursor — strips leading whitespace and list prefix (`- `, `* `, `1. ` etc.)
+2. Only shows snippets if the remaining content is a single word (no spaces = start of line)
+3. Applies prefix match instead of fuzzy: snippet label must START with what's typed
+
+**Files Modified**:
+- `lua/plugins/lsp/blink-cmp.lua` — Added `transform_items` to snippets provider
+
+**Commit**: cb7260e
 
 ---
 

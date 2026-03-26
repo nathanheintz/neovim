@@ -79,6 +79,16 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre", "BufNewFile", "FileType"
   end,
 })
 
+-- Open PDFs in Skim instead of loading binary content into Neovim
+vim.api.nvim_create_autocmd("BufReadCmd", {
+  pattern = "*.pdf",
+  callback = function(ev)
+    local filepath = vim.fn.expand("<afile>:p")
+    vim.fn.jobstart({ "open", "-a", "Skim", filepath }, { detach = true })
+    vim.api.nvim_buf_delete(ev.buf, { force = true })
+  end,
+})
+
 -- Ensure .hbs files are detected as handlebars
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = { "*.hbs", "*.handlebars" },

@@ -101,31 +101,41 @@ return {
 			{ "<leader>wx", "<cmd>close<CR>", desc = "close window" },
 			{ "<leader>ws", "<cmd>vert sb<CR>", desc = "buffer split" },
 
-			-- CODE
+			-- CODE & CLAUDE
 			{ "<leader>c", group = "CODE" },
-			{ "<leader>cf", "<cmd>lua vim.lsp.buf.format()<CR>", desc = "format" },
-			{ "<leader>cd", "<cmd>Telescope lsp_definitions<CR>", desc = "go to definition" },
-			{ "<leader>ch", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "hover help" },
-			{ "<leader>cn", "<cmd>lua vim.diagnostic.goto_next()<CR>", desc = "next error" },
-			{ "<leader>cp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", desc = "previous error" },
-			{ "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
-			{ "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "rename" },
+			{ "<leader>ct", "<cmd>ClaudeCode<cr>", desc = "toggle claude" },
+			{ "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "focus claude" },
+			{ "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "resume claude" },
+			{ "<leader>cc", "<cmd>ClaudeCode --continue<cr>", desc = "continue claude" },
+			{ "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", desc = "select model" },
+			{ "<leader>cb", "<cmd>ClaudeCodeAdd %<cr>", desc = "add buffer to claude" },
+			{ "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "send selection to claude" },
+			{ "<leader>cy", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "accept diff" },
+			{ "<leader>cn", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "deny diff" },
 
-			-- ACTIONS
+			-- LSP
+			{ "<leader>cl", group = "LSP" },
+			{ "<leader>clf", "<cmd>lua vim.lsp.buf.format()<CR>", desc = "format" },
+			{ "<leader>cld", "<cmd>Telescope lsp_definitions<CR>", desc = "go to definition" },
+			{ "<leader>clh", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "hover help" },
+			{ "<leader>cln", "<cmd>lua vim.diagnostic.goto_next()<CR>", desc = "next error" },
+			{ "<leader>clp", "<cmd>lua vim.diagnostic.goto_prev()<CR>", desc = "previous error" },
+			{ "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "code action" },
+			{ "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "rename" },
+
+			-- ACTIONS (live bindings only — dead bindings removed)
 			{ "<leader>a", group = "ACTIONS", icon = "󱐋" },
-			{ "<leader>aa", "<cmd>lua PdfAnnots()<CR>", desc = "pdf annotations" },
-			{ "<leader>ah", "<cmd>LocalHighlightToggle<CR>", desc = "highlight word" },
 			{ "<leader>ac", "<cmd>checkhealth<CR>", desc = "checkhealth" },
 			{ "<leader>ar", "<cmd>AutolistRecalculate<CR>", desc = "reorder list" },
-			{ "<leader>as", "<cmd>NeoTreeToggle ~/.config/nvim/snippets/<CR>", desc = "edit snippets" },
-			{ "<leader>au", "<cmd>cd %:p:h | NeoTreeToggle<CR>", desc = "update cwd" },
+			{ "<leader>as", "<cmd>Neotree ~/.config/nvim/snippets/<CR>", desc = "edit snippets" },
+			{ "<leader>au", "<cmd>cd %:p:h | Neotree<CR>", desc = "update cwd" },
 
 			-- FIND
 			{ "<leader>f", group = "FIND" },
 			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
 			{ "<leader>ff", "<cmd>lua require('telescope.builtin').find_files({search_dirs={'~/SecondBrain'}})<CR>", desc = "brain files" },
 			{ "<leader>fb", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain'}})<CR>", desc = "grep brain" },
-			{ "<leader>fz", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/4-Zettelkasten'}})<CR>", desc = "grep zettelkasten" },
+			{ "<leader>fz", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/3-Zettelkasten'}})<CR>", desc = "grep zettelkasten" },
 			{ "<leader>fl", "<cmd>lua require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/Literature'}})<CR>", desc = "grep lit notes" },
 			{ "<leader>fc", "<cmd>lua SearchCurrentBuffer()<CR>", desc = "current buffer" },
 			{ "<leader>fo", "<cmd>lua SearchAllBuffers()<CR>", desc = "open buffers" },

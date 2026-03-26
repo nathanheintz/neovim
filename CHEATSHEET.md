@@ -326,7 +326,7 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 - `<leader>fr` - Recent files
 - `<leader>ff` - Brain files (all of ~/SecondBrain)
 - `<leader>fb` - Grep brain (search all of ~/SecondBrain)
-- `<leader>fz` - Grep zettelkasten (`~/SecondBrain/4-Zettelkasten/`)
+- `<leader>fz` - Grep zettelkasten (`~/SecondBrain/3-Zettelkasten/`)
 - `<leader>fl` - Grep literature notes (`~/SecondBrain/Literature/`)
 
 ### Buffer & Context Search

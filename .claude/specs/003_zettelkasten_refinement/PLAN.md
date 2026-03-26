@@ -114,7 +114,7 @@ end
   - ~~Use `telescope.live_grep` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`~~
   - Implemented directly in which-key.lua
   - Keybinding: `<leader>fz` (grep zettelkasten)
-  - **Note**: Directory is `4-Zettelkasten` not `3-Zettelkasten`
+  - **Note**: Directory is `3-Zettelkasten` not `3-Zettelkasten`
 
 - [x] Create literature content search function
   - ~~Add `search_literature_grep()` to `lua/core/functions.lua`~~
@@ -124,7 +124,7 @@ end
 
 - [ ] Create zettelkasten file search function
   - Add `search_zettelkasten_files()` to `lua/core/functions.lua`
-  - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/4-Zettelkasten/"}`
+  - Use `telescope.find_files` with `search_dirs = {"~/SecondBrain/3-Zettelkasten/"}`
   - Configure markdown preview
   - Keybinding: TBD (maybe `<leader>fzf` or submenu)
 

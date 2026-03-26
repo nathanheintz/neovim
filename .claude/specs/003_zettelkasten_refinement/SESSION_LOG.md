@@ -123,7 +123,7 @@ User needed to learn window/buffer navigation for zettelkasten workflow:
 - Existing `<leader>w` menu insufficient (only had create split, close, maximize)
 - Needed directional split commands
 - Realized `<leader>ff` searches entire project, not vault-specific
-- Needed directory-specific grep for `~/SecondBrain/4-Zettelkasten/` and `~/SecondBrain/Literature/`
+- Needed directory-specific grep for `~/SecondBrain/3-Zettelkasten/` and `~/SecondBrain/Literature/`
 
 Key decisions:
 - Implement directional window splits (left, right, above, below)
@@ -150,14 +150,14 @@ Removed:
 **2. Directory-Specific Grep** (`lua/plugins/which-key.lua` lines 139-140):
 
 Added inline Telescope calls:
-- `<leader>fz` - grep zettelkasten (`~/SecondBrain/4-Zettelkasten/`)
+- `<leader>fz` - grep zettelkasten (`~/SecondBrain/3-Zettelkasten/`)
 - `<leader>fl` - grep lit notes (`~/SecondBrain/Literature/`)
 - `<leader>fp` - previous search (renamed from "last search")
 - `<leader>fw` - renamed to "word project"
 
 Implementation:
 ```lua
-require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/4-Zettelkasten'}})
+require('telescope.builtin').live_grep({search_dirs={'~/SecondBrain/3-Zettelkasten'}})
 ```
 
 **3. Which-Key Sort Order Fix** (`lua/plugins/which-key.lua` line 61):
@@ -237,7 +237,7 @@ Changed patch trigger from `VimEnter` autocmd to `vim.schedule()`:
 - Implemented grep directly in which-key.lua instead of separate functions
 - Simpler approach - inline calls work fine, can refactor later if needed
 - Commented out cache auto-deletion until tested after next which-key update
-- Directory is `4-Zettelkasten` not `3-Zettelkasten` (plan corrected)
+- Directory is `3-Zettelkasten` not `3-Zettelkasten` (plan corrected)
 
 ### Git Commit
 

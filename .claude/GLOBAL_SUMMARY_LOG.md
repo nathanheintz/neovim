@@ -60,15 +60,36 @@
 
 ---
 
+## 004: Publishing Workflows
+**Status**: In Progress (2025-12-04 → ongoing)
+**Problem**: Needed LaTeX templates for professional writing and an improved markdown writing environment.
+**Solution (Phase 1 — 2025-12-04)**: Created three LaTeX templates (PersonalLetter, ProfessionalLetter with fancyhdr letterhead, SimpleBook with A5 format). Added `<leader>tp/tl/tb` which-key bindings.
+**Solution (Phase 2 — 2026-03-26)**: Installed vim-table-mode for live table editing (`<leader>mtt`). Improved render-markdown.nvim: smaller bullet icons (`• ◦ ▸ ▹`), heading colors wired to nightfox palette API so H1–H6 use a distinct orange→maroon→blue→grey-blue hierarchy that auto-adapts to carbonfox/terafox/nightfox by cwd. Background banners graduated from `bg4` down to `bg1` for visual depth.
+**Key Files**:
+- `lua/plugins/vim-table-mode.lua` — vim-table-mode config (new)
+- `lua/plugins/render-markdown.lua` — Heading colors, bullet icons
+- `templates/PersonalLetter.tex`, `ProfessionalLetter.tex`, `SimpleBook.tex` — LaTeX templates
+**Git Commits**: cb7260e (2026-03-26)
+
+---
+
+## 010: Templating Workflows
+**Status**: In Progress (2026-03-26)
+**Problem**: Needed quick-insert diagram snippets for markdown writing — triangle ASCII art and a 4x4 quadrant matrix with live dynamic centering.
+**Solution**: Triangle as SnipMate snippet (static, 6 tab stops). 4x4Matrix as LuaSnip Lua-native snippet with `functionNode` padding that re-centers content in real time as user types. Two triggers: `4x4Matrix` and `matrix4x4`. Added `from_lua` loader and `region_check_events = "CursorMoved"` to LuaSnip config.
+**Key Files**:
+- `snippets/markdown.snippets` — Triangle diagram
+- `lua/snippets/markdown.lua` — 4x4Matrix + matrix4x4 (new file)
+- `lua/plugins/luasnip.lua` — region_check_events, from_lua loader
+**Git Commits**: cb7260e
+
+---
+
 ## Projects Not Yet Started
 
 ### 003: Zettelkasten Refinement
 **Status**: Planned
 **Purpose**: Enhanced Telescope search for vaults, citation insertion from Literature vault, preview functionality, wikilink improvements
-
-### 004: Publishing Workflows
-**Status**: Planned
-**Purpose**: LaTeX template selection/conversion, presentation export (Deckset/Marp/Reveal.js), e-book export, Ghost.org publishing workflow
 
 ### 005: Integration Testing
 **Status**: Planned
