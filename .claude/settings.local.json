@@ -6,7 +6,8 @@
       "WebFetch(domain:code.claude.com)",
       "WebFetch(domain:gleachkr.github.io)",
       "WebFetch(domain:grahamlk.me)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

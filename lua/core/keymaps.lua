@@ -147,27 +147,46 @@ function _G.set_markdown_keymaps()
   buf_map(0, "n", "<C-n>", "<cmd>lua HandleCheckbox()<CR>", "Toggle checkbox")
 
   -- Indentation and recalculation
-  -- buf_map(0, "i", "<tab>", "<Esc>><cmd>AutolistRecalculate<cr>a<space>", "Indent bullet")
   vim.keymap.set('i', '<Tab>', function()
-    -- 1. Accept completion if menu is open
+    -- 1. Jump forward in snippet if active
+    local luasnip = require('luasnip')
+    if luasnip.jumpable(1) then
+      return luasnip.jump(1)
+    end
+    -- 2. Accept completion if menu is open
     local ok, blink = pcall(require, 'blink.cmp')
     if ok and blink.is_menu_visible() then
       return blink.select_and_accept()
     end
-    -- 2. Indent bullet if on a list line
+    -- 3. Indent bullet if on a list line
     local line = vim.fn.getline('.')
     if line:match('^%s*%d+%.%s') or line:match('^%s*[-*+]%s') then
-      vim.cmd('normal! >>')
-      vim.cmd('AutolistRecalculate')
-      vim.api.nvim_feedkeys('a', 'n', false)
+      vim.cmd('AutolistTab')
       return
     end
-    -- 3. Normal tab (insert spaces per tabstop)
+    -- 4. Normal tab
     vim.api.nvim_feedkeys(
       vim.api.nvim_replace_termcodes('<C-t>', true, false, true), 'n', false
     )
-  end, { buffer = true, noremap = true, silent = true, desc = 'Tab: complete / indent bullet / insert tab' })
-  buf_map(0, "i", "<S-tab>", "<Esc><<cmd>AutolistRecalculate<cr>a", "Unindent bullet")
+  end, { buffer = true, noremap = true, silent = true, desc = 'Tab: snippet / complete / indent bullet / insert tab' })
+
+  vim.keymap.set('i', '<S-Tab>', function()
+    -- 1. Jump backward in snippet if active
+    local luasnip = require('luasnip')
+    if luasnip.jumpable(-1) then
+      return luasnip.jump(-1)
+    end
+    -- 2. Unindent bullet if on a list line
+    local line = vim.fn.getline('.')
+    if line:match('^%s*%d+%.%s') or line:match('^%s*[-*+]%s') then
+      vim.cmd('AutolistShiftTab')
+      return
+    end
+    -- 3. Normal shift-tab
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes('<C-d>', true, false, true), 'n', false
+    )
+  end, { buffer = true, noremap = true, silent = true, desc = 'S-Tab: snippet back / unindent bullet / remove tab' })
   buf_map(0, "n", ">", "><cmd>AutolistRecalculate<cr>", "Indent bullet")
   buf_map(0, "n", "<", "<<cmd>AutolistRecalculate<cr>", "Unindent bullet")
   buf_map(0, "n", "<C-c>", "<cmd>AutolistRecalculate<cr>", "Recalculate list")

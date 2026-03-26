@@ -196,6 +196,7 @@ return {
 			{ "<leader>mta", "<cmd>lua ToggleAllFolds()<CR>", desc = "toggle all folds" },
 			{ "<leader>mtf", "za", desc = "toggle fold under cursor" },
 			{ "<leader>mtm", "<cmd>lua ToggleFoldingMethod()<CR>", desc = "toggle folding method" },
+      { "<leader>mtt", "<cmd>TableModeToggle<CR>", desc = "toggle table mode" },
 
 			-- SESSIONS
 			{ "<leader>s", group = "SESSIONS" },

@@ -161,7 +161,26 @@ return {
               return vim.g.blink_snippets_enabled ~= false
             end,
             max_items = 10,
-            min_keyword_length = 3,  -- Require 3 characters before showing snippets
+            min_keyword_length = 3,
+            transform_items = function(ctx, items)
+              local col = vim.api.nvim_win_get_cursor(0)[2]
+              local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
+              local content = before_cursor
+              content = content:gsub("^%s+", "")          -- strip leading whitespace
+              content = content:gsub("^%d+[%.%)]%s*", "") -- strip "1. " or "1) "
+              content = content:gsub("^[%-%*%+]%s*", "")  -- strip "- " / "* " / "+ "
+              -- Must be the first word on the line
+              if content:find("%s") then return {} end
+              -- Prefix match only (no fuzzy): label must start with what's typed
+              local keyword = content:lower()
+              local filtered = {}
+              for _, item in ipairs(items) do
+                if item.label:lower():sub(1, #keyword) == keyword then
+                  table.insert(filtered, item)
+                end
+              end
+              return filtered
+            end,
           },
           omni = {
             name = 'omni',
