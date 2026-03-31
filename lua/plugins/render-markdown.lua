@@ -18,7 +18,8 @@ return {
     },
     bullet = {
       enabled = true,
-      icons = { "• ", "◦ ", "▸ ", "▹ " },
+      icons = { "•", "◦", "▸", "▹" },
+      right_pad = .5,
     },
   },
   config = function(_, opts)

@@ -18,9 +18,9 @@ return {
       },
       -- enable indentation
       indent = { enable = true },
-      -- enable folding
+      -- folding disabled (lectic uses LSP folding; treesitter fold not actively used)
       fold = {
-        enable = true,
+        enable = false,
       },
       -- enable autotagging (w/ nvim-ts-autotag plugin)
       autotag = {

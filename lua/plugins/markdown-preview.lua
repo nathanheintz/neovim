@@ -32,9 +32,6 @@ vim.cmd([[
     -- define source for custom css 
     vim.g.mkdp_markdown_css = vim.fn.expand('~/.config/nvim/lua/plugins/md-css/markdown-custom.css')
     
-    -- define source for images folder 
-    vim.g.mkdp_images_path = vim.fn.expand('~/.config/nvim/lua/plugins/md-css/')
-
     -- set to 1, the vim will refresh markdown when save the buffer or
     -- leave from insert mode, default 0 is auto refresh markdown as you edit or
     -- move the cursor

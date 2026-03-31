@@ -7,7 +7,14 @@
       "WebFetch(domain:gleachkr.github.io)",
       "WebFetch(domain:grahamlk.me)",
       "Bash(find:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:registry.modelcontextprotocol.io)",
+      "Bash(uv --version)",
+      "Bash(pip3 --version)",
+      "Read(//Users/nathanheintz/.config/**)",
+      "Read(//Users/nathanheintz/.config/lectic/**)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
