@@ -224,6 +224,44 @@ end
 
 ---
 
+### 2026-03-26 - Zettelkasten Path Corrected (4 → 3)
+
+**Task**: All references to `4-Zettelkasten` were incorrect — folder was renumbered to `3-Zettelkasten`
+
+**Changes**:
+- `lua/plugins/which-key.lua` — `<leader>fz` search path corrected
+- `lua/plugins/snacks/dashboard.lua` — `z` key cwd corrected
+- `CHEATSHEET.md`, `.claude/specs/003_zettelkasten_refinement/PLAN.md`, `SESSION_LOG.md`, `MAINTENANCE_LOG.md` — docs updated
+
+**Commit**: 30cf201
+
+---
+
+### 2026-03-26 - Dashboard & Keymap Cleanup
+
+**Task**: Fixed dashboard Config path, removed dead which-key bindings, fixed broken commands
+
+**Changes**:
+- `lua/plugins/snacks/dashboard.lua` — Config key fixed from `~/.config` to `~/.config/nvim`
+- `lua/plugins/which-key.lua` — Removed dead ACTIONS bindings (`<leader>aa` pdf annotations, `<leader>ah` local highlight — plugins not installed). Fixed broken `NeoTreeToggle` → `Neotree` for edit snippets and update-cwd commands.
+
+**Commit**: 30cf201
+
+---
+
+### 2026-03-26 - PDFs Open in Skim Instead of Neovim
+
+**Task**: Clicking a PDF in neo-tree was loading binary content as text in Neovim
+
+**Fix**: Added `BufReadCmd` autocmd for `*.pdf` — intercepts the open before content loads, fires Skim via `open -a Skim`, then deletes the buffer
+
+**Files Modified**:
+- `lua/core/autocmds.lua` — Added PDF intercept autocmd
+
+**Commit**: 30cf201
+
+---
+
 ### 2026-03-26 - Tab/S-Tab Markdown Keymap Overhaul
 
 **Task**: Rewrote Tab and S-Tab keymaps in markdown to fix multiple compounding bugs
@@ -276,6 +314,57 @@ end
 - `lua/plugins/lsp/blink-cmp.lua` — Added `transform_items` to snippets provider
 
 **Commit**: cb7260e
+
+---
+
+### 2026-03-27 - Snippet Menu: Require 3 Chars Before Showing
+
+**Task**: Triangle snippet appearing in autocomplete menu after typing a single "t"
+
+**Problem**: `min_keyword_length = 3` was set on the snippets provider but was not being enforced by blink.cmp — snippet showed on "t".
+
+**Resolution**: After a full Neovim restart (triggered by edits this session), blink.cmp began correctly enforcing `min_keyword_length = 3`. No code change was needed — the setting was already correct. Snippet now requires 3+ chars to appear.
+
+**What NOT to do**: Do not add a `#keyword < 3` guard inside `transform_items` — this causes snippets to stop appearing entirely due to a cursor-read timing issue where blink calls `transform_items` before the latest character is committed to the buffer.
+
+**Files Modified**: None (reverted all attempted changes)
+
+**Commit**: [pending]
+
+---
+
+### 2026-03-27 - Removed ReloadConfig / `<leader>rr`
+
+**Task**: Remove the `ReloadConfig` command and its which-key binding — it was misleading and non-functional for the common case
+
+**Problem**: `ReloadConfig` cleared `package.loaded` entries matching `'^plugins'` then re-ran `dofile(MYVIMRC)`. This cannot reload lazy.nvim-managed plugin configs — `setup()` calls have already run and cannot be re-executed mid-session. `:Lazy reload` exists but is explicitly marked experimental in the docs. Full restart is the only reliable approach for plugin config changes.
+
+**Changes**:
+- `lua/core/functions.lua` — Removed `ReloadConfig` user command entirely
+- `lua/plugins/which-key.lua` — Removed `<leader>rr` binding from RUN menu
+
+**Commit**: [pending]
+
+---
+
+### 2026-03-30 - Lectic LSP Multi-Buffer Fix, Paper Search Researcher Persona, Whisper/Python Recovery
+
+**Lectic LSP Auto-Attach (subsequent buffers)**
+- *Problem*: `plugin/lsp.lua` in lectic is never sourced for dynamically-added rtp directories. The config-function LSP start only covered the first `.lec` open. Subsequent `.lec` buffers got no LSP, so fold ranges weren't sent and tool-call blocks didn't auto-collapse.
+- *Fix*: Added a `FileType` autocmd in the lectic config function mirroring `plugin/lsp.lua`. Added `LspAttach` autocmd using `vim.defer_fn(500ms)` to call `zMzv` after LSP sends fold ranges.
+- *Files*: `lua/plugins/lectic.lua`
+
+**Paper Search MCP — Researcher Persona Only**
+- *Fix*: Added `tools` field to Researcher entry in `all_personas`. Updated `SwitchLecticPersona()` to write tools block into frontmatter when `persona.tools` is present. Removed OVERRIDE line from Researcher prompt.
+- *Files*: `lua/plugins/lectic.lua`
+
+**Python / Whisper Recovery**
+- *Problem*: `brew install pipx` (used to attempt paper-search-mcp install) required `python@3.14`, updating the `python3` symlink from 3.13 → 3.14. `openai-whisper` is not compatible with Python 3.14, breaking vocal.nvim dictation.
+- *Fix*: Uninstalled pipx (brew auto-removed python@3.14). Rebuilt paper-search-mcp venv on python3.13. Restored `python3` symlink to python3.13. Reverted vocal.lua `python_path` to `/opt/homebrew/bin/python3`.
+- *Note*: vocal.nvim hardcodes `command = "python"` in `transcription.lua` — `python_path` config option is ignored by the plugin (upstream bug).
+- *Files*: `lua/plugins/vocal.lua`
+
+**Commit**: [pending]
 
 ---
 

@@ -176,6 +176,17 @@ return {
 			{ "<leader>md", "<cmd>Vocal<CR>", desc = "dictate (speech-to-text)" },
 			{ "<leader>mv", "<cmd>MarkdownPreviewToggle<CR>", desc = "markdown preview" },
 			{ "<leader>mu", "<cmd>lua OpenUrlUnderCursor()<CR>", desc = "open URL under cursor" },
+			{ "<leader>mf", function()
+				local ufo = require("ufo")
+				local w = vim.api.nvim_get_current_win()
+				if vim.w[w].ufo_folded then
+					ufo.openAllFolds()
+					vim.w[w].ufo_folded = false
+				else
+					ufo.closeAllFolds()
+					vim.w[w].ufo_folded = true
+				end
+			end, desc = "toggle all folds" },
 
 			-- PERSONA SWITCHING
 			{ "<leader>mp", group = "SWITCH PERSONA" },
@@ -203,9 +214,6 @@ return {
 			{ "<leader>mtb", "<cmd>lua _G.toggle_buffer_completion()<CR>", desc = "toggle buffer completion", icon = " " },
 			{ "<leader>mto", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
 			{ "<leader>mtx", "<cmd>lua _G.toggle_luasnip_completion()<CR>", desc = "toggle snippet completion" },
-			{ "<leader>mta", "<cmd>lua ToggleAllFolds()<CR>", desc = "toggle all folds" },
-			{ "<leader>mtf", "za", desc = "toggle fold under cursor" },
-			{ "<leader>mtm", "<cmd>lua ToggleFoldingMethod()<CR>", desc = "toggle folding method" },
       { "<leader>mtt", "<cmd>TableModeToggle<CR>", desc = "toggle table mode" },
 
 			-- SESSIONS
@@ -243,7 +251,6 @@ return {
 			{ "<leader>rk", "<cmd>TermExec cmd='rm -rf ~/.local/share/nvim/lazy &' open=0<CR>", desc = "wipe plugin files" },
 			{ "<leader>rn", "function() vim.diagnostic.goto_next{popup_opts = {show_header = false}} end", desc = "next" },
 			{ "<leader>rp", "function() vim.diagnostic.goto_prev{popup_opts = {show_header = false}} end", desc = "prev" },
-			{ "<leader>rr", "<cmd>ReloadConfig<cr>", desc = "reload configs" },
 			{ "<leader>rm", "<cmd>lua Snacks.notifier.show_history()<cr>", desc = "show messages" },
 
 			-- TEMPLATES

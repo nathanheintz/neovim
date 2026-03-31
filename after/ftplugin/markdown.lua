@@ -22,7 +22,5 @@ require("nvim-surround").buffer_setup({
 -- prevents markdown from changing tabs to 4 spaces
 -- vim.g.markdown_recommended_style = 0
 
--- Set up folding based on Treesitter (folds at markdown headers)
-vim.opt_local.foldmethod = "expr"
-vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt_local.foldlevel = 99  -- Start with all folds open
+-- Folding is handled globally by nvim-ufo (treesitter provider for markdown,
+-- LSP provider for lectic.markdown). No manual foldmethod/foldexpr needed here.

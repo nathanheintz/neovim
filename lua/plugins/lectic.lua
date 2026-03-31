@@ -196,6 +196,49 @@ return {
     local plugin_dir = vim.fn.stdpath('data') .. '/lazy/lectic/extra/lectic.nvim'
     vim.opt.rtp:append(plugin_dir)
 
+    -- Start LSP for current buffer: the FileType event fires before the plugin
+    -- loads on first open, so the autocmd in plugin/lsp.lua misses it.
+    local ft = vim.bo.filetype
+    if ft == "lectic" or ft == "lectic.markdown" or ft == "markdown.lectic" then
+      vim.lsp.start({
+        name = 'lectic',
+        cmd = { 'lectic', 'lsp' },
+        root_dir = vim.fs.root(0, { ".git", "lectic.yaml" }) or vim.fn.getcwd(),
+        single_file_support = true,
+      })
+    end
+
+    -- Register FileType autocmd for subsequent .lec buffer opens.
+    -- plugin/lsp.lua is not sourced for dynamically-added rtp directories,
+    -- so we replicate its autocmd here.
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "lectic", "lectic.markdown", "markdown.lectic" },
+      callback = function()
+        vim.lsp.start({
+          name = 'lectic',
+          cmd = { 'lectic', 'lsp' },
+          root_dir = vim.fs.root(0, { ".git", "lectic.yaml" }) or vim.fn.getcwd(),
+          single_file_support = true,
+        })
+      end,
+    })
+
+    -- Collapse folds after lectic LSP attaches and sends fold ranges.
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client and client.name == "lectic" then
+          vim.defer_fn(function()
+            if vim.api.nvim_buf_is_loaded(args.buf) then
+              vim.api.nvim_buf_call(args.buf, function()
+                vim.cmd("normal! zMzv")
+              end)
+            end
+          end, 500)
+        end
+      end,
+    })
+
     -- Create a global function to insert context link
     function _G.InsertContextLink()
       local line_num = vim.api.nvim_win_get_cursor(0)[1]
@@ -225,7 +268,15 @@ return {
       },
       {
         name = "Researcher",
-        prompt = "You are a logician, philosopher, and political theorist. You're also a neuroscientist, anthropologist, and psychologist with expertise in conflict resolution, peacebuilding, restorative justice, and organizational psychology. Help me research, analyze, and synthesize ideas rigorously."
+        prompt = "You are a logician, philosopher, and political theorist. You're also a neuroscientist, anthropologist, and psychologist with expertise in conflict resolution, peacebuilding, restorative justice, and organizational psychology. Help me research, analyze, and synthesize ideas rigorously.",
+        tools = {
+          "  tools:",
+          "    - name: paper_search",
+          "      mcp_command: /Users/nathanheintz/.local/share/paper-search-mcp-env/bin/python",
+          "      args:",
+          '        - "-m"',
+          '        - "paper_search_mcp.server"',
+        },
       },
       {
         name = "Writer",

@@ -10,7 +10,7 @@ return {
     delete_recordings = true,
     local_model = {
       enabled = true,
-      model = "base", -- Options: tiny, base, small, medium, large
+      model = "medium", -- Options: tiny, base, small, medium, large-v3-turbo
       path = vim.fn.expand("~/.cache/whisper"),
       python_path = "/opt/homebrew/bin/python3",
     },

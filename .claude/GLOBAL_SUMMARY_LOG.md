@@ -85,6 +85,36 @@
 
 ---
 
+## Claude Code Integration (2026-03-26)
+**Status**: Completed
+**Problem**: Needed Claude Code accessible from within Neovim rather than a separate terminal window.
+**Solution**: Installed `coder/claudecode.nvim` (community plugin that reverse-engineers the VS Code extension protocol via WebSocket). Restructured `<leader>c` as unified CODE menu: Claude Code bindings at top level, LSP moved to `<leader>cl` subgroup. Neo-tree file-add binding handled via plugin's `keys` spec (ft-specific). Lazy-loaded via `cmd` spec.
+**Key Bindings**: `<leader>ct` toggle, `<leader>cc` continue, `<leader>cr` resume, `<leader>cf` focus, `<leader>cm` model select, `<leader>cb` add buffer, `<leader>cs` send selection, `<leader>cy/cn` accept/deny diff. LSP: `<leader>cl[f/d/h/n/p/a/r]`
+**Key Files**:
+- `lua/plugins/claudecode.lua` — Plugin config (new)
+- `lua/plugins/which-key.lua` — CODE menu restructure
+**Git Commits**: 30cf201
+
+---
+
+## 011: Dynamic Markdown Folding (nvim-ufo)
+**Status**: Completed (2026-03-30)
+**Problem**: Treesitter folding was static — fold ranges computed once on buffer load, going stale as content changed. No dynamic updating without manual refresh. Lectic `.lec` files also had LSP folding not auto-collapsing tool-call blocks on open when a second buffer was opened in the same session.
+**Solution**: Installed `kevinhwang91/nvim-ufo` with per-filetype providers: treesitter for `.md` files (dynamic heading-based folds, updates as you type), LSP for `.lec` files (preserves lectic tool-call block folding). Fixed Lectic LSP attach for subsequent buffer opens by registering a FileType autocmd inside the plugin config (replacing reliance on `plugin/lsp.lua` which is never sourced for dynamically-added rtp). Added `LspAttach` autocmd to auto-collapse folds after LSP sends fold ranges.
+**Key Features**:
+- `<leader>mf` — toggle all folds open/close (window-local state tracking, per ufo API behavior)
+- `<Left>` at column 0 — closes child fold under cursor if one starts at that line; does nothing otherwise
+- Folds stay accurate while editing — no manual refresh needed
+**Key Files**:
+- `lua/plugins/ufo.lua` — New plugin config (treesitter/lsp providers per filetype)
+- `lua/plugins/lectic.lua` — FileType autocmd for LSP attach + LspAttach autocmd for auto-collapse
+- `lua/plugins/which-key.lua` — `<leader>mf` toggle, removed dead fold keymaps
+- `after/ftplugin/markdown.lua` — Removed manual foldmethod/foldexpr (ufo takes over)
+- `lua/core/keymaps.lua` — `<Left>` child-fold-close keymap
+**Git Commits**: [pending]
+
+---
+
 ## Projects Not Yet Started
 
 ### 003: Zettelkasten Refinement

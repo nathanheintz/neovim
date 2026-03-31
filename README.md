@@ -15,6 +15,7 @@ This configuration prioritizes:
 - Zen mode for distraction-free writing (Snacks.nvim)
 - Speech-to-text dictation with [vocal.nvim](https://github.com/kyza0d/vocal.nvim) (local Whisper model, fully offline)
 - Markdown rendering and preview
+- Dynamic section folding via nvim-ufo — folds update as you type, fold/unfold with `<leader>mf`
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
 - Lectic AI assistance with 12 personas:
