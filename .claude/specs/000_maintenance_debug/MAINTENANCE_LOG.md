@@ -368,6 +368,23 @@ end
 
 ---
 
+### 2026-03-31 - Lectic Binary Update (0.0.2 → 0.0.3)
+
+**Problem**: Lectic broken after plugin update. `submit.lua` calls `lectic --format block` (added in plugin commit 377a86b, March 5 2026) but binary was still 0.0.2 which doesn't support the `--format` flag. Binary exited immediately with "error: unknown option '--format'", causing the spinner to crash (`nvim_buf_del_extmark` called with nil id before first 250ms tick).
+
+**Fix**: Updated binary to 0.0.3 via install script:
+```
+curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | sh
+```
+
+**Note**: When lectic plugin is updated via `:Lazy update`, check if binary also needs updating. Binary and plugin must stay in sync.
+
+**Files Modified**: None (binary only, installed to `~/.local/bin/lectic`)
+
+**Commit**: [pending]
+
+---
+
 ### 2025-11-19 - Insert Mode Navigation & Markdown Folding
 
 **Task**: Added Ctrl+Up/Down keybindings for actual line navigation, swapped paragraph navigation to Ctrl+Opt, fixed markdown folding to only fold on headers
