@@ -36,3 +36,16 @@ by config here. See `~/.claude/CLAUDE.md` for the full cross-repo diagnostic gui
 - Work incrementally, one task batch at a time
 - Run `/init` at session start to load full context
 - Document completed work per SESSION_PROTOCOL.md
+
+## Lectic Facts (Read Before Advising on Lectic Issues)
+
+- Plugin loads for ft = { "markdown", "lectic.markdown" } — works in .md files AND .lec files
+- Primary workflow is .md files with Lectic YAML frontmatter. .lec extension is not required.
+- Never suggest changing filetype from .md to .lec as a solution to Lectic issues
+- Obsidian and Lectic frontmatter coexist in the same .md files without conflict:
+  - Obsidian fields: id, aliases, tags
+  - Lectic fields: interlocutor, interlocutors, memories
+  - Neither plugin overwrites the other's fields — this is deliberate and stable
+- 12 personas available via <leader>mp (single-party switching, fully functional)
+- Complete Lectic docs: https://grahamlk.me/Lectic/llms-full.md
+- Source: https://github.com/gleachkr/Lectic

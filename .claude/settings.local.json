@@ -1,22 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)",
       "WebFetch(domain:code.claude.com)",
-      "WebFetch(domain:gleachkr.github.io)",
-      "WebFetch(domain:grahamlk.me)",
-      "Bash(find:*)",
-      "WebSearch",
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:registry.modelcontextprotocol.io)",
+      "Bash(find *)",
       "Bash(uv --version)",
       "Bash(pip3 --version)",
-      "Read(//Users/nathanheintz/.config/**)",
-      "Read(//Users/nathanheintz/.config/lectic/**)",
       "Bash(curl:*)"
-    ],
-    "deny": [],
-    "ask": []
+    ]
   }
 }

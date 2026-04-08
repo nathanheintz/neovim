@@ -1,22 +1,12 @@
 # Session Protocol
 
-**Purpose**: Define how Claude Code agent should behave and document work
+**Purpose**: Define how Claude Code agent should document work in the nvim config repo
 
-**Last Updated**: 2025-11-14
+**Last Updated**: 2026-04-07
 
----
-
-## Prime Directive: Universal Verification Protocol
-
-**MANDATORY FOR EVERY RESPONSE AFTER /init**:
-
-Before submitting ANY message:
-1. **Prioritize accuracy over speed** - Never rush an answer
-2. **Verify all factual claims** - Check code, documentation, or run commands
-3. **Review against this protocol** - Confirm you're following all requirements
-4. **Apply verification regardless of confidence** - Even if you "know" the answer
-
-This applies to ALL responses, not just technical recommendations.
+> Universal behavior rules (collaborative style, verification protocol, communication style)
+> are in ~/.claude/BEHAVIOR.md, loaded globally at every session start.
+> This file covers nvim-specific documentation, git protocol, and coding standards only.
 
 ---
 
@@ -25,17 +15,13 @@ This applies to ALL responses, not just technical recommendations.
 ```
 .claude/
 ├── PROJECT_CONTEXT.md         # Config overview, tools, preferences
-├── SESSION_PROTOCOL.md         # This file - agent behavior guidelines
+├── SESSION_PROTOCOL.md         # This file - nvim-specific documentation rules
 ├── GLOBAL_SUMMARY_LOG.md       # All completed projects history
 ├── NVIM_STANDARDS.md           # Shared coding/doc standards
 ├── settings.local.json         # Claude Code settings
 │
 ├── agents/                     # Specialized agent behavioral files
-│   └── research-specialist.md  # Research agent (invoked by /research)
-│
-├── commands/                   # Slash command definitions (official Claude Code)
-│   ├── init.md                 # /init - Load context at session start
-│   └── research.md             # /research - Create research reports (optional)
+│   └── research-specialist.md  # Research agent
 │
 └── specs/                      # Project documentation
     ├── 000_maintenance_debug/  # Ongoing maintenance & small fixes
@@ -62,16 +48,17 @@ This applies to ALL responses, not just technical recommendations.
 
 ### At Start of Every New Session
 
-When user says "Load context", "Initialize", or "Continue project NNN", you MUST:
+Run `/init` (global skill — works from any CWD) to load full workspace context.
 
-1. **Read core context files**:
-   - `.claude/PROJECT_CONTEXT.md` - Understand the config
-   - `.claude/GLOBAL_SUMMARY_LOG.md` - See all completed projects
-   - `.claude/SESSION_PROTOCOL.md` - This file (refresh behavior guidelines)
+For nvim-specific sessions, also read:
+
+1. **Core context files**:
+   - `.claude/PROJECT_CONTEXT.md` — Understand the config
+   - `.claude/GLOBAL_SUMMARY_LOG.md` — See all completed projects
 
 2. **If project specified, also read**:
-   - `.claude/specs/NNN_project/PLAN.md` - Current implementation plan
-   - `.claude/specs/NNN_project/SESSION_LOG.md` - Detailed work history
+   - `.claude/specs/NNN_project/PLAN.md` — Current implementation plan
+   - `.claude/specs/NNN_project/SESSION_LOG.md` — Detailed work history
 
 3. **Confirm context loaded**:
    - Tell user what you read
@@ -79,48 +66,6 @@ When user says "Load context", "Initialize", or "Continue project NNN", you MUST
    - Ask how to proceed
 
 **Token cost**: ~15-30KB total (very reasonable for full context)
-
----
-
-## Collaborative Work Style
-
-### Discussion Before Implementation
-
-**ALWAYS discuss approaches before coding**:
-- Ask clarifying questions
-- Propose solutions and explain tradeoffs
-- Get user approval on direction
-- Don't assume - check existing implementation first
-
-**Example**:
-```
-User: "Add a new colorscheme toggle"
-You: "I see you have CWD-based auto-switching in lua/core/options.lua.
-      Should this toggle override that, or work alongside it?
-      Also, which-key has <leader>mt for toggles - add it there?"
-```
-
-### Show Changes for Approval
-
-**Before using Write/Edit tools**:
-- Explain what you're about to change and why
-- Show the proposed code
-- Wait for user approval
-
-**User will**:
-- Approve → You proceed
-- Reject → User explains what to do instead
-
-### Incremental Implementation
-
-**Work step-by-step**:
-- Don't batch execute entire plans
-- Complete one task batch at a time
-- Let user review and test
-- Discuss what's next before continuing
-
-**NOT this**: "I'll implement all 5 phases now"
-**THIS**: "Let's start with Phase 1. I'll create the base function first."
 
 ---
 
@@ -190,7 +135,7 @@ You: "I see you have CWD-based auto-switching in lua/core/options.lua.
 ```
 
 **Rules**:
-- User doesn't have to ask - it's automatic
+- User doesn't have to ask — it's automatic
 - Update immediately after approval
 - Capture "why" not just "what"
 - Include enough detail to resume work after weeks away
@@ -209,8 +154,8 @@ A task batch is approved changes that form a logical unit:
 
 **Examples**:
 - ✅ "Added persona switching function + updated which-key menu"
-- ❌ "Fixed typo" (too small - group with larger work)
-- ❌ "Implemented entire Phase 2" (too large - split into multiple batches)
+- ❌ "Fixed typo" (too small — group with larger work)
+- ❌ "Implemented entire Phase 2" (too large — split into multiple batches)
 
 ### At Phase Breaks
 
@@ -244,7 +189,7 @@ Detailed description if needed:
 After all phases done:
 
 1. **Update** `.claude/GLOBAL_SUMMARY_LOG.md`:
-   - Add project entry with medium detail (see DOCUMENTATION_SYSTEM.md)
+   - Add project entry with medium detail
    - Include problem, solution, key files, impact, commits
 
 2. **Create** `.claude/specs/NNN_project/SUMMARY.md`:
@@ -252,117 +197,14 @@ After all phases done:
    - Overview, key decisions, files modified, lessons learned
 
 3. **Update** main config documentation:
-   - `README.md` - Add new features to appropriate sections
-   - `CHEATSHEET.md` - Add new keybindings/commands
+   - `README.md` — Add new features to appropriate sections
+   - `CHEATSHEET.md` — Add new keybindings/commands
 
 4. **Final git commit** for documentation updates
 
 ---
 
-## Context Awareness
-
-### Check Before Assuming
-
-**ALWAYS verify existing implementation**:
-- Read relevant files before proposing changes
-- Don't ask "do you use X?" if it's in PROJECT_CONTEXT.md
-- Check GLOBAL_SUMMARY_LOG for related past work
-- Reference existing patterns in the config
-
-**Absence of evidence ≠ evidence of absence**:
-- If search yields no definitive answer, that means "unknown", not "false"
-- "I didn't find X" does NOT mean "X doesn't exist"
-- When searching returns nothing: say "I don't have that information" or use WebFetch to check official docs
-- For questions about official features: MUST use WebFetch on official documentation, not rely on absence in local files
-
-## Prime Directive: Universal Verification Protocol
-
-**MANDATORY FOR EVERY RESPONSE AFTER /init**:
-
-Before submitting ANY message:
-1. **Prioritize accuracy over speed** - Never rush an answer
-2. **Verify all factual claims** - Check code, documentation, or run commands
-3. **Review against this protocol** - Confirm you're following all requirements
-4. **Apply verification regardless of confidence** - Even if you "know" the answer
-
-This applies to ALL responses, not just technical recommendations.
-
-### Verification Requirements for Technical Recommendations
-
-**NEVER suggest solutions without verification**:
-
-1. **Check official documentation first**:
-   - Use WebFetch to read actual plugin/tool documentation
-   - Verify installation instructions are from the developer, not assumptions
-   - Look for OS-specific instructions (macOS vs Linux behaves differently)
-   - Check repository age and maintenance status before recommending
-
-2. **Verify against user's actual stack**:
-   - **OS**: macOS (Darwin 24.1.0) - NOT Linux, paths/behavior differ
-   - **Shell**: Fish - NOT bash/zsh, syntax differs
-   - **Terminal**: Kitty - may have specific compatibility issues
-   - **Python**: Homebrew-managed, externally-managed environment
-   - When in doubt about system behavior: RUN A COMMAND to verify, don't assume
-
-3. **Never offer "general best practices" without source**:
-   - ❌ "Here are 3 options you could try..."
-   - ❌ "This is the recommended approach..."
-   - ❌ "Best practice is to..."
-   - ✅ "The documentation says to do X"
-   - ✅ "I need to check the documentation - let me verify"
-   - ✅ "I don't have enough information to recommend. Can you help me find X?"
-
-4. **Don't suggest "not recommended" approaches**:
-   - If you mention an option, you're implicitly endorsing it
-   - Never list approaches you wouldn't actually recommend
-   - If documentation mentions risky flags (like --break-system-packages), don't repeat them unless that's the actual documented solution
-
-5. **OS-specific verification**:
-   - Linux paths ≠ macOS paths (example: `~/.local` vs `~/Library`)
-   - Always verify system-specific behavior with commands when possible
-   - Use `python3 -m site --user-site` not assumptions about paths
-   - Check `uname` or other system commands when OS behavior matters
-
-**When you lack information**:
-- Say "I don't know"
-- Say "Let me check the documentation"
-- Say "I need to verify this on your system first"
-- Ask user for help finding official sources
-- Run verification commands before making claims
-
-**Example - BAD**:
-```
-Here are 3 options:
-1. Use --user flag (recommended)
-2. Use virtual environment
-3. Use --break-system-packages (not recommended)
-
-I recommend option 1.
-```
-
-**Example - GOOD**:
-```
-Let me check the official documentation to see what the developer recommends.
-[Uses WebFetch]
-The documentation says: [exact quote]
-However, this was written before Python 3.13's PEP 668.
-Let me verify what --user does on your macOS system.
-[Runs python3 -m site --user-site]
-Based on verification, --user installs to [actual path].
-```
-
-**Example - GOOD**:
-```
-I see in PROJECT_CONTEXT.md you use Deckset for presentations,
-and there's already a cheatsheet for it in cheatsheet-readme/.
-```
-
-**Example - BAD**:
-```
-Do you use Deckset?
-```
-
-### Understand Broader Context
+## Understand Broader Context
 
 **Before making changes**:
 - How does this fit into the overall config?
@@ -416,29 +258,6 @@ Do you use Deckset?
 - Start with type: feat, fix, chore, docs, refactor
 - Brief (50 char) summary line
 - Detailed body if needed
-- Always include Claude Code footer
-
----
-
-## Error Handling
-
-### When Things Go Wrong
-
-**If command fails**:
-- Don't hide errors - show them to user
-- Explain what went wrong
-- Propose solution
-- Ask if user wants to proceed differently
-
-**If unclear about request**:
-- Ask clarifying questions
-- Don't guess
-- Propose options if multiple interpretations
-
-**If documentation is unclear**:
-- Read more context files
-- Ask user for clarification
-- Update documentation to be clearer
 
 ---
 
@@ -493,71 +312,7 @@ Do you use Deckset?
 **Snippets**: `snippets/*.snippets`
 **Templates**: `templates/`
 
-**Don't create files in wrong locations** - check existing structure first.
-
----
-
-## Communication Style
-
-### Be Concise and Technical
-
-**User is working in terminal** - keep responses short:
-- Brief, technical explanations only
-- Code snippets when relevant
-- Don't repeat what user already knows
-- Ask questions clearly
-- No apologies, no performance, no emotional content
-- State facts, provide solutions, move on
-
-### Be Helpful
-
-**Proactive assistance**:
-- Point out potential issues before they arise
-- Suggest better approaches when relevant
-- Reference existing features that might help
-- But don't be pushy - user decides
-
-### Be Honest
-
-**If uncertain**:
-- Say "I'm not sure, let me check"
-- Read relevant files to verify
-- Don't make up answers
-- Admit mistakes clearly
-
-**When search returns no results**:
-- Negative search result = "I don't know", NOT "it doesn't exist"
-- Never conclude something is false just because you didn't find evidence it's true
-- For official feature questions, use WebFetch to check documentation before answering
-
-### Literal Interpretation of Pronouns and References
-
-**Use pronouns and references precisely**:
-- "you" means the agent (Claude)
-- "I/me" means the user
-- "we" means collaborative action
-- When user references something you just said/did, they mean THAT specific thing
-
-**When responding**:
-- If user says "you", answer about YOUR process/actions
-- If user says "I/me", answer about THEIR process/actions
-- Don't swap perspectives or generalize unless explicitly asked
-
-**Technical "why" questions**:
-- "Why did you X?" requires technical explanation of the actual mechanism/logic
-- NOT: high-level reasoning like "I misunderstood the requirement"
-- YES: specific technical details like "I called grep with pattern X because the variable contained Y, but the code path required Z"
-
-**Examples**:
-- User: "You said you'd test it. How would you test it?"
-  - ❌ "You could open nvim and try <leader>fc..."
-  - ✅ "I would execute `nvim --headless -c 'lua ...'` to check if the function loads without errors"
-
-- User: "Why did you use grep instead of find?"
-  - ❌ "I misunderstood what you wanted"
-  - ✅ "I executed grep because the `pattern` variable matched the regex `<leader>.*`, which triggers the content-search code path in my tool selection logic"
-
-**Rule**: Answer the question that was literally asked, using the exact pronouns/references used. Don't rephrase or generalize.
+**Don't create files in wrong locations** — check existing structure first.
 
 ---
 
@@ -597,22 +352,8 @@ You're following protocol well when:
 
 ## Quick Reference
 
-**Every session start**: Read PROJECT_CONTEXT.md, GLOBAL_SUMMARY_LOG.md, SESSION_PROTOCOL.md
+**Every session start**: Run `/init`, then read PROJECT_CONTEXT.md and GLOBAL_SUMMARY_LOG.md
 **After each approved batch**: Update SESSION_LOG.md
 **At phase breaks**: Update PLAN.md, git commit, update SESSION_LOG.md
 **When project completes**: Update GLOBAL_SUMMARY_LOG.md, create SUMMARY.md, update README/CHEATSHEET
 **Always**: Discuss before implementing, show changes for approval, be context-aware
-
----
-
-## Prime Directive: Universal Verification Protocol
-
-**MANDATORY FOR EVERY RESPONSE AFTER /init**:
-
-Before submitting ANY message:
-1. **Prioritize accuracy over speed** - Never rush an answer
-2. **Verify all factual claims** - Check code, documentation, or run commands
-3. **Review against this protocol** - Confirm you're following all requirements
-4. **Apply verification regardless of confidence** - Even if you "know" the answer
-
-This applies to ALL responses, not just technical recommendations.

@@ -1,7 +1,7 @@
 # Global Summary Log
 
 **Purpose**: High-level view of all completed and in-progress projects
-**Last Updated**: 2025-11-13
+**Last Updated**: 2026-04-07
 
 ---
 
@@ -112,6 +112,34 @@
 - `after/ftplugin/markdown.lua` — Removed manual foldmethod/foldexpr (ufo takes over)
 - `lua/core/keymaps.lua` — `<Left>` child-fold-close keymap
 **Git Commits**: [pending]
+
+---
+
+## 012: Claude Workflow Optimization
+**Status**: Completed (2026-04-07)
+**Problem**: Context architecture was fragmented — behavioral guidelines and project history only available in the nvim CWD, no global permissions (constant permission prompts), memory siloed per-project, no specialist agents, ghostdev had no Claude infrastructure at all.
+**Solution**: Ten-phase restructure of the Claude Code architecture across all three repos:
+- `~/.claude/settings.json` — global read permissions for all working dirs, security denies for sensitive paths
+- `~/.claude/PROFILE.md` — authored professional context, loaded globally via @import
+- `~/.claude/BEHAVIOR.md` — universal agent behavior rules (collaborative style, verification, diagnostic behavior), loaded globally via @import
+- `~/.claude/CLAUDE.md` — updated with @imports, three-repo table, Ghost added throughout
+- `~/.config/nvim/.claude/SESSION_PROTOCOL.md` — trimmed to nvim-specific content only (~220 lines, down from ~620)
+- `~/.claude/skills/init/SKILL.md` — user-global /init skill, works from any CWD; replaced nvim-local commands/init.md
+- `~/.claude/agents/librarian.md` — vault operations agent (Lectic→Zettelkasten handoff, vault audit, NSEW suggestions)
+- `~/.claude/agents/nvim-dev.md` — nvim config expert (accurate Lectic facts, auto-reads README + project context on startup)
+- `~/.claude/agents/ghost-dev.md` — Ghost theme development agent
+- `~/.claude/shared-memory/` — unified memory pool; `autoMemoryDirectory` set in `~/.claude/settings.json`; per-project memory dirs migrated and deleted
+- `~/SecondBrain/.claude/vault-log.md` — structural decision log for vault operations
+- Lectic + Obsidian coexistence facts added to both `~/.config/nvim/CLAUDE.md` and `~/SecondBrain/CLAUDE.md`
+- `~/ghostdev/CLAUDE.md`, `~/ghostdev/.claude/MAINTENANCE_LOG.md`, `~/ghostdev/.claude/specs/` — full Ghost dev infrastructure
+**Key Files**:
+- `~/.claude/settings.json` — global permissions + autoMemoryDirectory
+- `~/.claude/CLAUDE.md` — @import chain, three-repo overview
+- `~/.claude/BEHAVIOR.md`, `~/.claude/PROFILE.md` — globally loaded context
+- `~/.claude/skills/init/SKILL.md` — universal session initialization
+- `~/.claude/agents/librarian.md`, `nvim-dev.md`, `ghost-dev.md` — user-scoped specialist agents
+- `~/.claude/shared-memory/` — unified memory pool
+**Impact**: Full behavioral and project context now available from any CWD without re-initialization. No permission prompts for standard reads. Memory unified across all sessions. Three specialist agents available everywhere. Ghost dev has full Claude infrastructure. All three repos have accurate Lectic/Obsidian coexistence facts.
 
 ---
 
