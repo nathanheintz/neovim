@@ -1,7 +1,7 @@
 # Global Summary Log
 
 **Purpose**: High-level view of all completed and in-progress projects
-**Last Updated**: 2026-04-08
+**Last Updated**: 2026-04-09
 
 ---
 
@@ -144,7 +144,7 @@
 ---
 
 ## 013: Plugin Upgrades — obsidian-nvim migration + advanced folding
-**Status**: In Progress (2026-04-08 — Phases 1–2 complete, Phase 3–4 pending)
+**Status**: Completed (2026-04-09)
 **Problem**: epwalsh/obsidian.nvim stalled; no native blink.cmp support, no snacks.picker. Fold system static — no dynamic heading/research mode toggle. Lectic code-block folding conflicted with ufo treesitter provider.
 **Solution (Phase 1 — obsidian-nvim migration)**: Migrated to `obsidian-nvim/obsidian.nvim` community fork. Native blink.cmp completion (removed blink.compat wrapper). snacks.picker for vault search. LSP-style vault-wide rename enabled.
 **Solution (Phase 2 — advanced folding)**: Added buffer-local fold mode toggle (`<leader>zm`): writing mode uses ufo treesitter provider (heading folds); research mode detaches ufo and uses `vim.lsp.foldexpr()` for Lectic code-block folds. Added `FoldToHeadingLevel(N)` (treesitter-based, no foldlevel change so InsertLeave won't collapse). `<leader>z1` adds virtual blank lines above H1s for visual breathing room. Fixed `<Left>` fold detection to use heading text matching instead of fragile foldlevel comparison.
@@ -155,8 +155,9 @@
 - `lua/plugins/obsidian.lua` — Migrated to obsidian-nvim fork
 - `lua/plugins/lsp/blink-cmp.lua` — Removed blink.compat obsidian wrapper
 - `lua/plugins/which-key.lua` — New `<leader>z` FOLDS group
-- `lua/core/keymaps.lua` — Fixed `<Left>` heading fold detection
-**Git Commits**: [pending]
+- `lua/core/keymaps.lua` — Fixed `<Left>` heading fold detection; added `:Bd` safe buffer delete
+- `lua/plugins/claudecode.lua` — Reverted to `config = true` (no terminal workarounds needed)
+**Git Commits**: 6b8d3bd, db0adaa
 
 ---
 

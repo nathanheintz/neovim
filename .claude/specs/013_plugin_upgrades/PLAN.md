@@ -254,8 +254,8 @@ This fires before Neovim completes the deletion, switches any window showing the
 
 - [x] Phase 1: obsidian-nvim migration complete and tested
 - [x] Phase 2: fold-mode toggle working in `.md` files (+ FoldToHeadingLevel, H1 virtual padding, Left arrow fix)
-- [ ] Phase 3: live grep done; template update pending (id format TBD)
-- [ ] Phase 4: claudecode.nvim buffer close fix
+- [x] Phase 3: live grep done; zettelkasten template not needed (Obsidian auto-creates frontmatter on save, snippet covers NSEW structure)
+- [x] Phase 4: claudecode.nvim buffer close fix — :Bd command in keymaps.lua
 - [x] CHEATSHEET.md updated with fold keybindings
 - [x] `~/.claude/agents/librarian.md` already had obsidian-nvim URLs (updated in project 012)
-- [ ] Git commit
+- [x] Git commits — 6b8d3bd, db0adaa
