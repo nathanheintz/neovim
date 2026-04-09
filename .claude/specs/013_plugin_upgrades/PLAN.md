@@ -1,6 +1,6 @@
 # 013: Plugin Upgrades — Plan
 
-**Status**: Not started
+**Status**: Phase 1 complete
 **Depends on**: 012 (Claude Workflow Optimization) — obsidian-nvim migration should happen after the new obsidian-nvim docs are loaded into the librarian agent context
 **CWD**: `~/.config/nvim`
 
@@ -71,11 +71,9 @@ Target plugin: `obsidian-nvim/obsidian.nvim` — active community fork.
 - [ ] Update the librarian agent at `~/.claude/agents/librarian.md`:
   - Change obsidian docs URL from `https://github.com/epwalsh/obsidian.nvim` to `https://github.com/obsidian-nvim/obsidian.nvim`
   - Update the "currently installed" note to reflect migration is complete
-- [ ] Update MAINTENANCE_LOG.md
-
 ---
 
-## Phase 2: UFO Fold-Mode Toggle
+## Phase 2: UFO Fold-Mode Toggle [COMPLETED]
 
 ### Background
 
@@ -119,13 +117,19 @@ Add to `lua/plugins/which-key.lua` in the `<leader>m` (MARKDOWN & WRITING) group
 
 ### Steps
 
-- [ ] Read `lua/plugins/ufo.lua` in full
-- [ ] Read `lua/plugins/which-key.lua` to find correct location in `<leader>m` group
-- [ ] Show proposed additions for approval
-- [ ] Add `ToggleFoldMode()` to `lua/plugins/ufo.lua`
-- [ ] Add `<leader>mfl` keybinding to `lua/plugins/which-key.lua`
-- [ ] Test: open `.md` file with Lectic frontmatter, toggle to LSP mode, verify fold behavior changes
-- [ ] Update MAINTENANCE_LOG.md
+- [x] Read `lua/plugins/ufo.lua` in full
+- [x] Read `lua/plugins/which-key.lua` to find correct location in `<leader>m` group
+- [x] Show proposed additions for approval
+- [x] Add `ToggleFoldMode()` to `lua/plugins/ufo.lua`
+- [x] Add `<leader>zm` keybinding to `lua/plugins/which-key.lua` (moved to FOLDS group, not `<leader>m`)
+- [x] Test: toggle to LSP mode, verify code blocks fold
+
+**Notes:**
+- `ufo.setProviderSelector()` does not exist — confirmed via source. Correct approach: detach ufo, set native `foldmethod=expr` + `foldexpr='v:lua.vim.lsp.foldexpr()'`, then reattach ufo for writing mode.
+- Lectic LSP folding for `.md` files was previously handled by a manual `zc` loop in the LspAttach autocmd (`lectic.lua`). This conflicted with treesitter heading folds. Removed — ufo now owns writing mode, `vim.lsp.foldexpr()` owns research mode.
+- `vim.lsp.foldexpr()` cache confirmed populated (returned `1` for a code-block start line). Folds weren't closing because `vim.o.foldlevel = 99` (set by ufo globally) keeps everything open. Fix: set `vim.wo.foldlevel = 0` when switching to research mode.
+- Added `zR` before provider switch in both directions to ensure clean fold state on transition.
+- Added `<leader>zc` (zM, close all) and `<leader>zo` (zR, open all) for manual control.
 
 ---
 
@@ -168,23 +172,90 @@ This pre-fills all six required Zettelkasten fields (Tags, Sources, NSEW directi
 
 ### Steps
 
-- [ ] Read `lua/plugins/which-key.lua` to find the `<leader>f` group
-- [ ] Show proposed keybinding for approval
-- [ ] Add `<leader>fz` vault live grep keybinding
-- [ ] Check whether `~/SecondBrain/4-Resources/Obsidian-Templates/` already has a zettelkasten template
-- [ ] Create or update the zettelkasten template file
-- [ ] Test: `<leader>fz` opens live grep scoped to SecondBrain
-- [ ] Test: new note creation uses template with NSEW fields
-- [ ] Update MAINTENANCE_LOG.md
+- [x] Read `lua/plugins/which-key.lua` to find the `<leader>f` group
+- [x] Add `<leader>fz` vault live grep keybinding (scoped to `~/SecondBrain/3-Zettelkasten/`)
+- [x] Check whether `~/SecondBrain/4-Resources/Obsidian-Templates/` already has a zettelkasten template
+  - Template exists: `Template – A Zettelkasten Note.md` — has NSEW structure but no frontmatter or H1 title placeholder
+- [ ] Update template: add frontmatter (id, aliases, tags) and H1 title placeholder — id format TBD by user
+- [ ] Test: new note creation uses template with frontmatter + NSEW fields
+
+---
+
+## Phase 4: claudecode.nvim — Buffer Close Behavior Fix
+
+### Background
+
+Current behavior: when the ClaudeCode toggle window is open and the user runs `:bd` on the main buffer, Neovim promotes the terminal buffer (the Claude Code window) to fill the full screen. Escaping from terminal mode is severely limited — `:bd`, normal-mode commands, and most leader bindings are unavailable inside a terminal buffer. The user is effectively trapped.
+
+Desired behavior: `:bd` on a main buffer always switches to another listed buffer in that window position first, leaving the ClaudeCode toggle undisturbed as a split.
+
+### Root Cause
+
+When `:bd` removes the last non-terminal buffer visible in a window, Neovim has no listed buffer to display and falls back to the terminal buffer. The terminal then expands to fill the available space. There is no built-in guard against this in either claudecode.nvim or bufferline.
+
+### Implementation
+
+Add a `BufDelete` autocmd in `lua/plugins/claudecode.lua` (or `lua/core/keymaps.lua`) that intercepts buffer deletion when the Claude toggle is open and ensures a valid listed buffer is switched to first:
+
+```lua
+-- Guard against ClaudeCode terminal taking over when main buffer is closed
+vim.api.nvim_create_autocmd("BufDelete", {
+  callback = function(ev)
+    -- Only act on normal (non-terminal, non-special) buffers
+    if vim.bo[ev.buf].buftype ~= "" then return end
+
+    -- Find a listed, loaded, non-terminal buffer to switch to
+    local current = ev.buf
+    local fallback = nil
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if buf ~= current
+        and vim.bo[buf].buflisted
+        and vim.api.nvim_buf_is_loaded(buf)
+        and vim.bo[buf].buftype == ""
+      then
+        fallback = buf
+        break
+      end
+    end
+
+    if fallback then
+      -- Switch every window currently showing the deleted buffer to the fallback
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == current then
+          vim.api.nvim_win_set_buf(win, fallback)
+        end
+      end
+    end
+  end
+})
+```
+
+This fires before Neovim completes the deletion, switches any window showing the dying buffer to the fallback, and lets bufferline manage the tab display normally.
+
+**Alternative approach** (simpler, if the autocmd has timing issues): remap `<leader>bd` or override `:bd` with a custom command that runs the switch-then-delete logic explicitly. This gives more control over ordering.
+
+### Key Files
+
+- `lua/plugins/claudecode.lua` — preferred location (keeps the guard co-located with the plugin config)
+- `lua/core/keymaps.lua` — fallback if the autocmd needs to be filetype-agnostic
+
+### Steps
+
+- [ ] Read `lua/plugins/claudecode.lua` in full
+- [ ] Read `lua/core/keymaps.lua` to check for existing `:bd` remaps or buffer-close logic
+- [ ] Show proposed autocmd for approval
+- [ ] Add autocmd to `lua/plugins/claudecode.lua`
+- [ ] Test: open ClaudeCode toggle, open two buffers, `:bd` the active one — verify toggle stays as split and bufferline switches to the other buffer
+- [ ] Test: `:bd` with only one main buffer open — verify behavior is sane (probably shows empty/scratch buffer rather than terminal)
 
 ---
 
 ## Completion Checklist
 
-- [ ] Phase 1: obsidian-nvim migration complete and tested
-- [ ] Phase 2: fold-mode toggle working in `.md` files
-- [ ] Phase 3: live grep and template in place
-- [ ] CHEATSHEET.md updated with new keybindings (`<leader>mfl`, `<leader>fz`)
-- [ ] MAINTENANCE_LOG.md updated
-- [ ] `~/.claude/agents/librarian.md` updated with obsidian-nvim/obsidian.nvim docs URL
+- [x] Phase 1: obsidian-nvim migration complete and tested
+- [x] Phase 2: fold-mode toggle working in `.md` files (+ FoldToHeadingLevel, H1 virtual padding, Left arrow fix)
+- [ ] Phase 3: live grep done; template update pending (id format TBD)
+- [ ] Phase 4: claudecode.nvim buffer close fix
+- [x] CHEATSHEET.md updated with fold keybindings
+- [x] `~/.claude/agents/librarian.md` already had obsidian-nvim URLs (updated in project 012)
 - [ ] Git commit

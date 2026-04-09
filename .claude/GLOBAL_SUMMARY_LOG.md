@@ -1,7 +1,7 @@
 # Global Summary Log
 
 **Purpose**: High-level view of all completed and in-progress projects
-**Last Updated**: 2026-04-07
+**Last Updated**: 2026-04-08
 
 ---
 
@@ -111,7 +111,7 @@
 - `lua/plugins/which-key.lua` — `<leader>mf` toggle, removed dead fold keymaps
 - `after/ftplugin/markdown.lua` — Removed manual foldmethod/foldexpr (ufo takes over)
 - `lua/core/keymaps.lua` — `<Left>` child-fold-close keymap
-**Git Commits**: [pending]
+**Git Commits**: a3d864d
 
 ---
 
@@ -140,6 +140,23 @@
 - `~/.claude/agents/librarian.md`, `nvim-dev.md`, `ghost-dev.md` — user-scoped specialist agents
 - `~/.claude/shared-memory/` — unified memory pool
 **Impact**: Full behavioral and project context now available from any CWD without re-initialization. No permission prompts for standard reads. Memory unified across all sessions. Three specialist agents available everywhere. Ghost dev has full Claude infrastructure. All three repos have accurate Lectic/Obsidian coexistence facts.
+
+---
+
+## 013: Plugin Upgrades — obsidian-nvim migration + advanced folding
+**Status**: In Progress (2026-04-08 — Phases 1–2 complete, Phase 3–4 pending)
+**Problem**: epwalsh/obsidian.nvim stalled; no native blink.cmp support, no snacks.picker. Fold system static — no dynamic heading/research mode toggle. Lectic code-block folding conflicted with ufo treesitter provider.
+**Solution (Phase 1 — obsidian-nvim migration)**: Migrated to `obsidian-nvim/obsidian.nvim` community fork. Native blink.cmp completion (removed blink.compat wrapper). snacks.picker for vault search. LSP-style vault-wide rename enabled.
+**Solution (Phase 2 — advanced folding)**: Added buffer-local fold mode toggle (`<leader>zm`): writing mode uses ufo treesitter provider (heading folds); research mode detaches ufo and uses `vim.lsp.foldexpr()` for Lectic code-block folds. Added `FoldToHeadingLevel(N)` (treesitter-based, no foldlevel change so InsertLeave won't collapse). `<leader>z1` adds virtual blank lines above H1s for visual breathing room. Fixed `<Left>` fold detection to use heading text matching instead of fragile foldlevel comparison.
+**Key Bindings**: `<leader>zm` (mode toggle), `<leader>zf` (toggle heading folds), `<leader>z1/z2` (fold to H1/H2 outline), `<leader>zc/zo` (close/open all)
+**Key Files**:
+- `lua/plugins/ufo.lua` — ToggleFoldMode(), FoldToHeadingLevel(), ToggleHeadingFolds(), ClearFoldPadding()
+- `lua/plugins/lectic.lua` — Removed conflicting LspAttach zc loop for .md files
+- `lua/plugins/obsidian.lua` — Migrated to obsidian-nvim fork
+- `lua/plugins/lsp/blink-cmp.lua` — Removed blink.compat obsidian wrapper
+- `lua/plugins/which-key.lua` — New `<leader>z` FOLDS group
+- `lua/core/keymaps.lua` — Fixed `<Left>` heading fold detection
+**Git Commits**: [pending]
 
 ---
 

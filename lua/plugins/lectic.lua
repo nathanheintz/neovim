@@ -199,7 +199,7 @@ return {
     -- Start LSP for current buffer: the FileType event fires before the plugin
     -- loads on first open, so the autocmd in plugin/lsp.lua misses it.
     local ft = vim.bo.filetype
-    if ft == "lectic" or ft == "lectic.markdown" or ft == "markdown.lectic" then
+    if ft == "lectic" or ft == "lectic.markdown" or ft == "markdown.lectic" or ft == "markdown" then
       vim.lsp.start({
         name = 'lectic',
         cmd = { 'lectic', 'lsp' },
@@ -208,11 +208,11 @@ return {
       })
     end
 
-    -- Register FileType autocmd for subsequent .lec buffer opens.
+    -- Register FileType autocmd for subsequent buffer opens.
     -- plugin/lsp.lua is not sourced for dynamically-added rtp directories,
     -- so we replicate its autocmd here.
     vim.api.nvim_create_autocmd("FileType", {
-      pattern = { "lectic", "lectic.markdown", "markdown.lectic" },
+      pattern = { "lectic", "lectic.markdown", "markdown.lectic", "markdown" },
       callback = function()
         vim.lsp.start({
           name = 'lectic',
@@ -227,7 +227,13 @@ return {
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if client and client.name == "lectic" then
+        if not client or client.name ~= "lectic" then return end
+
+        local ft = vim.bo[args.buf].filetype
+
+        -- .lec files only: close all folds, open the one at cursor.
+        -- .md files: ufo handles folding via provider_selector (treesitter or LSP).
+        if ft == "lectic.markdown" or ft == "lectic" then
           vim.defer_fn(function()
             if vim.api.nvim_buf_is_loaded(args.buf) then
               vim.api.nvim_buf_call(args.buf, function()
@@ -271,11 +277,7 @@ return {
         prompt = "You are a logician, philosopher, and political theorist. You're also a neuroscientist, anthropologist, and psychologist with expertise in conflict resolution, peacebuilding, restorative justice, and organizational psychology. Help me research, analyze, and synthesize ideas rigorously.",
         tools = {
           "  tools:",
-          "    - name: paper_search",
-          "      mcp_command: /Users/nathanheintz/.local/share/paper-search-mcp-env/bin/python",
-          "      args:",
-          '        - "-m"',
-          '        - "paper_search_mcp.server"',
+          "    - kit: paper_search",
         },
       },
       {
@@ -374,6 +376,11 @@ return {
       table.insert(new_frontmatter, "interlocutor:")
       table.insert(new_frontmatter, "  name: " .. persona.name)
       table.insert(new_frontmatter, "  prompt: " .. persona.prompt)
+      if persona.tools then
+        for _, line in ipairs(persona.tools) do
+          table.insert(new_frontmatter, line)
+        end
+      end
       table.insert(new_frontmatter, "---")
 
       -- Replace frontmatter

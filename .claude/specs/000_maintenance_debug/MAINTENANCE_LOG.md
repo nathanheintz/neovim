@@ -62,6 +62,29 @@ Each entry should include:
 
 ---
 
+### 2026-04-08 - SESSION_PROTOCOL.md documentation system overhaul
+
+**Task**: Clarified project vs. maintenance distinction, simplified documentation structure, added planning guidance
+
+**Changes**:
+- `SESSION_PROTOCOL.md` — Added Task Complexity Assessment rule (project vs. maintenance decision upfront)
+- `SESSION_PROTOCOL.md` — Replaced SESSION_LOG format with lightweight Notes blocks inline in PLAN.md (decisions, pivots, gotchas, commit hashes)
+- `SESSION_PROTOCOL.md` — Removed SESSION_LOG.md and SUMMARY.md as standard project artifacts
+- `SESSION_PROTOCOL.md` — Added "Creating a Project Plan" section with succinct guidance
+- `SESSION_PROTOCOL.md` — Clarified GLOBAL_SUMMARY_LOG as canonical completed-project record; MAINTENANCE_LOG for small tasks only
+- `SESSION_PROTOCOL.md` — Updated directory structure, session init, phase break steps, and Quick Reference
+
+---
+
+### 2026-04-08 - Removed stale `<leader>rr` reference from PROJECT_CONTEXT.md
+
+**Task**: Fixed incorrect keybinding reference in documentation
+
+**Changes**:
+- `~/.config/nvim/.claude/PROJECT_CONTEXT.md` — "Adding a New Keybinding" step 4 previously said "Reload config with `<leader>rr`". That binding doesn't exist. Replaced with "Restart nvim to pick up changes."
+
+---
+
 ### 2025-11-15 - Window Management & Zettelkasten Search Keybindings
 
 **Task**: Added directional window splits and directory-specific grep for zettelkasten workflow
@@ -414,6 +437,20 @@ curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | s
 - Verified markdown files fold only on headers (`#`, `##`, `###`)
 - Confirmed YAML frontmatter and indented content don't create folds
 - Tested navigation keybindings work correctly
+
+**Commit**: [pending]
+
+---
+
+### 2026-04-05 - Lectic Cancel Keybinding
+
+**Task**: Added `<leader>mx` to interrupt a running Lectic request.
+
+**Changes**:
+- `lua/plugins/which-key.lua` — Added `<leader>mx` calling `require('lectic.submit').cancel_submit()`
+- `cheatsheet-readme/lectic-cheatsheet.md` — Documented new keybinding
+
+**Notes**: `cancel_submit()` already existed in `submit.lua` (line 9) but was never wired to a key. Calls `process:kill()` on the active Lectic subprocess.
 
 **Commit**: [pending]
 

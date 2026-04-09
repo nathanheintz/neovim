@@ -2,7 +2,7 @@
 
 **Purpose**: Define how Claude Code agent should document work in the nvim config repo
 
-**Last Updated**: 2026-04-07
+**Last Updated**: 2026-04-08
 
 > Universal behavior rules (collaborative style, verification protocol, communication style)
 > are in ~/.claude/BEHAVIOR.md, loaded globally at every session start.
@@ -29,10 +29,9 @@
     │   └── bug-reports/        # All bug documentation goes here
     │       └── YYYYMMDD_bug_name.md
     │
-    ├── NNN_project_name/       # Numbered project directories
-    │   ├── PLAN.md             # Implementation plan with phases
-    │   ├── SESSION_LOG.md      # Detailed work history
-    │   └── SUMMARY.md          # Final retrospective (when complete)
+    ├── NNN_project_name/       # One folder per project
+    │   ├── PLAN.md             # Primary file: phases, checkboxes, status, decisions
+    │   └── [additional files as needed — e.g. REPORT.md, research notes, bug docs]
     │
     └── ...                     # Additional projects (001, 002, etc.)
 ```
@@ -57,8 +56,7 @@ For nvim-specific sessions, also read:
    - `.claude/GLOBAL_SUMMARY_LOG.md` — See all completed projects
 
 2. **If project specified, also read**:
-   - `.claude/specs/NNN_project/PLAN.md` — Current implementation plan
-   - `.claude/specs/NNN_project/SESSION_LOG.md` — Detailed work history
+   - `.claude/specs/NNN_project/PLAN.md` — Current plan, status, and decisions
 
 3. **Confirm context loaded**:
    - Tell user what you read
@@ -70,6 +68,24 @@ For nvim-specific sessions, also read:
 ---
 
 ## Documentation Rules
+
+### Task Complexity Assessment
+
+Before starting any new request, assess whether it warrants a project or is a maintenance task:
+
+**Maintenance task** — small, self-contained, low coordination overhead:
+- Bug fixes, config tweaks, keybinding adjustments, small doc updates
+- Single-file or small multi-file changes completable in one session
+→ Do it. Log in `specs/000_maintenance_debug/MAINTENANCE_LOG.md` when done.
+
+**Project** — significant scope, benefits from planning and phased execution:
+- New features, plugin migrations, major refactors, multi-phase work
+- Multiple files, architectural decisions, or unclear upfront scope
+→ Suggest creating a numbered project folder with a PLAN.md before starting. Do not begin without an agreed plan.
+
+When the complexity is ambiguous, name it: "This could be a quick maintenance task or warrant a project — I'm leaning [X] because [reason]."
+
+---
 
 ### Small Maintenance Tasks
 
@@ -107,55 +123,36 @@ For nvim-specific sessions, also read:
 
 ---
 
-### After Each Approved Task Batch
+### During Active Project Work
 
-**For major features**, automatically update `.claude/specs/NNN_project/SESSION_LOG.md`:
+As work progresses, keep PLAN.md updated — it is the single source of truth for the project.
 
-**Format**:
+**Check off completed steps** as they're done: `- [ ]` → `- [x]`
+
+**Add a `Notes:` block under each phase** to capture (1-2 sentences each):
+- Key decisions and rationale — "chose X over Y because Z"
+- Pivots and blockers — "attempted X, hit Y, switched to Z"
+- Non-obvious gotchas discovered mid-work
+
+Only add notes when something non-obvious happened. Skip if a phase goes cleanly.
+
+**Log git commits** under the relevant phase as they're made.
+
+**Example:**
 ```markdown
-### Task Batch N: Descriptive Name
-**Discussion**:
-- Key decisions made
-- User preferences/requirements
-- Alternatives considered
+## Phase 1: obsidian-nvim Migration [COMPLETED]
+- [x] Step one
+- [x] Step two
 
-**Implementation**:
-- What was built (function names, file locations, line numbers if relevant)
-- How it works (brief technical description)
-- Key design choices
+**Notes:**
+- Removing blink.compat cascaded to cmp-nvim-lsp and cmp-vimtex — both relied on the
+  compat layer. Deleted vimtex-cmp.lua (unused), replaced cmp-nvim-lsp with
+  blink.cmp.get_lsp_capabilities().
+- toggle_obsidian_completion: `x and nil or false` always returns false in Lua. Use
+  explicit if/else.
 
-**Files Modified**:
-- path/to/file.lua (lines XXX-YYY) - What changed
-
-**Testing**: How we verified it works
-
-**Decisions**: Important choices that affect future work
-
-**Git Commit**: commit-hash (if committed) | [not yet]
+**Commits:** abc1234
 ```
-
-**Rules**:
-- User doesn't have to ask — it's automatic
-- Update immediately after approval
-- Capture "why" not just "what"
-- Include enough detail to resume work after weeks away
-
-### What Constitutes a Task Batch
-
-A task batch is approved changes that form a logical unit:
-
-**Boundaries**:
-- User approves a set of changes → Log as one batch
-- Typically 1-5 file changes that work together
-- 10-30 minutes of focused work
-- One feature/fix in working state
-
-**Special case**: 5+ rapid approvals for same feature → Group as one batch
-
-**Examples**:
-- ✅ "Added persona switching function + updated which-key menu"
-- ❌ "Fixed typo" (too small — group with larger work)
-- ❌ "Implemented entire Phase 2" (too large — split into multiple batches)
 
 ### At Phase Breaks
 
@@ -164,14 +161,10 @@ When completing a phase of the plan:
 1. **Update** `.claude/specs/NNN_project/PLAN.md`:
    - Mark checkboxes complete: `- [ ]` → `- [x]`
    - Mark phase status: `## Phase N [COMPLETED]`
+   - Add Notes block and commit hash if not already done
    - NEVER delete checkboxes (preserves full plan history)
 
-2. **Update** `.claude/specs/NNN_project/SESSION_LOG.md`:
-   - Add session end state
-   - List completed items
-   - Note what's next
-
-3. **Create git commit**:
+2. **Create git commit**:
    - Meaningful commit message
    - Reference phase completed
 
@@ -189,18 +182,38 @@ Detailed description if needed:
 After all phases done:
 
 1. **Update** `.claude/GLOBAL_SUMMARY_LOG.md`:
-   - Add project entry with medium detail
-   - Include problem, solution, key files, impact, commits
+   - This is the canonical record of all completed projects — every project must have an entry
+   - Include: problem, solution, key files, impact, commits
 
-2. **Create** `.claude/specs/NNN_project/SUMMARY.md`:
-   - Final retrospective
-   - Overview, key decisions, files modified, lessons learned
-
-3. **Update** main config documentation:
+2. **Update** main config documentation:
    - `README.md` — Add new features to appropriate sections
    - `CHEATSHEET.md` — Add new keybindings/commands
 
-4. **Final git commit** for documentation updates
+3. **Final git commit** for documentation updates
+
+---
+
+## Creating a Project Plan
+
+When a task warrants a project, create `specs/NNN_project_name/PLAN.md` before starting work.
+
+**A good plan includes:**
+- **Overview** — what problem this solves and why
+- **Phases** — logical units of work, each with a checklist of steps
+- **Background per phase** — constraints, key files, risks worth flagging upfront
+- **Completion checklist** — high-level milestones (phases done, docs updated, committed)
+
+**Keep it honest:** only plan what you know. Phases can be added as scope becomes clearer. A plan that gets updated is better than one that's abandoned.
+
+**What to put in a phase:**
+- Steps specific enough to act on without re-reading background material
+- Risks or constraints discovered during planning (not discovered during doing — those go in Notes)
+- File locations relevant to that phase
+
+**What not to put in a plan:**
+- Code snippets (write the code, not a preview of it)
+- Exhaustive step-by-step that duplicates reading the files
+- "Future considerations" that aren't part of the current scope
 
 ---
 
@@ -352,8 +365,11 @@ You're following protocol well when:
 
 ## Quick Reference
 
-**Every session start**: Run `/init`, then read PROJECT_CONTEXT.md and GLOBAL_SUMMARY_LOG.md
-**After each approved batch**: Update SESSION_LOG.md
-**At phase breaks**: Update PLAN.md, git commit, update SESSION_LOG.md
-**When project completes**: Update GLOBAL_SUMMARY_LOG.md, create SUMMARY.md, update README/CHEATSHEET
+**Every session start**: Run `/init`, read PROJECT_CONTEXT.md and GLOBAL_SUMMARY_LOG.md
+**New request**: Assess complexity — maintenance task or project? Name it if ambiguous.
+**During project work**: Check off steps, add Notes to PLAN.md for decisions/pivots/gotchas, log commits
+**At phase breaks**: Mark phase [COMPLETED] in PLAN.md, git commit
+**When project completes**: Update GLOBAL_SUMMARY_LOG.md (canonical record), update README/CHEATSHEET
+**Maintenance tasks**: Do it, log in MAINTENANCE_LOG.md
+**GLOBAL_SUMMARY_LOG.md** = canonical record of completed projects | **MAINTENANCE_LOG.md** = small tasks only
 **Always**: Discuss before implementing, show changes for approval, be context-aware

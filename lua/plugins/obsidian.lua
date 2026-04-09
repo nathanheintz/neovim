@@ -1,35 +1,28 @@
 return {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   version = "*",
   lazy = true,
-  -- ft = {"markdown", "lectic.markdown"}, -- load obsidian automatically in these filetypes (commented out to enable manual control)
+  ft = {"markdown", "lectic.markdown"},
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-telescope/telescope.nvim",
   },
   opts = {
     workspaces = {
       {
         name = "SecondBrain",
-        path = "~/SecondBrain", -- CHANGE THIS to your Obsidian vault path
+        path = "~/SecondBrain",
       },
     },
     completion = {
-      nvim_cmp = true, -- Works with blink.cmp via blink.compat
-      min_chars = 2,
+      min_chars = 2, -- blink.cmp auto-detected; no nvim_cmp compat needed
     },
     picker = {
-      name = "telescope",
-      telescope = {
-        border = true,
-        previewer = true,
-      },
+      name = "snacks",
     },
     templates = {
-      folder = "4-Resources/Obsidian-Templates", -- Relative path to your templates folder
-      date_format = "%Y-%m-%d",
-      time_format = "%H:%M",
+      folder = "4-Resources/Obsidian-Templates",
+      date_format = "YYYY-MM-DD",
+      time_format = "HH:mm",
     },
-    -- Additional options can be added here as needed
   },
 }

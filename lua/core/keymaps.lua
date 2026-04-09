@@ -298,13 +298,15 @@ map("n", "<A-l>", ":vertical resize +2<CR>", {}, "Increase width")
 vim.keymap.set('n', '<Left>', function()
   local col = vim.api.nvim_win_get_cursor(0)[2]
   local line = vim.fn.line('.')
-  local child_fold_starts_here = vim.fn.foldlevel(line) > vim.fn.foldlevel(line - 1)
-  if col == 0 and child_fold_starts_here and vim.fn.foldclosed(line) == -1 then
+  local line_text = vim.api.nvim_get_current_line()
+  local is_heading = line_text:match('^#+%s')
+  local in_open_fold = vim.fn.foldlevel(line) > 0 and vim.fn.foldclosed(line) == -1
+  if col == 0 and is_heading and in_open_fold then
     vim.cmd('normal! zc')
   else
     vim.cmd('normal! h')
   end
-end, { noremap = true, silent = true, desc = 'Left: close fold at col 0, else move left' })
+end, { noremap = true, silent = true, desc = 'Left: close fold at col 0 on heading, else move left' })
 
 -- Buffer navigation
 -- map("n", "<TAB>", "", { callback = function() GotoBuffer(1, 1) end }, "Next buffer")

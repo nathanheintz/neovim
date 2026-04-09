@@ -141,7 +141,7 @@ return {
 			{ "<leader>fo", "<cmd>lua SearchAllBuffers()<CR>", desc = "open buffers" },
 			{ "<leader>fw", "<cmd>lua SearchWordUnderCursor()<CR>", desc = "word project" },
 			{ "<leader>fp", "<cmd>Telescope resume<CR>", desc = "previous search" },
-			{ "<leader>fy", "<cmd>YankyRingHistory<CR>", desc = "yanks" },
+			{ "<leader>fy", "<cmd>Telescope yank_history<CR>", desc = "yanks" },
 			{ "<leader>fk", "<cmd>Telescope keymaps<CR>", desc = "keymaps" },
 			{ "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "help" },
 
@@ -170,23 +170,19 @@ return {
 			{ "<leader>mz", "<cmd>lua Snacks.zen()<CR>", desc = "zen mode" },
 			{ "<leader>mw", "<cmd>wa!<CR>", desc = "write all" },
 			{ "<leader>ml", "<cmd>Lectic<CR>", desc = "run lectic on file" },
+			{ "<leader>mx", "<cmd>lua require('lectic.submit').cancel_submit()<CR>", desc = "cancel lectic (interrupt)" },
 			{ "<leader>mn", "<cmd>lua CreateNewLecticFile()<CR>", desc = "new lectic file (multiparty)" },
 			{ "<leader>ms", "<cmd>lua SubmitLecticSelection()<CR>", desc = "submit selection with message" },
 			{ "<leader>mc", "<cmd>lua InsertContextLink()<CR>", desc = "insert context link" },
 			{ "<leader>md", "<cmd>Vocal<CR>", desc = "dictate (speech-to-text)" },
 			{ "<leader>mv", "<cmd>MarkdownPreviewToggle<CR>", desc = "markdown preview" },
 			{ "<leader>mu", "<cmd>lua OpenUrlUnderCursor()<CR>", desc = "open URL under cursor" },
-			{ "<leader>mf", function()
-				local ufo = require("ufo")
-				local w = vim.api.nvim_get_current_win()
-				if vim.w[w].ufo_folded then
-					ufo.openAllFolds()
-					vim.w[w].ufo_folded = false
-				else
-					ufo.closeAllFolds()
-					vim.w[w].ufo_folded = true
-				end
-			end, desc = "toggle all folds" },
+
+      -- OBSIDIAN
+      { "<leader>o", group = "OBSIDIAN", icon = "󰇈" },
+      { "<leader>ol", "<cmd>ObsidianFollowLink<CR>", desc = "link", icon = "" },
+      { "<leader>ot", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
+      
 
 			-- PERSONA SWITCHING
 			{ "<leader>mp", group = "SWITCH PERSONA" },
@@ -212,10 +208,17 @@ return {
 			-- TOGGLES
 			{ "<leader>mt", group = "TOGGLES" },
 			{ "<leader>mtb", "<cmd>lua _G.toggle_buffer_completion()<CR>", desc = "toggle buffer completion", icon = " " },
-			{ "<leader>mto", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
 			{ "<leader>mtx", "<cmd>lua _G.toggle_luasnip_completion()<CR>", desc = "toggle snippet completion" },
       { "<leader>mtt", "<cmd>TableModeToggle<CR>", desc = "toggle table mode" },
 
+			-- FOLDS
+			{ "<leader>z", group = "FOLDS" },
+			{ "<leader>zf", "<cmd>lua ToggleHeadingFolds()<CR>", desc = "toggle heading folds" },
+			{ "<leader>zm", "<cmd>lua ToggleFoldMode()<CR>", desc = "toggle fold mode (writing/research)" },
+			{ "<leader>zc", "zM", desc = "close all folds" },
+			{ "<leader>zo", "<cmd>lua ClearFoldPadding()<CR>zR", desc = "open all folds" },
+			{ "<leader>z1", "<cmd>lua FoldToHeadingLevel(1)<CR>", desc = "fold to H1 level" },
+			{ "<leader>z2", "<cmd>lua FoldToHeadingLevel(2)<CR>", desc = "fold to H2 level" },
 			-- SESSIONS
 			{ "<leader>s", group = "SESSIONS" },
 			{ "<leader>ss", "<cmd>lua require('resession').save()<CR>", desc = "save session" },

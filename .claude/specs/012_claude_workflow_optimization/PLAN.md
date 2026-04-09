@@ -818,8 +818,22 @@ Small fixes, tweaks, and debugging sessions.
 - [x] Phase 9: Lectic + Obsidian facts added to both CLAUDE.md files
 - [x] Phase 10: ghostdev CLAUDE.md, .claude/ infrastructure created
 - [x] GLOBAL_SUMMARY_LOG.md updated
-- [ ] Git commit (`~/.config/nvim` repo)
-- [ ] Git commit (`~/SecondBrain` repo)
+- [x] Git commit (`~/.config/nvim` repo) — 37f701c
+- [x] Git commit (`~/SecondBrain` repo) — e7d480f
 - [ ] Git commit (`~/ghostdev` repo) — no git repo initialized; skip
 
 **Note:** With Phase 10 complete, project 015 no longer needs to cover ghostdev infrastructure setup. Repurpose 015 as the first active Ghost theme development project.
+
+---
+
+## Post-Completion Fixes (2026-04-08)
+
+### Gap: obsidian-nvim docs missing from nvim-dev and librarian agents
+
+**Identified**: During project 013 (Plugin Upgrades) session — nvim-dev agent lacked obsidian-nvim documentation URLs, requiring manual WebFetch during migration work.
+
+**Root cause**: Phase 6b (nvim-dev) and Phase 6a (librarian) only specified Lectic docs. The REPORT.md described nvim-dev as having "full Lectic documentation, the nvim README, and the current plugin list" — obsidian-nvim docs were never added to either agent brief.
+
+**Fix applied**:
+- `~/.claude/agents/nvim-dev.md` — added `### Obsidian-nvim Documentation` section with 6 URLs: raw README, default.lua config, and wiki pages for Link, Frontmatter, Note, Breaking-Changes
+- `~/.claude/agents/librarian.md` — replaced stale epwalsh URL + "will migrate soon" note with the same 6-URL set (with librarian-relevant annotations emphasizing Obsidian.md compatibility)

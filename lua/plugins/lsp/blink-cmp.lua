@@ -1,20 +1,10 @@
 return {
   {
-    "saghen/blink.compat",
-    version = "2.*",
-    lazy = true,
-    opts = {
-      impersonate_nvim_cmp = true,
-    },
-  },
-  {
     "saghen/blink.cmp",
     version = "1.*",
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      "saghen/blink.compat",
       "L3MON4D3/LuaSnip",
-      "micangl/cmp-vimtex",
     },
     config = function(_, opts)
       require('blink.cmp').setup(opts)
@@ -28,10 +18,9 @@ return {
       })
 
       -- Initialize completion toggle states
-      -- Buffer starts OFF (will be off in markdown, on in other files via enabled function)
-      -- Obsidian and snippets start ON
+      -- Buffer completion OFF by default in markdown, ON elsewhere
+      -- Snippets ON by default
       vim.g.blink_buffer_enabled = false
-      vim.g.blink_obsidian_enabled = true
       vim.g.blink_snippets_enabled = true
 
       -- Global toggle functions for completion sources
@@ -41,10 +30,17 @@ return {
         vim.notify("Buffer completion " .. status, vim.log.levels.INFO)
       end
 
+      -- Buffer-local toggle: sets vim.b.completion = false to disable all
+      -- obsidian sources in the current buffer (checked by obsidian.nvim's
+      -- native blink integration)
       function _G.toggle_obsidian_completion()
-        vim.g.blink_obsidian_enabled = not vim.g.blink_obsidian_enabled
-        local status = vim.g.blink_obsidian_enabled and "enabled" or "disabled"
-        vim.notify("Obsidian completion " .. status, vim.log.levels.INFO)
+        if vim.b.completion == false then
+          vim.b.completion = nil
+          vim.notify("Obsidian completion enabled", vim.log.levels.INFO)
+        else
+          vim.b.completion = false
+          vim.notify("Obsidian completion disabled", vim.log.levels.INFO)
+        end
       end
 
       function _G.toggle_luasnip_completion()
@@ -112,9 +108,10 @@ return {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
 
         -- Smart per-filetype defaults
+        -- Note: obsidian sources (obsidian, obsidian_tags, obsidian_new) are
+        -- auto-injected into markdown by obsidian.nvim's native blink integration
         per_filetype = {
-          -- Markdown/Lectic: writing-focused completion
-          markdown = { 'lsp', 'path', 'buffer', 'snippets', 'obsidian' },
+          markdown = { 'lsp', 'path', 'buffer', 'snippets' },
           ['lectic.markdown'] = { 'lsp', 'path', 'buffer', 'snippets' },
 
           -- LaTeX: VimTeX + snippets priority
@@ -192,15 +189,6 @@ return {
             max_items = 50,
             min_keyword_length = 0,
             score_offset = 100,
-          },
-          obsidian = {
-            name = 'obsidian',
-            module = 'blink.compat.source',
-            enabled = function()
-              return vim.bo.filetype == 'markdown' and vim.g.blink_obsidian_enabled ~= false
-            end,
-            min_keyword_length = 2,
-            max_items = 20,
           },
           cmdline = {
             name = 'cmdline',

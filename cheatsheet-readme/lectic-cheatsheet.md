@@ -7,6 +7,7 @@
 
 ### Running Lectic
 - `<leader>ml` - Process entire buffer
+- `<leader>mx` - Cancel/interrupt running Lectic request
 - `<leader>mS` - Submit visual selection with message (visual mode)
 - `:Lectic` - Process entire buffer
 - `:Lectic {line1},{line2}` - Process specific line range

@@ -374,6 +374,15 @@ Single-party AI conversations with 12 personas (multi-party mode disabled - brok
 - `[text](url)` - Link
 - ````code```` - Code block
 
+### Folding (`<leader>z`)
+- `<leader>zm` - Toggle fold mode: writing (treesitter/headings) ↔ research (LSP/code blocks)
+- `<leader>zf` - Toggle all heading folds open/closed
+- `<leader>z1` - Fold all H2+ sections (show H1 outline only, with visual spacing)
+- `<leader>z2` - Fold all H3+ sections (show H1–H2 outline)
+- `<leader>zc` - Close all folds
+- `<leader>zo` - Open all folds (also clears H1 visual spacing)
+- `<Left>` at col 0 on a heading - Close that heading's fold
+
 
 ## Tips and Tricks
 

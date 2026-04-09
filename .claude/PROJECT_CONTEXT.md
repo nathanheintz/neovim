@@ -190,7 +190,7 @@ Based on current working directory (see `lua/core/options.lua`):
 1. Edit `lua/plugins/which-key.lua`
 2. Add to appropriate menu group
 3. Update CHEATSHEET.md
-4. Reload config with `<leader>rr`
+4. Restart nvim to pick up changes
 
 ### Adding a New Plugin
 1. Create `lua/plugins/plugin-name.lua`
