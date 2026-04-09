@@ -365,3 +365,30 @@ map("i", "<Down>", "<C-o>gj", {}, "Move down visual line")
 -- Insert mode paragraph navigation
 map("i", "<C-M-Up>", "<C-o>{", {}, "Move to start of paragraph")
 map("i", "<C-M-Down>", "<C-o>}", {}, "Move to end of paragraph")
+
+-- Safe buffer delete: switch window to another buffer before closing,
+-- so splits (e.g. ClaudeCode terminal) don't expand to fill the screen.
+local function safe_bdelete()
+  local current = vim.api.nvim_get_current_buf()
+  local fallback = nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current
+      and vim.bo[buf].buflisted
+      and vim.bo[buf].buftype == ""
+    then
+      fallback = buf
+      break
+    end
+  end
+  if fallback then
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_buf(win) == current then
+        vim.api.nvim_win_set_buf(win, fallback)
+      end
+    end
+  end
+  vim.cmd("bdelete " .. current)
+end
+
+vim.api.nvim_create_user_command("Bd", safe_bdelete, {})
+vim.cmd("cnoreabbrev bd Bd")
