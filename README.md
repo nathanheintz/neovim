@@ -195,16 +195,22 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
     └── docs/               # System documentation
 ```
 
-## Development Workflow
-This configuration includes a `.claude/` documentation system for planning and implementing changes.
+## Claude Code Integration
 
-In claude code, run `/init` with the nvim config as the cwd to initialize the workflow. The agent will: 
-  - Review project context files 
-  - Abide by session protocols
-  - Build and design collaboratively with the user
-  - Summarize, document and commit work progressively to prevent work loss
+This config runs claude code via the claudecode.nvim plugin with cwd-specific context loading allowing you to separate config development and zettelkasten maintenance/creative work. Shared global behavior, skills and memory persist across contexts.
 
-See `.claude/SESSION_PROTOCOL.md` for complete documentation system guide.
+**Context layers:**
+- Global `~/.claude/CLAUDE.md` — master map; @imports universal behavior rules and profile
+- `~/.config/nvim/CLAUDE.md` — this repo's full context, auto-loaded when CWD is here
+- On-demand: plugin docs fetched via `Read` or `WebFetch` when working on a specific plugin
+
+**Global infrastructure (`~/.claude/`):**
+- `settings.json` — global read permissions; `autoMemoryDirectory` pointing to shared memory pool
+- `skills/init/SKILL.md` — `/init` skill works from any CWD; loads project history and session protocol
+- `agents/librarian.md` — vault operations: decomposing AI writing sessions into atomic Zettelkasten notes, suggesting directional links between notes (North/South = abstraction level, East/West = related concepts), and auditing the vault for orphaned or under-linked notes
+- `agents/ghost-dev.md` — Ghost theme development specialist
+
+See `.claude/SESSION_PROTOCOL.md` for git protocol and documentation standards.
 
 ## License
 MIT License - feel free to use and modify for your own configuration.
