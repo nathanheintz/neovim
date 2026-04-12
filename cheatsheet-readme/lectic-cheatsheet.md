@@ -3,7 +3,8 @@
 ## Key Commands
 
 ### Creating Files
-- `<leader>mn` - Create new Lectic file (Homie)
+- `<leader>mn` - Create new Lectic file (Scholar default, Obsidian-compatible frontmatter)
+- `<leader>mf` - Add Lectic frontmatter to existing Obsidian doc (Scholar as default persona)
 
 ### Running Lectic
 - `<leader>ml` - Process entire buffer
@@ -14,7 +15,7 @@
 
 ### Context & Persona Commands
 - `<leader>mc` - Insert context link with path completion
-- `<leader>mp` - Switch persona submenu (see below)
+- `<leader>mp` - Switch persona submenu (inserts `:ask[Name]` at cursor)
 
 ### Which-Key Menu (`<leader>m`)
 ```
@@ -22,7 +23,8 @@
   z - Zen mode
   w - Write all
   l - Run Lectic on file
-  n - New Lectic file (Homie)
+  n - New Lectic file (Scholar)
+  f - Add Lectic frontmatter (Scholar)
   c - Insert context link
   p - Switch persona submenu
   S - Submit selection with message
@@ -34,12 +36,12 @@
 
 ### Persona Switching Menu (`<leader>mp`)
 ```
-<leader>mp - SWITCH PERSONA
+<leader>mp - SWITCH PERSONA (inserts :ask[Name] at cursor)
   c - Consultant
   m - Marketing
   f - Finance
   p - Product
-  r - Researcher
+  r - Researcher (has paper_search tool)
   w - Writer
   e - Editor
   d - Designer
@@ -49,107 +51,81 @@
   n - Nomad
 ```
 
-## Persona Modes
+## How Multi-Party Works (v0.0.3)
 
-**IMPORTANT:** Multi-party conversations are broken in Lectic beta6, so only single-party modes work.
+True multi-party mode is working as of 2026-04-12. All 12 personas are defined globally in
+`~/Library/Preferences/lectic/lectic.yaml` (Lectic's system config on macOS). This config
+merges into every document automatically — no persona prompts needed in frontmatter.
 
-When creating a new file with `<leader>mn`, it starts with the Homie persona by default.
+**To switch personas mid-conversation:**
+1. Press `<leader>mp` and select a persona (e.g. `e` for Editor)
+2. `:ask[Editor]` is inserted at the cursor on a new line
+3. Continue typing your message on the same line after the directive
+4. Run Lectic — all subsequent responses come from Editor
 
-To use other personas (Consultant, Marketing, Finance, Product, Researcher, Writer, Editor, Designer, Scholar, Scribe, Nomad), use `<leader>mp` to switch personas.
+**`:ask[Name]`** — permanently switches the active speaker for all turns that follow.
+**`:aside[Name]`** — single-turn switch; reverts to previous speaker after one response.
+
+## Frontmatter
+
+Minimal frontmatter — Lectic pulls the full persona config from the system yaml:
+
+```yaml
+---
+id:
+aliases: []
+tags: []
+interlocutor:
+  name: Scholar
+  prompt:
+---
+```
+
+- `prompt:` can be empty — Lectic uses the persona definition from the system config
+- No `provider:` needed
+- All 12 personas available via `:ask[Name]` even with just Scholar declared
+
+**To add this frontmatter to an existing Obsidian note:** `<leader>mf`
 
 ## Adding Context Files
 
 Add markdown links to context files in the body of your document (not in frontmatter).
 
-**Quick method:** Use `<leader>mc` to insert `[Context](/Users/nathanheintz/SecondBrain/)` with cursor positioned for path completion (use `Ctrl+x Ctrl+f` to complete file paths).
-
-**Example:**
-```markdown
----
-id: business-plan-2025
-aliases: []
-tags: []
-interlocutor:
-  name: Consultant
-  prompt: You are a business strategy expert.
----
-
-# Business Plan
-
-Reference documents:
-[Brand Guidelines](/Users/nathanheintz/SecondBrain/brand-guidelines.md)
-[Market Research](/Users/nathanheintz/SecondBrain/market-research.md)
-
-Question for business strategy expert
-```
+**Quick method:** Use `<leader>mc` to insert `[Context](/Users/nathanheintz/SecondBrain/)` with
+cursor positioned for path completion (use `Ctrl+x Ctrl+f` to complete file paths).
 
 **Requirements:**
 - Use markdown link syntax: `[Description](/absolute/path)`
 - Must use absolute paths (NOT `~/`)
 - Place links in document body before asking questions
 
-## Frontmatter Examples
-
-### Single-Party Format (Currently Working)
-```yaml
----
-id: essay-draft
-aliases: []
-tags: []
-interlocutor:
-  name: Writer
-  prompt: You are a design writer with a minimalist, accessible style.
----
-```
-
-**Required field order:** `id`, `aliases`, `tags`, `interlocutor`
-
-**Important:**
-- Empty arrays must use `[]`, not blank lines
-- Use `interlocutor:` (singular) not `interlocutors:` (plural)
-- No `:ask[Name]` directive needed in single-party mode
-
-### Multi-Party Format (DISABLED - Broken in beta6)
-```yaml
----
-# THIS FORMAT DOES NOT WORK IN CURRENT VERSION
-# interlocutors:
-#   - name: Consultant
-#     prompt: You are a business strategy expert.
-#   - name: Marketing
-#     prompt: You are a marketing specialist.
----
-```
-
-Multi-party conversations with `:ask[Name]` directives are broken in Lectic beta6. Use single-party mode and switch personas with `<leader>mp` instead.
-
-## Switching Personas
-
-To change the active persona in your document:
-
-1. Press `<leader>mp` to open the persona switching menu
-2. Select the persona you want (e.g., `w` for Writer, `c` for Consultant)
-3. The frontmatter updates automatically, preserving your `id`, `aliases`, and `tags`
-
-**Available personas:** Consultant, Marketing, Finance, Product, Researcher, Writer, Editor, Designer, Scholar, Scribe, Homie, Nomad
-
----
-
 ## Technical Details
 
 ### Where Personas Are Defined
 
-All persona definitions are in `~/.config/nvim/lua/plugins/lectic.lua`:
-- `persona_modes` table (line 26) - for file creation
-- `all_personas` table (line 228) - for persona switching
+All 12 personas are in `~/Library/Preferences/lectic/lectic.yaml` — Lectic's system config
+on macOS. This is NOT `~/.config/lectic/lectic.yaml`, which Lectic silently ignores unless
+the `LECTIC_CONFIG` env var is set.
+
+**Personas**: Homie, Consultant, Marketing, Finance, Product, Researcher (paper_search tool),
+Writer, Editor, Designer, Scholar, Scribe, Nomad
+
+**paper_search**: Defined via `kits:` in the same system yaml. Researcher's entry uses
+`tools: - kit: paper_search`. No inline MCP config in frontmatter.
 
 ### How Commands Work
 
 **`CreateNewLecticFile()` (`<leader>mn`)**
 1. Opens new buffer
-2. Generates single-party frontmatter with Homie persona and Obsidian fields
-3. Prompts for save location
+2. Generates Obsidian-compatible frontmatter with Scholar as default interlocutor
+3. Prompts for save location with date-based default filename
 4. Saves file with `.md` extension
+
+**`AddLecticFrontmatter()` (`<leader>mf`)**
+1. Finds existing frontmatter boundaries
+2. Collects Obsidian fields (id, aliases, tags), strips any existing interlocutor block
+3. Appends `interlocutor: / name: Scholar / prompt:` to the frontmatter
+4. Leaves all other Obsidian fields intact
 
 **`InsertContextLink()` (`<leader>mc`)**
 1. Inserts `[Context](/Users/nathanheintz/SecondBrain/)` on new line
@@ -157,10 +133,9 @@ All persona definitions are in `~/.config/nvim/lua/plugins/lectic.lua`:
 3. Starts insert mode for immediate path completion
 
 **`SwitchLecticPersona()` (`<leader>mp`)**
-1. Reads current frontmatter
-2. Preserves Obsidian fields (`id`, `aliases`, `tags`)
-3. Updates `interlocutor.name` and `interlocutor.prompt` only
-4. Writes new frontmatter back to file
+1. Inserts `:ask[PersonaName] ` on a new line at the current cursor position
+2. Positions cursor at end of directive and enters insert mode
+3. No frontmatter mutation — persona switching is inline via Lectic directives
 
 **`SubmitLecticSelection()` (`<leader>mS`)**
 1. Captures visual selection
@@ -183,7 +158,7 @@ All persona definitions are in `~/.config/nvim/lua/plugins/lectic.lua`:
 
 **Model setting** (in `lua/plugins/lectic.lua`):
 ```lua
-vim.g.lectic_model = "claude-3-7-sonnet"
+vim.g.lectic_model = "claude-sonnet-4-6"
 ```
 
 **Concealment** (for lectic.markdown files):

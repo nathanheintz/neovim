@@ -18,14 +18,14 @@ This configuration prioritizes:
 - Dynamic section folding via nvim-ufo — folds update as you type, fold/unfold with `<leader>mf`
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
-- Lectic AI assistance with 12 personas:
-  - **Business Personas**: Consultant, Marketing, Finance, Product
-  - **Writing Personas**: Researcher, Writer, Editor
-  - **Workshop Design Personas**: Designer, Scholar, Scribe
-  - **Homie**: A helpful generalist (philosopher, psychologist, designer, writer)
-  - **Nomad**: Travel planner & digital nomadism expert
-  - Switch personas mid-conversation with <leader>mp and select your persona - frontmatter will update, preserving Obsidian fields and previous conversation
-  - Context files added to conversation via simple markdown link syntax.  
+- Lectic AI assistance with 12 personas in true multi-party mode (v0.0.3):
+  - **Business**: Consultant, Marketing, Finance, Product
+  - **Research & Writing**: Researcher (with paper_search MCP tool), Writer, Editor
+  - **Workshop & Design**: Designer, Scholar, Scribe
+  - **General**: Homie, Nomad
+  - All personas defined globally — frontmatter only needs `name: Scholar` (Scholar is default)
+  - Switch personas mid-conversation with `<leader>mp` — inserts `:ask[Name]` directive at cursor
+  - Context files added to conversation via markdown link syntax in document body
 
 ### LaTeX Publishing
 - VimTeX integration with forward/inverse search
@@ -94,7 +94,8 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 *Writing & AI*:
 - `<leader>mz` - Toggle zen mode (focus/unfocus window)
 - `<leader>md` - Dictate (speech-to-text)
-- `<leader>mn` - Create new Lectic file (Homie)
+- `<leader>mn` - Create new Lectic file (Scholar)
+- `<leader>mf` - Add Lectic frontmatter to existing Obsidian doc
 - `<leader>ml` - Run Lectic on current file
 - `<leader>mc` - Insert context link
 - `<leader>mp` - Switch Lectic persona

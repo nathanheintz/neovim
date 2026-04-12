@@ -23,171 +23,99 @@ return {
       end
     })
 
-    -- Define multi-persona mode templates
-    local persona_modes = {
-      -- MULTI-PARTY MODES DISABLED: Multi-party conversations are broken in Lectic beta6
-      -- business = {
-      --   {
-      --     name = "Consultant",
-      --     prompt = "You are a business strategy expert and professional services business development specialist. Help me develop strategic plans, identify opportunities, build client relationships, and grow consulting practices."
-      --   },
-      --   {
-      --     name = "Marketing",
-      --     prompt = "You are a marketing and storytelling specialist. Help me craft compelling narratives, develop marketing strategies, create content that resonates, and communicate value effectively."
-      --   },
-      --   {
-      --     name = "Finance",
-      --     prompt = "You are a finance expert. Help me with financial planning, budgeting, pricing strategies, revenue models, and financial decision-making for professional services."
-      --   },
-      --   {
-      --     name = "Product",
-      --     prompt = "You are a product and service design expert. Help me design offerings, refine service delivery, create customer experiences, and develop innovative solutions."
-      --   },
-      -- },
-      -- writing = {
-      --   {
-      --     name = "Researcher",
-      --     prompt = "You are a logician, philosopher, and political theorist. You're also a neuroscientist, anthropologist, and psychologist with expertise in conflict resolution, peacebuilding, restorative justice, and organizational psychology. Help me research, analyze, and synthesize ideas rigorously."
-      --   },
-      --   {
-      --     name = "Writer",
-      --     prompt = "You are a design writer with a minimalist, accessible style. You treat language as a designed object - every word is intentional. You are humble, curious, and detail-oriented without being verbose. Help me write accessible nonfiction about internal arts, personal development, leadership, and philosophy."
-      --   },
-      --   {
-      --     name = "Editor",
-      --     prompt = "You are a nonfiction editor and storytelling expert with deep knowledge of editing theory. Help me refine my writing, improve structure, clarify arguments, and strengthen narrative flow."
-      --   },
-      -- },
-      -- workshop = {
-      --   {
-      --     name = "Designer",
-      --     prompt = "You are an expert workshop designer and facilitator with a vast facilitation tool library. Help me design engaging workshops, create effective exercises, structure learning experiences, and facilitate transformative group processes."
-      --   },
-      --   {
-      --     name = "Scholar",
-      --     prompt = "You are a scientific researcher specializing in bringing rigorous, cited research findings to support workshop content and exercises. Help me find relevant studies, back up concepts with evidence, and ensure academic rigor."
-      --   },
-      --   {
-      --     name = "Scribe",
-      --     prompt = "You are a succinct writer specializing in building clear, concise slide notes and workshop content. Help me distill complex ideas into digestible formats, write effective facilitation notes, and create participant materials."
-      --   },
-      -- },
-      homie = {
-        {
-          name = "Homie",
-          prompt = "You are a logician, philosopher, political theorist, pedagogist, psychologist, and psychonaut. You have deep expertise in systemic change, conflict resolution, peacebuilding, restorative justice, and social practice art. You understand neuroscience, anthropology, organizational psychology, and transformative learning. Help me think through complex problems with wisdom, rigor, and creativity."
-        },
-      },
-      nomad = {
-        {
-          name = "Nomad",
-          prompt = "You are a travel planner and digital nomadism expert. You know everything about travel hacks, different cities around the world, learning languages, digital nomad and other types of visas, travel strategies, hidden destinations, cost-effective living abroad, and the practicalities of location-independent work. Help me plan travels, navigate logistics, and optimize the nomadic lifestyle."
-        },
-      },
-      -- MULTI-PARTY TEST MODE DISABLED: Multi-party conversations are broken in Lectic beta6
-      -- test = {
-      --   {
-      --     name = "Moonstard",
-      --     prompt = "You're an overly sentimental self-help guru who drinks way too much Kava. You're constantly talking about how compassion and self-regulation is the answer to humanity's problems. Spiritual healing is all you can talk about."
-      --   },
-      --   {
-      --     name = "Bruce",
-      --     prompt = "You're an urban New Yorker with a hard edge and a short fuse who cares deeply about how badass his city is, and that's all you can talk about. You make everything about NYC."
-      --   },
-      -- },
-    }
-
-    -- Create a function to create a new Lectic file
-    function _G.CreateNewLecticFile(mode)
-      -- Open a new buffer
+    -- Create a new Lectic file with Obsidian-compatible frontmatter.
+    -- Scholar is the default persona; prompt/provider pulled from ~/Library/Preferences/lectic/lectic.yaml.
+    function _G.CreateNewLecticFile()
       vim.cmd("enew")
       vim.cmd("setfiletype markdown")
 
-      local function create_file_with_mode(selected_mode)
-        local interlocutors = persona_modes[selected_mode]
+      local template = table.concat({
+        "---",
+        "id:",
+        "aliases: []",
+        "tags: []",
+        "interlocutor:",
+        "  name: Scholar",
+        "  prompt:",
+        "---",
+        "",
+        "",
+      }, "\n")
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(template, "\n"))
 
-        if not interlocutors then
-          vim.notify("Unknown mode: " .. selected_mode, vim.log.levels.ERROR)
-          return
-        end
-
-        -- Build frontmatter based on single vs multi-party
-        local interlocutors_yaml
-        if #interlocutors == 1 then
-          -- Single party: use interlocutor (singular)
-          interlocutors_yaml = "interlocutor:\n" ..
-            "  name: " .. interlocutors[1].name .. "\n" ..
-            "  prompt: " .. interlocutors[1].prompt .. "\n"
-        -- MULTI-PARTY DISABLED: Multi-party conversations are broken in Lectic beta6
-        -- else
-        --   -- Multi-party: use interlocutors (plural array)
-        --   -- Multi-party REQUIRES provider field for each interlocutor
-        --   -- Model comes from global vim.g.lectic_model setting
-        --   interlocutors_yaml = "interlocutors:\n"
-        --   for _, persona in ipairs(interlocutors) do
-        --     interlocutors_yaml = interlocutors_yaml ..
-        --       "  - name: " .. persona.name .. "\n" ..
-        --       "    provider: anthropic\n" ..
-        --       "    prompt: " .. persona.prompt .. "\n"
-        --   end
-        end
-
-        -- Build template (always use Obsidian-compatible format)
-        local template
-        local default_extension
-        -- MULTI-PARTY TEST MODE DISABLED
-        -- if selected_mode == "test" then
-        --   -- Pure Lectic format: no Obsidian fields, .lec extension
-        --   template = "---\n" .. interlocutors_yaml .. "---\n\n"
-        --   default_extension = ".lec"
-        -- else
-          -- Obsidian-compatible format: include id/aliases/tags, .md extension
-          template = "---\n" ..
-              "id:\n" ..
-              "aliases: []\n" ..
-              "tags: []\n" ..
-              interlocutors_yaml ..
-              "---\n\n"
-          default_extension = ".md"
-        -- end
-
-        -- Insert the template
-        vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(template, "\n"))
-
-        -- Prompt for save location
-        local cwd = vim.fn.getcwd()
-        local default_filename = cwd .. "/" .. os.date("%Y-%m-%d") .. default_extension
-        vim.ui.input({
-          prompt = "Save as: ",
-          default = default_filename,
-          completion = "file"
-        }, function(filepath)
-          if filepath and filepath ~= "" then
-            -- Add appropriate extension if missing (always .md now)
-            -- MULTI-PARTY TEST MODE DISABLED
-            -- local ext_pattern = selected_mode == "test" and "%.lec$" or "%.md$"
-            local ext_pattern = "%.md$"
-            if not filepath:match(ext_pattern) then
-              filepath = filepath .. default_extension
-            end
-
-            local ok, err = pcall(function()
-              vim.cmd("write " .. vim.fn.fnameescape(filepath))
-            end)
-
-            if ok then
-              vim.notify("Lectic file created: " .. filepath, vim.log.levels.INFO)
-              vim.api.nvim_win_set_cursor(0, { vim.api.nvim_buf_line_count(0), 0 })
-            else
-              vim.notify("Failed to save file: " .. err, vim.log.levels.ERROR)
-            end
+      local cwd = vim.fn.getcwd()
+      local default_filename = cwd .. "/" .. os.date("%Y-%m-%d") .. ".md"
+      vim.ui.input({
+        prompt = "Save as: ",
+        default = default_filename,
+        completion = "file"
+      }, function(filepath)
+        if filepath and filepath ~= "" then
+          if not filepath:match("%.md$") then
+            filepath = filepath .. ".md"
           end
-        end)
+          local ok, err = pcall(function()
+            vim.cmd("write " .. vim.fn.fnameescape(filepath))
+          end)
+          if ok then
+            vim.notify("Lectic file created: " .. filepath, vim.log.levels.INFO)
+            vim.api.nvim_win_set_cursor(0, { vim.api.nvim_buf_line_count(0), 0 })
+          else
+            vim.notify("Failed to save file: " .. err, vim.log.levels.ERROR)
+          end
+        end
+      end)
+    end
+
+    -- Add Scholar interlocutor fields to an existing document's frontmatter.
+    -- Preserves all existing Obsidian fields (id, aliases, tags).
+    -- Use <leader>mp to switch to other personas via :ask[Name] after this.
+    function _G.AddLecticFrontmatter()
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+      local frontmatter_start, frontmatter_end
+      if lines[1] == "---" then
+        frontmatter_start = 1
+        for i = 2, #lines do
+          if lines[i] == "---" or lines[i] == "..." then
+            frontmatter_end = i
+            break
+          end
+        end
       end
 
-      -- Always create with Homie mode (single-party)
-      -- Use <leader>mp to switch to other personas after creation
-      create_file_with_mode("homie")
+      if not frontmatter_start or not frontmatter_end then
+        vim.notify("No valid frontmatter found", vim.log.levels.ERROR)
+        return
+      end
+
+      -- Collect Obsidian fields, skip any existing interlocutor block
+      local obsidian_fields = {}
+      local in_interlocutor = false
+      for i = frontmatter_start + 1, frontmatter_end - 1 do
+        local line = lines[i]
+        if line:match("^interlocutor:") then
+          in_interlocutor = true
+        elseif in_interlocutor and line:match("^%s+") then
+          -- skip
+        else
+          in_interlocutor = false
+          table.insert(obsidian_fields, line)
+        end
+      end
+
+      -- Build new frontmatter with Scholar appended
+      local new_frontmatter = { "---" }
+      for _, field in ipairs(obsidian_fields) do
+        table.insert(new_frontmatter, field)
+      end
+      table.insert(new_frontmatter, "interlocutor:")
+      table.insert(new_frontmatter, "  name: Scholar")
+      table.insert(new_frontmatter, "  prompt:")
+      table.insert(new_frontmatter, "---")
+
+      vim.api.nvim_buf_set_lines(0, frontmatter_start - 1, frontmatter_end, false, new_frontmatter)
+      vim.notify("Added Scholar interlocutor to frontmatter", vim.log.levels.INFO)
     end
   end,
 
@@ -254,139 +182,15 @@ return {
       vim.cmd("startinsert")
     end
 
-    -- Define all personas as a flat list for single-party switching
-    local all_personas = {
-      {
-        name = "Consultant",
-        prompt = "You are a business strategy expert and professional services business development specialist. Help me develop strategic plans, identify opportunities, build client relationships, and grow consulting practices."
-      },
-      {
-        name = "Marketing",
-        prompt = "You are a marketing and storytelling specialist. Help me craft compelling narratives, develop marketing strategies, create content that resonates, and communicate value effectively."
-      },
-      {
-        name = "Finance",
-        prompt = "You are a finance expert. Help me with financial planning, budgeting, pricing strategies, revenue models, and financial decision-making for professional services."
-      },
-      {
-        name = "Product",
-        prompt = "You are a product and service design expert. Help me design offerings, refine service delivery, create customer experiences, and develop innovative solutions."
-      },
-      {
-        name = "Researcher",
-        prompt = "You are a logician, philosopher, and political theorist. You're also a neuroscientist, anthropologist, and psychologist with expertise in conflict resolution, peacebuilding, restorative justice, and organizational psychology. Help me research, analyze, and synthesize ideas rigorously.",
-        tools = {
-          "  tools:",
-          "    - kit: paper_search",
-        },
-      },
-      {
-        name = "Writer",
-        prompt = "You are a design writer with a minimalist, accessible style. You treat language as a designed object - every word is intentional. You are humble, curious, and detail-oriented without being verbose. Help me write accessible nonfiction about internal arts, personal development, leadership, and philosophy."
-      },
-      {
-        name = "Editor",
-        prompt = "You are a nonfiction editor and storytelling expert with deep knowledge of editing theory. Help me refine my writing, improve structure, clarify arguments, and strengthen narrative flow."
-      },
-      {
-        name = "Designer",
-        prompt = "You are an expert workshop designer and facilitator with a vast facilitation tool library. Help me design engaging workshops, create effective exercises, structure learning experiences, and facilitate transformative group processes."
-      },
-      {
-        name = "Scholar",
-        prompt = "You are a scientific researcher specializing in bringing rigorous, cited research findings to support workshop content and exercises. Help me find relevant studies, back up concepts with evidence, and ensure academic rigor."
-      },
-      {
-        name = "Scribe",
-        prompt = "You are a succinct writer specializing in building clear, concise slide notes and workshop content. Help me distill complex ideas into digestible formats, write effective facilitation notes, and create participant materials."
-      },
-      {
-        name = "Homie",
-        prompt = "You are a logician, philosopher, political theorist, pedagogist, psychologist, and psychonaut. You have deep expertise in systemic change, conflict resolution, peacebuilding, restorative justice, and social practice art. You understand neuroscience, anthropology, organizational psychology, and transformative learning. Help me think through complex problems with wisdom, rigor, and creativity."
-      },
-      {
-        name = "Nomad",
-        prompt = "You are a travel planner and digital nomadism expert. You know everything about travel hacks, different cities around the world, learning languages, digital nomad and other types of visas, travel strategies, hidden destinations, cost-effective living abroad, and the practicalities of location-independent work. Help me plan travels, navigate logistics, and optimize the nomadic lifestyle."
-      },
-    }
-
-    -- Create a global function to switch persona in single-party mode
+    -- Insert an :ask[Name] directive at the current cursor position.
+    -- Personas are defined globally in ~/Library/Preferences/lectic/lectic.yaml.
+    -- :ask[Name] permanently switches the active interlocutor for all subsequent turns.
     function _G.SwitchLecticPersona(persona_name)
-      -- Find the persona
-      local persona = nil
-      for _, p in ipairs(all_personas) do
-        if p.name == persona_name then
-          persona = p
-          break
-        end
-      end
-
-      if not persona then
-        vim.notify("Persona '" .. persona_name .. "' not found", vim.log.levels.ERROR)
-        return
-      end
-
-      -- Read current file
-      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-      -- Find frontmatter boundaries
-      local frontmatter_start = nil
-      local frontmatter_end = nil
-
-      if lines[1] == "---" then
-        frontmatter_start = 1
-        for i = 2, #lines do
-          if lines[i] == "---" then
-            frontmatter_end = i
-            break
-          end
-        end
-      end
-
-      if not frontmatter_start or not frontmatter_end then
-        vim.notify("No valid frontmatter found", vim.log.levels.ERROR)
-        return
-      end
-
-      -- Extract frontmatter lines
-      local frontmatter_lines = {}
-      local obsidian_fields = {}
-      local in_interlocutor = false
-
-      for i = frontmatter_start + 1, frontmatter_end - 1 do
-        local line = lines[i]
-
-        -- Preserve Obsidian fields
-        if line:match("^id:") or line:match("^aliases:") or line:match("^tags:") then
-          table.insert(obsidian_fields, line)
-        elseif line:match("^interlocutor:") or line:match("^interlocutors:") then
-          in_interlocutor = true
-        elseif in_interlocutor and (line:match("^%s+") or line:match("^  ")) then
-          -- Skip existing interlocutor content
-        else
-          in_interlocutor = false
-        end
-      end
-
-      -- Build new frontmatter
-      local new_frontmatter = {"---"}
-      for _, field in ipairs(obsidian_fields) do
-        table.insert(new_frontmatter, field)
-      end
-      table.insert(new_frontmatter, "interlocutor:")
-      table.insert(new_frontmatter, "  name: " .. persona.name)
-      table.insert(new_frontmatter, "  prompt: " .. persona.prompt)
-      if persona.tools then
-        for _, line in ipairs(persona.tools) do
-          table.insert(new_frontmatter, line)
-        end
-      end
-      table.insert(new_frontmatter, "---")
-
-      -- Replace frontmatter
-      vim.api.nvim_buf_set_lines(0, frontmatter_start - 1, frontmatter_end, false, new_frontmatter)
-
-      vim.notify("Switched to persona: " .. persona_name, vim.log.levels.INFO)
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+      local directive = ":ask[" .. persona_name .. "] "
+      vim.api.nvim_buf_set_lines(0, row, row, false, { directive })
+      vim.api.nvim_win_set_cursor(0, { row + 1, #directive })
+      vim.cmd("startinsert!")
     end
 
     -- Create a global function to submit current lectic section

@@ -1,50 +1,106 @@
 # 014: Agents, Commands & Skills — Plan
 
-**Status**: Not started
-**Depends on**: 012 (Claude Workflow Optimization) — agents librarian, nvim-dev, ghost-dev must exist before skills that invoke them are written
-**CWD**: `~/.config/nvim` (for nvim-specific skills) and `~/SecondBrain` (for vault skills)
-
----
-
-## Overview
-
-Two workstreams:
-1. Create vault-operation skills/commands for SecondBrain
-2. Check Lectic multi-party mode status and re-enable if fixed
+**Status**: Phase 1 complete (2026-04-12). Phase 2 not yet started.
+**Depends on**: 012 PLAN2 (Claude optimization) can proceed in parallel — agents will be
+updated as part of that project, but this plan's Phase 1 is independent.
+**CWD**: `~/.config/nvim` (for Lectic config) and `~/SecondBrain` (for vault skills)
 
 ---
 
 ## Agent Notes
 
-**Before starting:** Invoke `nvim-dev` to load config context.
+**nvim-dev agent**: Parked for now. The nvim-dev.md file is being updated as part of
+012 PLAN2 — its content (Lectic facts, paper_search config, persona-switching workflow)
+will flow into main session context via the CWD-conditional /init instead of requiring
+agent invocation. Do not invoke nvim-dev as a specialist during this plan's execution.
 
 **Key facts:**
 - Lectic works in `.md` files (primary) and `.lec` files. The plugin loads for both `markdown` and `lectic.markdown` filetypes. Do not suggest filetype changes.
 - Obsidian and Lectic frontmatter coexist in the same `.md` files without conflict. Never suggest separating them.
 - Skills/commands live in `.claude/commands/` (project-scoped) or `~/.claude/skills/` (user-scoped).
-- The `librarian` agent handles all vault operations (Zettelkasten handoff + maintenance). It must exist before `/zettel-from-doc` and `/vault-context` skills are written.
 - Lectic documentation: `https://grahamlk.me/Lectic/llms-full.md` (complete, single URL).
 - Lectic source: `https://github.com/gleachkr/Lectic`
 
-**Skill file format:**
-```markdown
----
-name: skill-name
-description: One-line description for auto-invocation matching
-allowed-tools: Read, Glob, Grep, Write
----
-Skill prompt content here.
-```
-
 ---
 
-## Phase 1: Vault Operation Skills
+## Phase 1: Lectic Multi-Party Mode — Investigation and Fix
 
-These skills live at `~/SecondBrain/.claude/commands/` (project-scoped to SecondBrain).
+### Background
 
-### 1a. `/vault-status`
+Nathan's primary writing workflow is switching personas mid-document using `<leader>mp[key]`
+(mpr=Researcher, mpw=Writer, mpe=Editor, etc.). This was implemented via `SwitchLecticPersona()`
+in `lua/plugins/lectic.lua` — a custom build that rewrites `interlocutor:` (singular) in
+the frontmatter on each switch.
 
-Gives Claude an instant snapshot of the vault state without manual description.
+**This is now broken.** Lectic v0.0.3 (released 2026-03-31) introduced strict document
+history parsing. It reads `:::Name` response blocks from the full document and validates
+each against the list of known interlocutors. When `interlocutor:` (singular) only defines
+one persona, any `:::PreviousPersona` block from earlier in the conversation throws:
+`interlocutor [Name] can't be found!`
+
+The frontmatter-switching approach is fundamentally incompatible with v0.0.3's history
+parsing. It needs to be replaced.
+
+**What Nathan wants**: Use Lectic multi-party mode as Graham intends it — multiple personas
+available in a single document, switching between them naturally, without overly complex
+frontmatter.
+
+### The Multi-Party Approach
+
+Lectic's native multi-party format uses `interlocutors:` (plural) with an array of personas.
+Each persona is then addressed via the `:::Name` directive syntax. This is what v0.0.3
+was built for.
+
+**The frontmatter complexity concern**: Defining all persona prompts inline means very long
+YAML. However, Lectic v0.0.2 added `imports:` support — top-level imports that load config
+from external files. This may allow persona definitions to live in `~/.config/lectic/lectic.yaml`
+(which already exists and defines the paper_search tool) and be referenced in documents
+without repeating full prompts.
+
+This needs to be investigated before designing the fix.
+
+### Investigation Steps
+
+- [x] Fetch `https://grahamlk.me/Lectic/llms-full.md` — read in full
+- [x] Read `~/.config/lectic/lectic.yaml` — understood current structure
+- [x] Read `lua/plugins/lectic.lua` in full — understood current state
+- [x] Design the replacement workflow
+
+### Design Decisions
+
+- [x] Decide: define personas in lectic.yaml (global) — confirmed, no frontmatter duplication needed
+- [x] Decide: keep `<leader>mp` switching — yes, but now inserts `:ask[Name]` instead of rewriting frontmatter
+- [x] Decide: existing documents — `:::Name` blocks validate correctly once named personas are in lectic.yaml
+- [x] Draft proposed changes — approved, implemented
+
+**Notes:**
+- `kit:` references a `kits:` top-level array. `- kit: paper_search` in Researcher's `tools:` is valid
+  and working. Researcher entry in `~/Library/Preferences/lectic/lectic.yaml` uses `tools: - kit: paper_search`.
+- macOS critical finding: Lectic reads `~/Library/Preferences/lectic/lectic.yaml`, NOT `~/.config/lectic/lectic.yaml`.
+  The latter is silently ignored. Writing personas to wrong file caused `:ask[Editor]` failure.
+- Document frontmatter: `interlocutor: name: Scholar / prompt:` (empty prompt is valid — Lectic merges full
+  prompt from system config). No `provider:` needed.
+- `SwitchLecticPersona()` inserts `:ask[Name] ` at cursor and enters insert mode — no frontmatter mutation.
+- `CreateNewLecticFile()` and `AddLecticFrontmatter()` write minimal frontmatter (name + empty prompt only).
+- `persona_modes` table and `all_personas` table removed from lectic.lua. `scholar_prompt` local var removed.
+
+### Implementation Steps
+
+- [x] Update `~/Library/Preferences/lectic/lectic.yaml` — all 12 personas + kits defined globally
+- [x] Update `lua/plugins/lectic.lua` — SwitchLecticPersona, CreateNewLecticFile, AddLecticFrontmatter
+- [x] Update `lectic-cheatsheet.md` to reflect new workflow
+- [x] Test: fresh file, multi-persona conversation, persona switching — confirmed working
+- [x] Update all context docs with correct macOS config path
+- [x] Update GLOBAL_SUMMARY_LOG.md
+
+---
+
+## Phase 2: Vault Operation Skills
+
+**Dependency**: 012 PLAN2 agent updates should be complete before these skills are written,
+so the librarian agent they invoke is accurate.
+
+### 2a. `/vault-status`
 
 **File:** `~/SecondBrain/.claude/commands/vault-status.md`
 
@@ -65,136 +121,40 @@ Report the current state of the SecondBrain vault:
 Summarize what's changed and ask what to work on.
 ```
 
-### 1b. `/zettel-from-doc`
-
-Hands off a Lectic synthesis document to the librarian agent for decomposition into atomic Zettelkasten notes.
+### 2b. `/zettel-from-doc`
 
 **File:** `~/SecondBrain/.claude/commands/zettel-from-doc.md`
 
-```markdown
----
-name: zettel-from-doc
-description: Decompose the current Lectic synthesis document into atomic Zettelkasten notes with NSEW links
-allowed-tools: Read, Write, Glob, Grep
----
+Hands off a Lectic synthesis document to the librarian agent for decomposition into atomic
+Zettelkasten notes. Brief to be written once librarian agent is finalized in 012 PLAN2.
 
-Invoke the librarian agent to decompose the document at $ARGUMENTS (or the current file if no argument given) into atomic Zettelkasten notes.
-
-The librarian should:
-1. Read the source document
-2. Identify distinct atomic concepts (one idea per note)
-3. For each concept, create a note in ~/SecondBrain/3-Zettelkasten/ using the zettelkasten template format:
-   - Tags, Sources, West, East, North, South fields populated
-   - NSEW links cross-referenced against existing vault notes where possible
-4. Return a summary: notes created, NSEW links populated, links that couldn't be resolved
-
-Zettelkasten note format:
----
-id: [YYYYMMDDHHmm]
-aliases: []
-tags: []
----
-# [Note Title]
-### Tags: #tag1, #tag2
-### Sources: [source links]
-### West: [[Similar/Adjacent note]]
-### East: [[Opposite perspective note]]
-### North: [[Theme/Question note]]
-### South: [[What this leads to note]]
-
-[Note body — one atomic idea]
-```
-
-### 1c. `/vault-context`
-
-Finds relevant vault notes and inserts them as Lectic context links in the current document.
+### 2c. `/vault-context`
 
 **File:** `~/SecondBrain/.claude/commands/vault-context.md`
 
-```markdown
----
-name: vault-context
-description: Find relevant vault notes for the current document and insert as Lectic context links
-allowed-tools: Read, Grep, Glob, Edit
----
+Finds relevant vault notes and inserts them as Lectic context links in the current document.
+Brief to be written once librarian agent is finalized in 012 PLAN2.
 
-Given the current document at $ARGUMENTS (or ask user to specify topic/keywords):
-1. Search ~/SecondBrain/3-Zettelkasten/ for notes topically relevant to the document's content
-2. Present a list of candidates with a one-line summary of each
-3. Wait for user to confirm which to include
-4. Insert confirmed notes as Lectic context links in markdown link format at the end of the document:
-   [Note Title](../3-Zettelkasten/note-filename.md)
-
-Note: these links are Lectic context links — they load the note content as context for the AI persona. Do not convert to Obsidian wiki-link format [[Note Title]].
-```
-
-### 1d. `/lectic-debug`
-
-Invokes nvim-dev to troubleshoot Lectic configuration issues.
+### 2d. `/lectic-debug`
 
 **File:** `~/.config/nvim/.claude/commands/lectic-debug.md`
 
-```markdown
----
-name: lectic-debug
-description: Troubleshoot Lectic configuration, frontmatter, or persona issues in the current file
-allowed-tools: Read, WebFetch
----
-
-Invoke the nvim-dev agent to diagnose the Lectic issue described in $ARGUMENTS.
-
-The agent should:
-1. Read the current file's frontmatter
-2. Fetch https://grahamlk.me/Lectic/llms-full.md as reference
-3. Diagnose the issue against the documentation
-4. Propose a fix
-
-Key facts the agent must know:
-- Lectic works in .md files (primary) AND .lec files — do not suggest filetype changes
-- Obsidian and Lectic frontmatter coexist in the same file without conflict
-- Obsidian fields: id, aliases, tags. Lectic fields: interlocutor, interlocutors, memories
-- The nvim plugin is loaded for ft = { "markdown", "lectic.markdown" }
-```
+Invokes nvim-dev to troubleshoot Lectic configuration issues. To be written once nvim-dev
+agent is finalized in 012 PLAN2.
 
 ### Steps
 
-- [ ] Create `~/SecondBrain/.claude/commands/` directory if it doesn't exist
-- [ ] Create `~/SecondBrain/.claude/commands/vault-status.md`
-- [ ] Create `~/SecondBrain/.claude/commands/zettel-from-doc.md`
-- [ ] Create `~/SecondBrain/.claude/commands/vault-context.md`
-- [ ] Create `~/.config/nvim/.claude/commands/lectic-debug.md`
-- [ ] Test `/vault-status` from SecondBrain CWD
-- [ ] Test `/lectic-debug` from nvim CWD
-
----
-
-## Phase 2: Lectic Multi-Party Mode Check
-
-### Background
-
-Multi-party Lectic mode (`:ask[PersonaName]` and `:aside[PersonaName]` directives) was broken in beta6. The config currently has 12 personas disabled as multi-party modes in `lua/plugins/lectic.lua` (lines ~28-60 are commented out).
-
-Single-party persona switching via `<leader>mp` is fully functional and is the current primary workflow.
-
-Multi-party would enable simultaneous dialogue between personas in a single document — e.g., Researcher and Editor responding to the same prompt. This is distinct from single-party switching.
-
-### Steps
-
-- [ ] Fetch `https://github.com/gleachkr/Lectic/releases` and check changelog for any post-beta6 entries addressing multi-party stability
-- [ ] Fetch `https://grahamlk.me/Lectic/llms-full.md` and check current documentation for multi-party status
-- [ ] If fixed:
-  - [ ] Read `lua/plugins/lectic.lua` in full
-  - [ ] Identify the commented-out multi-party persona_modes (lines ~28-60)
-  - [ ] Propose a test document with two interlocutors before uncommenting anything
-  - [ ] Test multi-party in a `.md` file with `interlocutors:` (plural) frontmatter
-  - [ ] If confirmed working, uncomment the business and writing persona modes in `lua/plugins/lectic.lua`
-  - [ ] Update MAINTENANCE_LOG.md
-- [ ] If still broken: note status and date in MAINTENANCE_LOG.md, revisit later
+- [ ] Create `~/SecondBrain/.claude/commands/` directory
+- [ ] Write vault-status.md
+- [ ] Write zettel-from-doc.md (after 012 PLAN2 Phase 3b complete)
+- [ ] Write vault-context.md (after 012 PLAN2 Phase 3b complete)
+- [ ] Write lectic-debug.md (after 012 PLAN2 Phase 3c complete)
+- [ ] Test each skill
 
 ---
 
 ## Completion Checklist
 
-- [ ] Phase 1: all four skill files created
-- [ ] Phase 2: multi-party status checked and documented
-- [ ] MAINTENANCE_LOG.md updated
+- [x] Phase 1: Lectic multi-party working, workflow documented, config updated (2026-04-12)
+- [ ] Phase 2: All four skill files created and tested
+- [x] GLOBAL_SUMMARY_LOG.md updated

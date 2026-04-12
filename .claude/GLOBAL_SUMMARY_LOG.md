@@ -1,7 +1,7 @@
 # Global Summary Log
 
 **Purpose**: High-level view of all completed and in-progress projects
-**Last Updated**: 2026-04-09
+**Last Updated**: 2026-04-12
 
 ---
 
@@ -158,6 +158,57 @@
 - `lua/core/keymaps.lua` — Fixed `<Left>` heading fold detection; added `:Bd` safe buffer delete
 - `lua/plugins/claudecode.lua` — Reverted to `config = true` (no terminal workarounds needed)
 **Git Commits**: 6b8d3bd, db0adaa
+
+---
+
+## 016: Context Failure Diagnosis
+**Status**: Completed (2026-04-11)
+**Problem**: During a Lectic debugging session, the agent lacked critical Lectic facts (v0.0.3 state, SwitchLecticPersona brokenness, paper_search tool config) that were documented but not loaded. Root-cause audit needed.
+**Solution**: Identified three failure mechanisms: (1) PROJECT_CONTEXT.md was globally @imported, so agents never needed to read `~/.config/nvim/CLAUDE.md` — making it invisible to audits. (2) nvim-dev agent was the wrong vehicle for Lectic facts — expensive startup, facts still didn't reach the main session. (3) No vault-equivalent context existed in SecondBrain/CLAUDE.md for Obsidian/Lectic workflow.
+**Key Finding**: The PROJECT_CONTEXT.md @import created a blind spot — the root CLAUDE.md was effectively bypassed. Agents working in the nvim CWD never loaded it.
+**Impact**: Led directly to 012 PLAN2 full architecture redesign. nvim-dev agent parked. All context migrated to CWD-specific CLAUDE.md files (the intended Claude Code mechanism).
+
+---
+
+## 012 (PLAN2): Claude Context Architecture Redesign
+**Status**: Completed (2026-04-11)
+**Problem**: Context architecture redesigned from scratch after 016 diagnosis revealed systemic gaps. PROJECT_CONTEXT.md @import workaround created invisible files. nvim-dev agent added expense without reliably delivering facts. SecondBrain had no workflow or Lectic context. ghostdev CLAUDE.md had no Claude infrastructure reference.
+**Solution**: Three-layer architecture — (1) global `~/.claude/CLAUDE.md` as master map with @imports for PROFILE.md and BEHAVIOR.md only; (2) repo-root CLAUDE.md files as CWD auto-loaded full context; (3) on-demand fetches for plugin docs. Every file in the system inventoried and assigned upstream visibility.
+- `~/.config/nvim/CLAUDE.md` — fully rewritten; merged PROJECT_CONTEXT.md content + Lectic v0.0.3 state, frontmatter coexistence, paper_search, Python env, on-demand fetch instructions
+- `~/SecondBrain/CLAUDE.md` — fully expanded; full workflow pipeline, writing projects, Lectic personas table, Zettelkasten find/navigate/pull/write/distill workflow, Literature/Readwise, Obsidian desktop usage, publishing (LaTeX/Pandoc/Ghost/Slidev), Claude infrastructure
+- `~/.claude/CLAUDE.md` — rewritten; removed PROJECT_CONTEXT.md @import, added Core Tools section, CWD strategy table, agent continuity rule (nvim-dev PARKED)
+- `~/.config/nvim/.claude/PROJECT_CONTEXT.md` — deleted; content fully migrated
+- `~/.claude/skills/init/SKILL.md` — rewritten; CWD-conditional loading, removed disable-model-invocation
+- `~/.claude/agents/librarian.md` — removed stale interlocutors: disabled line
+- `~/.config/nvim/.claude/commands/research.md` — deleted (Ben's approach, non-functional)
+- `~/ghostdev/CLAUDE.md` — added Claude Infrastructure section with MAINTENANCE_LOG.md reference
+- `~/SecondBrain/.claude/vault-log.md` — added lectic.yaml entry
+- `~/SecondBrain/.claude/specs/002_slidev_workflow/PLAN.md` — created
+**Key Files Changed**: All repo-root CLAUDE.md files, ~/.claude/CLAUDE.md, /init SKILL.md, librarian.md
+**Impact**: Every file in the three-repo system has upstream visibility. CWD-specific context loads automatically without workarounds. nvim-dev agent parked — no longer needed. Lectic/Obsidian workflow fully documented in both affected CLAUDE.md files. Architecture matches Claude Code's intended design pattern.
+
+---
+
+## 014: Lectic Multi-Party Mode
+**Status**: Phase 1 complete (2026-04-12). Phase 2 (vault skills) not yet started.
+**Problem**: Lectic v0.0.3 introduced strict history validation that broke the old `SwitchLecticPersona()` implementation, which rewrote `interlocutor:` (singular) in frontmatter on each switch. Any document with `:::PreviousPersona` blocks from an earlier turn would fail validation when only the current persona was declared. Additionally, personas were defined in `~/.config/lectic/lectic.yaml`, which Lectic silently ignores on macOS — the actual system config path is `~/Library/Preferences/lectic/lectic.yaml`.
+**Solution**: 
+- Moved all 12 persona definitions to `~/Library/Preferences/lectic/lectic.yaml` (correct macOS path). `kits:` entry for paper_search preserved; Researcher's entry uses `tools: - kit: paper_search`.
+- `SwitchLecticPersona()` now inserts `:ask[Name]` at cursor — Lectic's native multi-party directive. No frontmatter mutation.
+- Document frontmatter simplified to `interlocutor: name: Scholar / prompt:` (empty). Lectic merges full persona config from system file automatically.
+- `CreateNewLecticFile()` (`<leader>mn`): Scholar as default, minimal frontmatter.
+- New `AddLecticFrontmatter()` (`<leader>mf`): adds Scholar frontmatter to existing Obsidian docs, preserving id/aliases/tags.
+- Scholar/Researcher names swapped to match descriptions: Scholar = logician/philosopher, Researcher = scientific citations + paper_search.
+**Key Findings**:
+- macOS: Lectic reads `~/Library/Preferences/lectic/lectic.yaml` (hardcoded in `src/utils/xdg.ts`). `~/.config/lectic/` is ignored.
+- Global `interlocutors:` in system config merge into all documents — all personas accessible via `:ask[Name]` without frontmatter duplication.
+- `kits:` mechanism works correctly: `tools: - kit: paper_search` in an interlocutor entry expands to the full MCP command defined in `kits:`.
+**Key Files**:
+- `~/Library/Preferences/lectic/lectic.yaml` — 12 personas + paper_search kit (external to nvim config)
+- `lua/plugins/lectic.lua` — SwitchLecticPersona, CreateNewLecticFile, AddLecticFrontmatter
+- `lua/plugins/which-key.lua` — `<leader>mf` added
+- `cheatsheet-readme/lectic-cheatsheet.md` — fully rewritten for multi-party workflow
+**Impact**: True multi-persona conversations in any `.md` file. Scholar is the default persona. Researcher has paper_search tool access. No inline prompts or MCP config in frontmatter.
 
 ---
 

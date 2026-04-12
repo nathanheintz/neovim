@@ -130,6 +130,16 @@ return {
 			{ "<leader>as", "<cmd>Neotree ~/.config/nvim/snippets/<CR>", desc = "edit snippets" },
 			{ "<leader>au", "<cmd>cd %:p:h | Neotree<CR>", desc = "update cwd" },
 
+      -- POMODORO TIMER 
+      { "<leader>at", group = "TIMERS", icon = "󰚭" },      
+      { "<leader>att", "<cmd>TimerStart 24m<CR>", desc = "timer (24m)", icon = "󰚭" },
+      { "<leader>atp", "<cmd>TimerPause<CR>", desc = "pause timer", icon = "󰚭" },
+      { "<leader>atr", "<cmd>TimerResume<CR>", desc = "resume timer", icon = "" },
+      { "<leader>atx", "<cmd>TimerStop<CR>", desc = "stop timer", icon = "" },
+      { "<leader>ats", "<cmd>TimerSession shorties<CR>", desc = "shorties", icon = "(25s)" },
+      { "<leader>atf", "<cmd>TimerSession forties<CR>", desc = "forties", icon = "(40s)" },
+      { "<leader>ath", "<cmd>TimerSession hours<CR>", desc = "forties", icon = "(50s)" },
+
 			-- FIND
 			{ "<leader>f", group = "FIND" },
 			{ "<leader>fr", "<cmd>Telescope oldfiles<CR>", desc = "recent" },
@@ -174,6 +184,7 @@ return {
 			{ "<leader>mn", "<cmd>lua CreateNewLecticFile()<CR>", desc = "new lectic file (multiparty)" },
 			{ "<leader>ms", "<cmd>lua SubmitLecticSelection()<CR>", desc = "submit selection with message" },
 			{ "<leader>mc", "<cmd>lua InsertContextLink()<CR>", desc = "insert context link" },
+			{ "<leader>mf", "<cmd>lua AddLecticFrontmatter()<CR>", desc = "lectic frontmatter (add Scholar)" },
 			{ "<leader>md", "<cmd>Vocal<CR>", desc = "dictate (speech-to-text)" },
 			{ "<leader>mv", "<cmd>MarkdownPreviewToggle<CR>", desc = "markdown preview" },
 			{ "<leader>mu", "<cmd>lua OpenUrlUnderCursor()<CR>", desc = "open URL under cursor" },

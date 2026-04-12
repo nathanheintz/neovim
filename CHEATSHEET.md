@@ -294,27 +294,28 @@ IMPORTANT: When using `:!mv`, add `-i` flag for interactive prompts or `-n` to p
 
 ## AI Writing Assistant (Lectic)
 
-Single-party AI conversations with 12 personas (multi-party mode disabled - broken in beta6). See [lectic-cheatsheet.md](lectic-cheatsheet.md) for details.
+True multi-party AI conversations with 12 personas (v0.0.3). See [lectic-cheatsheet.md](lectic-cheatsheet.md) for details.
 
 ### Keybindings
 
 **Markdown/Writing (`<leader>m`)**:
 - `<leader>mz` - Toggle zen mode
 - `<leader>mw` - Write all buffers
-- `<leader>mn` - New Lectic file (creates with Homie persona)
+- `<leader>mn` - New Lectic file (Scholar default, Obsidian-compatible frontmatter)
+- `<leader>mf` - Add Lectic frontmatter to existing Obsidian doc (Scholar)
 - `<leader>ml` - Run Lectic on current file
 - `<leader>ms` - Submit visual selection with message
 - `<leader>mc` - Insert context link template (use Ctrl+x Ctrl+f for path completion)
 - `<leader>md` - Dictate (speech-to-text) - press once to start, again to stop/transcribe
 - `<leader>mv` - Markdown preview toggle
 - `<leader>mu` - Open URL under cursor
-- `<leader>mp` - Switch persona submenu (see below)
+- `<leader>mp` - Switch persona submenu (inserts `:ask[Name]` at cursor)
 - `<leader>mt` - Toggles submenu (completion, folding)
 
-**Persona Switching (`<leader>mp`)**:
+**Persona Switching (`<leader>mp`)** — inserts `:ask[Name]` directive mid-document:
 - `c` - Consultant, `m` - Marketing, `f` - Finance, `p` - Product
-- `r` - Researcher, `w` - Writer, `e` - Editor
-- `d` - Designer, `s` - Scholar, `b` - Scribe
+- `r` - Researcher (paper_search tool), `w` - Writer, `e` - Editor
+- `d` - Designer, `s` - Scholar (default), `b` - Scribe
 - `h` - Homie, `n` - Nomad
 
 **Context Files**: Add markdown links in document body: `[Context](/absolute/path.md)` - use `<leader>mc` for quick insertion
