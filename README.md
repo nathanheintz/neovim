@@ -4,7 +4,7 @@ A second brain and zettelkasten Neovim configuration optimized for AI-assisted n
 
 ## Overview
 This configuration prioritizes:
-- **Writing workflow**: Zen mode, smart completion, spell checking
+- **Writing workflow**: Zen mode, smart completion, spell checking, Pomodoro timer
 - **Note-taking**: Obsidian vault integration with wiki-link completion
 - **AI assistance**: Lectic writing assistant with obsidian-compatible frontmatter support
 - **Publishing**: LaTeX with VimTeX, markdown presentations
@@ -93,6 +93,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 
 *Writing & AI*:
 - `<leader>mz` - Toggle zen mode (focus/unfocus window)
+- `<leader>at` - Pomodoro timer submenu (start, pause, resume, stop, sessions)
 - `<leader>md` - Dictate (speech-to-text)
 - `<leader>mn` - Create new Lectic file (Scholar)
 - `<leader>mf` - Add Lectic frontmatter to existing Obsidian doc
@@ -136,6 +137,7 @@ See [CHEATSHEET.md](CHEATSHEET.md) for complete keybinding reference.
 
 ### Writing & Note-Taking
 - **Lectic** - AI writing assistant with frontmatter support
+- **pomo.nvim** - Pomodoro timer with lualine statusline integration and system notifications
 - **vocal.nvim** - Speech-to-text dictation (local Whisper model)
 - **obsidian.nvim** - Obsidian vault integration
 - **render-markdown.nvim** - Live markdown rendering

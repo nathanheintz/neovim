@@ -385,6 +385,20 @@ True multi-party AI conversations with 12 personas (v0.0.3). See [lectic-cheatsh
 - `<Left>` at col 0 on a heading - Close that heading's fold
 
 
+## Pomodoro Timer (`<leader>at`)
+
+- `<leader>att` - Start 24-minute timer
+- `<leader>atp` - Pause timer
+- `<leader>atr` - Resume timer
+- `<leader>atx` - Stop timer
+- `<leader>ats` - Session: shorties (25m work / 5m break × 3, then 15m)
+- `<leader>atf` - Session: forties (40m work / 10m or 20m break × 4)
+- `<leader>ath` - Session: hours (50m work / 10m or 20m break × 4)
+
+Remaining time shown in lualine statusline (󰄉 MM:SS) while a timer is active.
+System notification fires when each timer ends.
+
+
 ## Tips and Tricks
 
 ### Quick Actions
