@@ -5,7 +5,7 @@ return {
     require('lualine').setup({
       options = {
         icons_enabled = true,
-        theme = 'gruvbox',
+        theme = vim.g.colors_name or 'terafox',
         component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
         disabled_filetypes = {
@@ -39,8 +39,24 @@ return {
           -- { require('mcphub.extensions.lualine') },
           -- 'encoding',
           -- 'fileformat',
-          'filetype'
-        },
+          'filetype', function()
+        local ok, pomo = pcall(require, "pomo")
+        if not ok then
+          return ""
+        end
+
+        local timer = pomo.get_first_to_finish()
+        if timer == nil then
+          return ""
+        end
+
+        local secs = timer:time_remaining()
+        local mins = math.floor(secs / 60) 
+        local s = secs % 60               
+          return string.format("󰄉 %d:%02d",
+        mins, s)
+      end,
+      },
         lualine_y = { 'progress' },
         lualine_z = { 'location' }
       },
@@ -56,6 +72,13 @@ return {
       winbar = {},
       inactive_winbar = {},
       extensions = {}
-    })
-  end,
-}
+   
+
+      })
+    vim.api.nvim_create_autocmd("ColorScheme", {                   
+    callback = function()               
+      require('lualine').setup({ options = { theme = vim.g.colors_name } })
+    end,
+  })
+end,
+} 
