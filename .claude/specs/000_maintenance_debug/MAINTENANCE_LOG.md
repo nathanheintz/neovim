@@ -456,3 +456,23 @@ curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | s
 
 ---
 
+### 2026-04-09 - Intermittent Bufferline/Lualine Color Breakage on CWD Theme Switch
+
+**Task**: Investigate and fix intermittent highlight corruption in lualine and bufferline when CWD-based colorscheme autocmd fires
+
+**Problem**: When switching CWDs (triggering carbonfox/terafox/nightfox auto-switch), lualine and bufferline sometimes render with only the darkest and lightest colors — accent colors drop out, making active tab indistinguishable. Intermittent, not consistent.
+
+**Suspected cause**: Race condition — `ColorScheme` autocmd fires while the new theme is still applying highlight groups. Lualine/bufferline re-apply their own highlights before the colorscheme finishes, then get overwritten partially.
+
+**Proposed fix**:
+- Wrap lualine's `ColorScheme` autocmd callback in `vim.schedule()` to defer until after colorscheme highlights are fully applied
+- Add a similar `ColorScheme` autocmd to `bufferline.lua` — extract options to a `local opts` variable, re-run `bufferline.setup({ options = opts })` inside `vim.schedule()` on colorscheme change
+
+**Files to modify**:
+- `lua/plugins/lualine.lua` — add `vim.schedule` wrapper to existing ColorScheme autocmd
+- `lua/plugins/bufferline.lua` — extract options to local var, add ColorScheme autocmd
+
+**Status**: Deferred
+
+---
+
