@@ -348,7 +348,7 @@ end
 
 **Resolution**: After a full Neovim restart (triggered by edits this session), blink.cmp began correctly enforcing `min_keyword_length = 3`. No code change was needed — the setting was already correct. Snippet now requires 3+ chars to appear.
 
-**What NOT to do**: Do not add a `#keyword < 3` guard inside `transform_items` — this causes snippets to stop appearing entirely due to a cursor-read timing issue where blink calls `transform_items` before the latest character is committed to the buffer.
+**What NOT to do**: Do not add a `#keyword < 3` guard inside `transform_items` — this causes snippets to stop appearing when typing exactly 3 chars. This was attributed to a "cursor timing bug" but that diagnosis was incorrect. The actual fix (2026-04-21) uses a mid-word check instead — see that entry.
 
 **Files Modified**: None (reverted all attempted changes)
 
@@ -473,6 +473,34 @@ curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | s
 - `lua/plugins/bufferline.lua` — extract options to local var, add ColorScheme autocmd
 
 **Status**: Deferred
+
+---
+
+### 2026-04-20 - Fix render-markdown Checkbox Character Disappearance
+
+**Task**: Checkbox list items were losing their first 3+ characters of text content.
+
+**Root cause**: Commit `2f5ed5a` added `right_pad = .5` to the bullet config as an attempt to add spacing between bullet icons and text. The float value effectively rounds to 0 in Lua's `string.rep`, so it added no space — but it left the config in a broken state that caused character-eating on checkbox items.
+
+**Fix**: Removed `right_pad = .5` from the bullet block entirely. The plugin's intended pattern is icon-only in the `icons` field with no explicit `right_pad` needed. Checkboxes fall through to plugin defaults, which render correctly.
+
+**Files Modified**:
+- `lua/plugins/render-markdown.lua` — removed `right_pad` from bullet block
+
+---
+
+### 2026-04-21 - Snippet Menu Triggering Mid-Word During Insert Mode Navigation
+
+**Task**: Snippet completion menu (triangle, matrix) was appearing when navigating through existing prose with arrow keys in insert mode, hijacking cursor movement.
+
+**Root cause**: `min_keyword_length = 3` checks `context.bounds.length` (full word length), not the length of text typed before the cursor. So navigating to a position mid-word in "Track" (5 chars) passes the length check even though only "T" is before the cursor. "T" is a valid prefix of "triangle", so the snippet appeared.
+
+Previous session (2026-03-27) incorrectly attributed this to a timing bug and warned against keyword length guards in `transform_items`. That diagnosis was wrong — the actual mechanism is blink's design: `min_keyword_length` is a word-length gate, not a typed-chars gate.
+
+**Fix**: Added a mid-word check in `transform_items`: if the character immediately after the cursor is non-whitespace, the cursor is inside an existing word (navigating, not typing) — return `{}`. When typing, cursor is at end of word so nothing non-whitespace follows.
+
+**Files Modified**:
+- `lua/plugins/lsp/blink-cmp.lua` — added `after_cursor` mid-word check in snippets `transform_items`
 
 ---
 

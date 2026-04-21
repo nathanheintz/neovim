@@ -168,6 +168,10 @@ return {
               content = content:gsub("^[%-%*%+]%s*", "")  -- strip "- " / "* " / "+ "
               -- Must be the first word on the line
               if content:find("%s") then return {} end
+              -- Suppress when navigating mid-word: cursor is inside an existing word,
+              -- not at the end of what's being typed
+              local after_cursor = vim.api.nvim_get_current_line():sub(col + 1)
+              if after_cursor:match("^%S") then return {} end
               -- Prefix match only (no fuzzy): label must start with what's typed
               local keyword = content:lower()
               local filtered = {}
