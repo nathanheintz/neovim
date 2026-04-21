@@ -101,7 +101,7 @@ return {
           hide_dotfiles = false,
           hide_gitignored = false,
           hide_by_name = {},
-          never_show = {},
+          never_show = { ".DS_Store" },
         },
         hijack_netrw_behavior = "open_current",
         use_libuv_file_watcher = true,

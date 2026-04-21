@@ -54,12 +54,12 @@ return {
   sessions = {
     -- Example session configuration for a session called "pomodoro".
     shorties = {
-      { name = "Work", duration = "25m" },
-      { name = "Short Break", duration = "5m" },
-      { name = "Work", duration = "25m" },
-      { name = "Short Break", duration = "5m" },
-      { name = "Work", duration = "25m" },
-      { name = "Long Break", duration = "15m" },
+      { name = "Work", duration = "24m" },
+      { name = "Short Break", duration = "6m" },
+      { name = "Work", duration = "24m" },
+      { name = "Short Break", duration = "6m" },
+      { name = "Work", duration = "24m" },
+      { name = "Long Break", duration = "24m" },
     },
 
     forties = {
@@ -74,13 +74,13 @@ return {
     },
 
     hours = {
-      { name = "Work", duration = "50m" },
+      { name = "Work", duration = "60m" },
       { name = "Break", duration = "10m" },
-      { name = "Work", duration = "50m" },
+      { name = "Work", duration = "60m" },
       { name = "Long Break", duration = "20m" },
-      { name = "Work", duration = "50m" },
+      { name = "Work", duration = "60m" },
       { name = "Break", duration = "10m" },
-      { name = "Work", duration = "50m" },
+      { name = "Work", duration = "60m" },
       { name = "Long Break", duration = "20m" },
     },
   },

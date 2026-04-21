@@ -141,7 +141,13 @@ end
 -- Markdown mappings setup function triggered by an auto-command
 function _G.set_markdown_keymaps()
   -- List management
-  buf_map(0, "i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>", "New bullet point")
+  vim.keymap.set("i", "<CR>", function()
+    local prev = vim.api.nvim_buf_get_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false)[1] or ""
+    if prev:match("^:::") then
+      return "<CR>"
+    end
+    return "<CR><cmd>AutolistNewBullet<cr>"
+  end, { buffer = true, silent = true, expr = true, desc = "New bullet point" })
   buf_map(0, "n", "o", "o<cmd>AutolistNewBullet<cr>", "New bullet below")
   buf_map(0, "n", "O", "O<cmd>AutolistNewBulletBefore<cr>", "New bullet above")
   buf_map(0, "n", "<C-n>", "<cmd>lua HandleCheckbox()<CR>", "Toggle checkbox")
