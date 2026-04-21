@@ -88,9 +88,9 @@ return {
 
 			-- Top-level mappings
 			{ "<leader>d", "<cmd>update! | lua Snacks.bufdelete()<CR>", desc = "delete buffer" },
-			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "explorer", icon = "" },
+			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "explorer", icon = "" },
 			{ "<leader>q", "<cmd>wa! | qa!<CR>", desc = "quit" },
-			{ "<leader>u", "<cmd>Telescope undo<CR>", desc = "undo", icon = "" },
+			{ "<leader>u", "<cmd>Telescope undo<CR>", desc = "undo", icon = "" },
 
 			-- WINDOW
 			{ "<leader>w", group = "WINDOW" },
@@ -129,16 +129,7 @@ return {
 			{ "<leader>ar", "<cmd>AutolistRecalculate<CR>", desc = "reorder list" },
 			{ "<leader>as", "<cmd>Neotree ~/.config/nvim/snippets/<CR>", desc = "edit snippets" },
 			{ "<leader>au", "<cmd>cd %:p:h | Neotree<CR>", desc = "update cwd" },
-
-      -- POMODORO TIMER 
-      { "<leader>at", group = "TIMERS", icon = "󰚭" },      
-      { "<leader>att", "<cmd>TimerStart 24m<CR>", desc = "timer (24m)", icon = "󰚭" },
-      { "<leader>atp", "<cmd>TimerPause<CR>", desc = "pause timer", icon = "󰚭" },
-      { "<leader>atr", "<cmd>TimerResume<CR>", desc = "resume timer", icon = "" },
-      { "<leader>atx", "<cmd>TimerStop<CR>", desc = "stop timer", icon = "" },
-      { "<leader>ats", "<cmd>TimerSession shorties<CR>", desc = "shorties", icon = "(25s)" },
-      { "<leader>atf", "<cmd>TimerSession forties<CR>", desc = "forties", icon = "(40s)" },
-      { "<leader>ath", "<cmd>TimerSession hours<CR>", desc = "forties", icon = "(50s)" },
+			{ "<leader>ap", function() vim.fn.setreg("+", vim.fn.expand("%:p")) end, desc = "copy file path" },
 
 			-- FIND
 			{ "<leader>f", group = "FIND" },
@@ -191,9 +182,13 @@ return {
 
       -- OBSIDIAN
       { "<leader>o", group = "OBSIDIAN", icon = "󰇈" },
-      { "<leader>ol", "<cmd>ObsidianFollowLink<CR>", desc = "link", icon = "" },
-      { "<leader>ot", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
-      
+      { "<leader>ol", "<cmd>ObsidianFollowLink<CR>", desc = "link", icon = "" },
+      { "<leader>ob", "<cmd>ObsidianBacklinks<CR>", desc = "backlinks", icon = "" },
+      { "<leader>of", "<cmd>ObsidianSearch<CR>", desc = "search vault", icon = "" },
+      { "<leader>oo", "<cmd>ObsidianOpen<CR>", desc = "open filename", icon = "" },
+      { "<leader>ot", "<cmd>ObsidianTags<CR>", desc = "search tags", icon = "" },
+      { "<leader>or", "<cmd>ObsidianRename<CR>", desc = "rename", icon = "󰇂" },
+      { "<leader>oc", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
 
 			-- PERSONA SWITCHING
 			{ "<leader>mp", group = "SWITCH PERSONA" },
@@ -208,7 +203,8 @@ return {
 			{ "<leader>mps", "<cmd>lua SwitchLecticPersona('Scholar')<CR>", desc = "scholar" },
 			{ "<leader>mpb", "<cmd>lua SwitchLecticPersona('Scribe')<CR>", desc = "scribe" },
 			{ "<leader>mph", "<cmd>lua SwitchLecticPersona('Homie')<CR>", desc = "homie" },
-			{ "<leader>mpn", "<cmd>lua SwitchLecticPersona('Nomad')<CR>", desc = "nomad" },
+			{ "<leader>mpn", "<cmd>lua SwitchLecticPersona('Newshound')<CR>", desc = "newshound" },
+			{ "<leader>mpt", "<cmd>lua SwitchLecticPersona('Traveler')<CR>", desc = "traveler" },
 
 			-- SURROUND
 			{ "<leader>ms", group = "SURROUND" },
@@ -230,6 +226,7 @@ return {
 			{ "<leader>zo", "<cmd>lua ClearFoldPadding()<CR>zR", desc = "open all folds" },
 			{ "<leader>z1", "<cmd>lua FoldToHeadingLevel(1)<CR>", desc = "fold to H1 level" },
 			{ "<leader>z2", "<cmd>lua FoldToHeadingLevel(2)<CR>", desc = "fold to H2 level" },
+
 			-- SESSIONS
 			{ "<leader>s", group = "SESSIONS" },
 			{ "<leader>ss", "<cmd>lua require('resession').save()<CR>", desc = "save session" },
@@ -238,25 +235,39 @@ return {
 			{ "<leader>sr", "<cmd>lua RenameSession()<CR>", desc = "rename session" },
 
 			-- PUBLISHING
-			{ "<leader>p", group = "PUBLISHING", icon = "" },
-			{ "<leader>pc", "<cmd>VimtexCompile<CR>", desc = "compile latex" },
-			{ "<leader>pv", "<cmd>VimtexView<CR>", desc = "view pdf" },
-			{ "<leader>pi", "<cmd>VimtexTocOpen<CR>", desc = "latex TOC" },
-			{ "<leader>pb", "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", desc = "export bibliography" },
-			{ "<leader>pC", "<cmd>VimtexClearCache All<CR>", desc = "clear vimtex cache" },
-			{ "<leader>pe", "<cmd>VimtexErrors<CR>", desc = "latex errors" },
-			{ "<leader>pf", "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", desc = "find citations" },
-			{ "<leader>pg", "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", desc = "edit glossary" },
-			{ "<leader>pk", "<cmd>VimtexClean<CR>", desc = "clean aux files" },
-			{ "<leader>pt", "<cmd>terminal latexindent -w %:p:r.tex<CR>", desc = "format tex file" },
-			{ "<leader>pV", "<plug>(vimtex-context-menu)", desc = "vimtex context menu" },
-			{ "<leader>pW", "<cmd>VimtexCountWords!<CR>", desc = "word count (vimtex)" },
-			{ "<leader>pw", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", desc = "convert to word" },
-			{ "<leader>pm", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", desc = "convert to markdown" },
-			{ "<leader>ph", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", desc = "convert to html" },
-			{ "<leader>pl", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", desc = "convert to latex" },
-			{ "<leader>pp", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", desc = "convert to pdf" },
-			{ "<leader>pP", "<cmd>TermExec cmd='zathura %:p:r.pdf &' open=0<CR>", desc = "view pdf (zathura)" },
+			{ "<leader>p", group = "PUBLISHING", icon = "" },
+
+			-- LATEX
+			{ "<leader>pl", group = "LATEX" },
+			{ "<leader>plc", "<cmd>VimtexCompile<CR>", desc = "compile" },
+			{ "<leader>plv", "<cmd>VimtexView<CR>", desc = "view pdf" },
+			{ "<leader>plt", "<cmd>VimtexTocOpen<CR>", desc = "table of contents" },
+			{ "<leader>ple", "<cmd>VimtexErrors<CR>", desc = "errors" },
+			{ "<leader>plw", "<cmd>VimtexCountWords!<CR>", desc = "word count" },
+			{ "<leader>plf", "<cmd>Telescope bibtex format_string=\\citet{%s}<CR>", desc = "find citations" },
+			{ "<leader>plb", "<cmd>terminal bibexport -o %:p:r.bib %:p:r.aux<CR>", desc = "export bibliography" },
+			{ "<leader>plg", "<cmd>e ~/.config/nvim/templates/Glossary.tex<CR>", desc = "edit glossary" },
+			{ "<leader>plk", "<cmd>VimtexClean<CR>", desc = "clean aux files" },
+			{ "<leader>pll", "<cmd>terminal latexindent -w %:p:r.tex<CR>", desc = "format (latexindent)" },
+			{ "<leader>plx", "<cmd>VimtexClearCache All<CR>", desc = "clear cache" },
+			{ "<leader>plV", "<plug>(vimtex-context-menu)", desc = "vimtex context menu" },
+
+			-- CONVERT (pandoc)
+			{ "<leader>pc", group = "CONVERT" },
+			{ "<leader>pcw", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.docx'<CR>", desc = "→ word" },
+			{ "<leader>pcm", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.md'<CR>", desc = "→ markdown" },
+			{ "<leader>pch", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.html'<CR>", desc = "→ html" },
+			{ "<leader>pcl", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.tex'<CR>", desc = "→ latex" },
+			{ "<leader>pcp", "<cmd>TermExec cmd='pandoc %:p -o %:p:r.pdf' open=0<CR>", desc = "→ pdf" },
+
+			-- TEMPLATES
+			{ "<leader>pt", group = "TEMPLATES", icon = "" },
+			{ "<leader>ptp", "<cmd>read ~/.config/nvim/templates/PersonalLetter.tex<CR>", desc = "personal letter" },
+			{ "<leader>ptl", "<cmd>read ~/.config/nvim/templates/ProfessionalLetter.tex<CR>", desc = "professional letter" },
+			{ "<leader>ptb", "<cmd>read ~/.config/nvim/templates/SimpleBook.tex<CR>", desc = "simple book" },
+			{ "<leader>pts", "<cmd>read ~/.config/nvim/templates/Screenplay.tex<CR>", desc = "screenplay" },
+			{ "<leader>ptc", "<cmd>read ~/.config/nvim/templates/CoachingAgreement.tex<CR>", desc = "coaching agreement" },
+			{ "<leader>ptj", "<cmd>read ~/.config/nvim/templates/TherapeuticJournal.md<CR>", desc = "therapeutic journal" },
 
 			-- RUN
 			{ "<leader>r", group = "RUN", icon = "󰜎" },
@@ -267,14 +278,15 @@ return {
 			{ "<leader>rp", "function() vim.diagnostic.goto_prev{popup_opts = {show_header = false}} end", desc = "prev" },
 			{ "<leader>rm", "<cmd>lua Snacks.notifier.show_history()<cr>", desc = "show messages" },
 
-			-- TEMPLATES
-			{ "<leader>t", group = "TEMPLATES", icon = "" },
-			{ "<leader>tp", "<cmd>read ~/.config/nvim/templates/PersonalLetter.tex<CR>", desc = "personal letter" },
-			{ "<leader>tl", "<cmd>read ~/.config/nvim/templates/ProfessionalLetter.tex<CR>", desc = "professional letter" },
-			{ "<leader>tb", "<cmd>read ~/.config/nvim/templates/SimpleBook.tex<CR>", desc = "simple book" },
-			{ "<leader>ts", "<cmd>read ~/.config/nvim/templates/Screenplay.tex<CR>", desc = "screenplay" },
-		{ "<leader>tc", "<cmd>read ~/.config/nvim/templates/CoachingAgreement.tex<CR>", desc = "coaching agreement" },
-      { "<leader>tj", "<cmd>read ~/.config/nvim/templates/TherapeuticJournal.md<CR>", desc = "therapeutic journal" },
+			-- TIMERS
+			{ "<leader>t", group = "TIMERS", icon = "󰚭" },
+			{ "<leader>tt", "<cmd>TimerStart 24m<CR>", desc = "timer (24m)" },
+			{ "<leader>tp", "<cmd>TimerPause<CR>", desc = "pause timer" },
+			{ "<leader>tr", "<cmd>TimerResume<CR>", desc = "resume timer" },
+			{ "<leader>tx", "<cmd>TimerStop<CR>", desc = "stop timer" },
+			{ "<leader>ts", "<cmd>TimerSession shorties<CR>", desc = "shorties (24m/6m/3x)" },
+			{ "<leader>tf", "<cmd>TimerSession forties<CR>", desc = "forties (40m)" },
+			{ "<leader>th", "<cmd>TimerSession hours<CR>", desc = "hours (50m)" },
 		})
 
 	end,

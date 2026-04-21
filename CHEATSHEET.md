@@ -7,6 +7,21 @@
 - `i` - Enter Insert mode before cursor
 - `a` - Enter Insert mode after cursor
 
+### Buffer Navigation
+
+- `Tab` / `Shift-Tab` - Cycle to next / previous buffer tab
+- `:bn` / `:bp` - Next / previous buffer
+- `Ctrl-Option-l` / `Ctrl-Option-h` - Move buffer tab right / left
+- `:Bd` - Close buffer, keep window open (reassigns window to another buffer first)
+- `:bd` - Close buffer and close its window (documented Neovim default)
+- `:wa` - Write all buffers
+- `:qa` - Quit all windows
+- `:wqa` - Write and quit all
+- `:e!` - Reload current buffer, discard changes
+- `:bufdo e!` - Reload all buffers, discard changes
+
+---
+
 #### Basic Normal Mode Movement
 - `h/j/k/l` - Left/Down/Up/Right
 - `{` - Jump to previous paragraph
@@ -385,15 +400,15 @@ True multi-party AI conversations with 12 personas (v0.0.3). See [lectic-cheatsh
 - `<Left>` at col 0 on a heading - Close that heading's fold
 
 
-## Pomodoro Timer (`<leader>at`)
+## Pomodoro Timer (`<leader>t`)
 
-- `<leader>att` - Start 24-minute timer
-- `<leader>atp` - Pause timer
-- `<leader>atr` - Resume timer
-- `<leader>atx` - Stop timer
-- `<leader>ats` - Session: shorties (25m work / 5m break × 3, then 15m)
-- `<leader>atf` - Session: forties (40m work / 10m or 20m break × 4)
-- `<leader>ath` - Session: hours (50m work / 10m or 20m break × 4)
+- `<leader>tt` - Start 24-minute timer
+- `<leader>tp` - Pause timer
+- `<leader>tr` - Resume timer
+- `<leader>tx` - Stop timer
+- `<leader>ts` - Session: shorties (25m work / 5m break × 3, then 15m)
+- `<leader>tf` - Session: forties (40m work / 10m or 20m break × 4)
+- `<leader>th` - Session: hours (50m work / 10m or 20m break × 4)
 
 Remaining time shown in lualine statusline (󰄉 MM:SS) while a timer is active.
 System notification fires when each timer ends.
@@ -500,6 +515,12 @@ In Neovim, "windows" (also called panes in other tools like tmux) are viewports 
 - `:bp` or `:bprev` - Go to previous buffer
 - `:b#` - Go to alternate buffer (last buffer you were in)
 - `Ctrl-6` or `Ctrl-^` - Toggle between current and alternate buffer
+
+### Buffer Tab Navigation (BufferLine)
+- `Tab` - Cycle to next buffer tab
+- `Shift-Tab` - Cycle to previous buffer tab
+- `Ctrl-Option-l` - Move current buffer tab right
+- `Ctrl-Option-h` - Move current buffer tab left
 
 ### Managing Buffers
 - `:bd` or `:bdelete` - Delete current buffer

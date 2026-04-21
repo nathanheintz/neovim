@@ -17,9 +17,9 @@ Do not guess at API or configuration details.
 - **Lectic docs**: `~/.config/nvim/cheatsheet-readme/lectic-docs-llms-full.md` — local copy.
   Use `Read` on this file. Do not WebFetch. "The Lectic docs" always means this file.
 - **Lectic source**: `https://github.com/gleachkr/Lectic`
-- **lectic.yaml**: Lectic's own global config lives at `~/Library/Preferences/lectic/lectic.yaml`
-  on macOS (hardcoded in Lectic source; `~/.config/lectic/lectic.yaml` is ignored unless
-  `LECTIC_CONFIG` is set). Separate from this repo — do not look for it here.
+- **lectic.yaml**: Active config at `~/.config/lectic/lectic.yaml`, loaded via `LECTIC_CONFIG`
+  set in Fish config (`set -gx LECTIC_CONFIG ~/.config/lectic/lectic.yaml`). The macOS default
+  at `~/Library/Preferences/lectic/lectic.yaml` is stale and NOT read. Separate from this repo.
 
 For deeper project history, run `/init` to load `GLOBAL_SUMMARY_LOG.md`.
 
@@ -124,9 +124,12 @@ For deeper project history, run `/init` to load `GLOBAL_SUMMARY_LOG.md`.
   <leader>ms — Surround
   <leader>mt — Toggles (completion, folding)
 <leader>s — SESSIONS
-<leader>p — PUBLISHING (VimTeX, Pandoc)
+<leader>p — PUBLISHING
+  <leader>pl — LATEX (VimTeX, latexindent)
+  <leader>pc — CONVERT (Pandoc)
+  <leader>pt — TEMPLATES
 <leader>r — RUN (reload, diagnostics)
-<leader>t — TEMPLATES
+<leader>t — TIMERS (Pomodoro)
 ```
 
 ### Lectic Configuration (`lua/plugins/lectic.lua`)
@@ -140,8 +143,8 @@ Designer, Scholar, Scribe, Homie, Nomad
 **Switching**: `<leader>mp[key]` — e.g. `<leader>mpr` = Researcher, `<leader>mpw` = Writer
 
 **Current state**: True multi-party mode working as of 2026-04-12 (project 014). All 12 personas
-defined in `~/Library/Preferences/lectic/lectic.yaml` — the Lectic system config that merges
-into every document. `SwitchLecticPersona()` inserts `:ask[Name]` at cursor; no frontmatter
+defined in `~/.config/lectic/lectic.yaml` — the active Lectic system config (loaded via
+`LECTIC_CONFIG` in Fish). `SwitchLecticPersona()` inserts `:ask[Name]` at cursor; no frontmatter
 mutation. Frontmatter only needs `interlocutor: name: Scholar / prompt:` (empty prompt is fine
 — Lectic pulls the full prompt from the system config).
 
@@ -156,9 +159,9 @@ without conflict. Obsidian fields: `id`, `aliases`, `tags`. Lectic fields: `inte
 `interlocutors`, `memories`. Neither plugin overwrites the other's fields — this is deliberate
 and stable. Never remove, restructure, or suggest separating them.
 
-**paper_search**: The Researcher persona has `tools: - kit: paper_search` in its entry in
-`~/Library/Preferences/lectic/lectic.yaml`. The `kits:` section of that same file defines the
-MCP command. Do not inline the MCP config in frontmatter.
+**paper_search**: The Researcher persona has tools defined inline in `~/.config/lectic/lectic.yaml`
+— `tools: - name: paper_search / mcp_command: ...`. No `kits:` block; tools go directly in the
+persona entry. Do not inline the MCP config in frontmatter.
 
 ### Completion Toggles
 - Buffer completion: OFF by default in markdown, ON elsewhere

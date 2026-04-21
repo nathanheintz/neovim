@@ -18,14 +18,22 @@ This configuration prioritizes:
 - Dynamic section folding via nvim-ufo — folds update as you type, fold/unfold with `<leader>mf`
 - Smart per-filetype completion (blink.cmp)
 - Obsidian vault integration with wiki-link completion
-- Lectic AI assistance with 12 personas in true multi-party mode (v0.0.3):
+- Lectic AI assistance with 13 personas in true multi-party mode (v0.0.3):
   - **Business**: Consultant, Marketing, Finance, Product
   - **Research & Writing**: Researcher (with paper_search MCP tool), Writer, Editor
   - **Workshop & Design**: Designer, Scholar, Scribe
-  - **General**: Homie, Nomad
-  - All personas defined globally — frontmatter only needs `name: Scholar` (Scholar is default)
+  - **News & Intelligence**: Newshound (live RSS feed scanning + full article fetch — see below)
+  - **General**: Homie, Traveler
+  - All personas defined globally in `~/.config/lectic/lectic.yaml` (active via `LECTIC_CONFIG` Fish env var) — frontmatter only needs `name: Scholar` (Scholar is default)
   - Switch personas mid-conversation with `<leader>mp` — inserts `:ask[Name]` directive at cursor
   - Context files added to conversation via markdown link syntax in document body
+
+### Newshound: Live News Briefing
+The Newshound persona scans curated RSS feeds and reads full articles to produce sourced geopolitical briefings. Powered by two exec tools:
+- **`scan-news`** (`~/.local/bin/scan-news`) — fetches 10 curated feeds concurrently, matches keywords with word-boundary regex, returns title/date/source/URL/excerpt. Feeds: Guardian, Intercept, Drop Site, Al Jazeera, Grayzone, +972, Crisis Group, WaPo, DoD Contracts, State Dept.
+- **`fetch-page`** (`~/.local/bin/fetch-page`) — fetches any URL and returns stripped article text (up to 50k chars). Both use a dedicated Python virtualenv at `~/.local/share/scan-news-env`.
+
+Full feed library (35+ sources) curated in `~/SecondBrain/4-Resources/RSS/newshound-feeds.opml`. Switch to Newshound with `<leader>mpn`.
 
 ### LaTeX Publishing
 - VimTeX integration with forward/inverse search
