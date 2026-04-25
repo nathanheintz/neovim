@@ -568,6 +568,27 @@ curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | s
 
 ---
 
+### 2026-04-25 - Lualine and Bufferline Colorscheme Sync Fix
+
+**Task**: Lualine and bufferline were intermittently losing their colorscheme on CWD switches, showing as greyscale or losing selected-tab highlight. Restart fixed it.
+
+**Root cause**: The CWD autocmd fires `vim.cmd("colorscheme X")` synchronously. Lualine and bufferline have internal ColorScheme handlers that respond, but they fire before the new colorscheme's highlight groups are fully settled — resulting in wrong or missing colors.
+
+Secondary issue: lualine's `theme = vim.g.colors_name or 'terafox'` was a string baked at startup. Lualine's internal ColorScheme handler re-runs `setup()` with the stored config, always reapplying the original baked theme regardless of the current colorscheme.
+
+**Fix**:
+1. `lua/core/options.lua` — added `vim.schedule(function() vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" }) end)` inside the DirChanged/VimEnter callback, after setting the colorscheme. This defers a second ColorScheme event one tick later, after highlight groups have settled. Both lualine and bufferline re-render correctly against the final state.
+2. `lua/plugins/lualine.lua` — changed `theme` to a function: `function() return vim.g.colors_name or 'terafox' end`. Lualine calls it on every re-init, so it always reads the current colorscheme rather than a baked-in string. Removed the conflicting custom ColorScheme autocmd.
+3. `lua/plugins/colorscheme.lua` — added `lazy = false` to make start-plugin intent explicit.
+4. `lua/plugins/lualine.lua` — added `snacks_dashboard` to `disabled_filetypes.statusline` to hide lualine on the dashboard.
+
+**Files Modified**:
+- `lua/core/options.lua`
+- `lua/plugins/lualine.lua`
+- `lua/plugins/colorscheme.lua`
+
+---
+
 ### 2026-04-21 - Snippet Menu Triggering Mid-Word During Insert Mode Navigation
 
 **Task**: Snippet completion menu (triangle, matrix) was appearing when navigating through existing prose with arrow keys in insert mode, hijacking cursor movement.
