@@ -35,11 +35,36 @@ return {
 
     -- The "System" notifier sends a system notification when the timer is finished.
     -- Available on MacOS and Windows natively and on Linux via the `libnotify-bin` package.
-    { name = "System" },
+    -- { name = "System" },
 
     -- You can also define custom notifiers by providing an "init" function instead of a name.
     -- See "Defining custom notifiers" below for an example 👇
     -- { init = function(timer) ... end }
+    {
+      init = function(timer)
+        return {
+          timer = timer,
+          start = function(self) end,
+          tick = function(self, time_left) end,
+          stop = function(self) end,
+          done = function(self)
+            local message
+            if self.timer.name == "Work" then
+              message = "Nice work! Now take a break. 🧘🏼‍♂️"
+            else
+              message = "Get to work! 💪🏼"
+            end
+            os.execute(string.format(
+              "notificli -p -icon 'Clock' -title 'Hey, Nathan 🐬' -message '%s' -sound 'Submarine' -actions 'Fuck Yeah'",
+              message
+            ))
+          end,
+        }
+      end,
+    },
+
+  -- Persistent Mode Usage: NotifiCLI -title "Title" -message "Message" [-subtitle "Subtitle"] [-actions "Yes,No"] [-reply "Placeholder"] [-url "https://..."] [-image "/path/to/image.png"] [-sound "Name"] [-silent]    
+      
   },
 
   -- Override the notifiers for specific timer names.

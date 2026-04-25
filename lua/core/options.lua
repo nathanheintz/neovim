@@ -88,6 +88,10 @@ vim.api.nvim_create_autocmd({ "DirChanged", "VimEnter" }, {
 		else
 			vim.cmd("colorscheme terafox") -- Default
 		end
+
+		vim.schedule(function()
+			vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "*" })
+		end)
 	end,
 })
 

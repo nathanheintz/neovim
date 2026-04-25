@@ -489,6 +489,85 @@ curl -fsSL https://raw.githubusercontent.com/gleachkr/lectic/main/install.sh | s
 
 ---
 
+### 2026-04-22 - obsidian.nvim Legacy Commands Migration
+
+**Task**: Silence deprecation warning about legacy `ObsidianX` commands and migrate to new `Obsidian <subcommand>` format before 4.0 removal.
+
+**Problem**: obsidian.nvim defaulted `legacy_commands` to `true`, registering top-level `ObsidianBacklinks`, `ObsidianFollowLink`, etc. Warning appeared on every startup in a markdown buffer.
+
+**Changes**:
+- `lua/plugins/obsidian.lua` — added `legacy_commands = false` to `opts`
+- `lua/plugins/which-key.lua` — updated six `<leader>o` bindings to new format:
+  - `ObsidianFollowLink` → `Obsidian follow_link`
+  - `ObsidianBacklinks` → `Obsidian backlinks`
+  - `ObsidianSearch` → `Obsidian search`
+  - `ObsidianOpen` → `Obsidian open`
+  - `ObsidianTags` → `Obsidian tags`
+  - `ObsidianRename` → `Obsidian rename`
+
+**Verified**: Subcommand names confirmed against plugin source at `lua/obsidian/commands/init.lua`.
+
+---
+
+### 2026-04-22 - Pomo.nvim Custom Notifier (NotifiCLI)
+
+**Task**: Replace built-in System notifier with a custom notifier using NotifiCLI for richer done-notifications with sound, persistent alerts, and action button.
+
+**Problem**: Built-in System notifier used hardcoded `sound name "Ping"` via osascript — sound wasn't audible. No way to configure sound or add action buttons without a custom notifier.
+
+**Solution**: Wrote a custom `init` notifier in `pomo.lua` that calls NotifiCLI on `done()`. Fires different messages based on `timer.name` — Work timers get "Nice work! Now take a break." and Break timers get "Get to work!". Uses `os.execute` (synchronous, works fine since `-p` blocks until button click but timer is already done).
+
+**NotifiCLI Setup**:
+- Installed from DMG at `https://github.com/saihgupr/NotifiCLI/releases`
+- Symlinked: `sudo ln -s /Applications/NotifiCLI.app/Contents/MacOS/notificli /usr/local/bin/notificli`
+- Persistent mode setup: ran `notificli -p -title "Setup" -message "Test" -actions "OK"`, then System Settings → Notifications → NotifiCLI (Persistent) → Alert Style: Alerts
+
+**Changes**:
+- `lua/plugins/pomo.lua` — commented out `{ name = "System" }`, added custom `init` notifier with `done()` branching on `timer.name`
+
+**Notifier config**:
+```lua
+{ init = function(timer)
+    return {
+      timer = timer,
+      start = function(self) end,
+      tick = function(self, time_left) end,
+      stop = function(self) end,
+      done = function(self)
+        local message
+        if self.timer.name == "Work" then
+          message = "Nice work! Now take a break. 🧘🏼‍♂️"
+        else
+          message = "Get to work! 💪🏼"
+        end
+        os.execute(string.format(
+          "notificli -p -icon 'Clock' -title 'Hey, Nathan 🐬' -message '%s' -sound 'Submarine' -actions 'Fuck Yeah.'",
+          message
+        ))
+      end,
+    }
+  end,
+},
+```
+
+---
+
+### 2026-04-24 - Slidev Multi-Presentation Launch Fix
+
+**Task**: Fixed `<leader>psp` failing to launch multiple Slidev presentations simultaneously.
+
+**Root cause**: `TermExec` reuses the same terminal by default. Second invocation sent keystrokes to the running Slidev process, triggering its `r` (restart) hotkey. Also: `id=` in the TermExec command string is parsed but ignored — terminal routing uses the Vim count prefix, not the `id=` arg.
+
+**Fix**: Use count prefix syntax (`vim.cmd(term_id .. "TermExec ...")`) where `term_id = 100 + vim.fn.bufnr("%")`. Moved logic out of which-key inline function into `SlidevPresent()` in `lua/core/functions.lua`. Added `<leader>pst` → `TermSelect` for accessing background terminals.
+
+**Changes**:
+- `lua/core/functions.lua` — Added `SlidevPresent()` global function
+- `lua/plugins/which-key.lua` — Replaced inline block with `function() SlidevPresent() end`, added `<leader>pst`
+
+**Notes**: Ports skip non-sequentially (e.g., 3030 → 3033) when prior Slidev processes from failed test runs are still running — clears on nvim exit. `--open` flag restored once terminal isolation was fixed.
+
+---
+
 ### 2026-04-21 - Snippet Menu Triggering Mid-Word During Insert Mode Navigation
 
 **Task**: Snippet completion menu (triangle, matrix) was appearing when navigating through existing prose with arrow keys in insert mode, hijacking cursor movement.

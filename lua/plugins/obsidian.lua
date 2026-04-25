@@ -7,6 +7,7 @@ return {
     "nvim-lua/plenary.nvim",
   },
   opts = {
+    legacy_commands = false,
     ui = { enable = false },
     workspaces = {
       {
@@ -18,7 +19,7 @@ return {
       min_chars = 2, -- blink.cmp auto-detected; no nvim_cmp compat needed
     },
     picker = {
-      name = "snacks",
+      name = "snacks.pick",
     },
     templates = {
       folder = "4-Resources/Obsidian-Templates",

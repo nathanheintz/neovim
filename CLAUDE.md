@@ -103,6 +103,9 @@ For deeper project history, run `/init` to load `GLOBAL_SUMMARY_LOG.md`.
     ├── NVIM_STANDARDS.md       # Coding and documentation standards
     ├── SESSION_PROTOCOL.md     # Git protocol, documentation rules
     └── specs/                  # Per-project plans and reports
+        ├── 000_maintenance_debug/
+        │   └── MAINTENANCE_LOG.md  # Small fixes, tweaks, debug sessions
+        └── NNN_other-projects/
 ```
 
 ---

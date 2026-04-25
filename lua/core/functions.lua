@@ -597,6 +597,13 @@ function _G.CopyDiagnosticsToClipboard()
   vim.notify("Copied " .. #diagnostics .. " diagnostics to clipboard", vim.log.levels.INFO)
 end
 
+-- Launch Slidev presentation for the current buffer in a background terminal
+function SlidevPresent()
+    local file = vim.fn.expand("%:p")
+    local term_id = 100 + vim.fn.bufnr("%")
+    vim.cmd(term_id .. "TermExec cmd='slidev --open " .. file .. "' open=0")
+end
+
 -- Rename current resession session
 function RenameSession()
   local resession = require('resession')

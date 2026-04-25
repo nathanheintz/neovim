@@ -5,11 +5,14 @@ return {
     require('lualine').setup({
       options = {
         icons_enabled = true,
-        theme = vim.g.colors_name or 'terafox',
+        theme = function()
+          return vim.g.colors_name or 'terafox'
+        end,
         component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
         disabled_filetypes = {
           statusline = {
+            "snacks_dashboard",
             "Avante",
             "AvanteInput",
             "AvanteAsk",
@@ -75,10 +78,5 @@ return {
    
 
       })
-    vim.api.nvim_create_autocmd("ColorScheme", {                   
-    callback = function()               
-      require('lualine').setup({ options = { theme = vim.g.colors_name } })
-    end,
-  })
 end,
 } 

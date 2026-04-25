@@ -414,6 +414,41 @@ Remaining time shown in lualine statusline (󰄉 MM:SS) while a timer is active.
 System notification fires when each timer ends.
 
 
+## Publishing (`<leader>p`)
+
+### LaTeX (`<leader>pl`)
+- `<leader>plc` - Compile
+- `<leader>plv` - View PDF
+- `<leader>plt` - Table of contents
+- `<leader>ple` - Errors
+- `<leader>plw` - Word count
+- `<leader>plf` - Find citations (Telescope/bibtex)
+- `<leader>plb` - Export bibliography
+- `<leader>plg` - Edit glossary
+- `<leader>plk` - Clean aux files
+- `<leader>pll` - Format (latexindent)
+- `<leader>plx` - Clear cache
+- `<leader>plV` - VimTeX context menu
+
+### Convert / Pandoc (`<leader>pc`)
+- `<leader>pcw` - → Word (.docx)
+- `<leader>pcm` - → Markdown
+- `<leader>pch` - → HTML
+- `<leader>pcl` - → LaTeX
+- `<leader>pcp` - → PDF
+
+### Templates (`<leader>pt`)
+- `<leader>ptp` - Personal letter
+- `<leader>ptl` - Professional letter
+- `<leader>ptb` - Simple book
+- `<leader>pts` - Screenplay
+- `<leader>ptc` - Coaching agreement
+- `<leader>ptj` - Therapeutic journal
+
+### Slidev (`<leader>ps`)
+- `<leader>psp` - Present (launches `slidev <current file>` dev server)
+
+
 ## Tips and Tricks
 
 ### Quick Actions

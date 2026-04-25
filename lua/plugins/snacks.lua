@@ -80,6 +80,7 @@ return {
       refresh = 50,
     },
     notify = { enabled = true },
+    picker = { enabled = true },
     profiler = { enabled = false },
     quickfile = { enabled = true },
     rename = { enabled = true },

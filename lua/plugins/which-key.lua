@@ -182,12 +182,12 @@ return {
 
       -- OBSIDIAN
       { "<leader>o", group = "OBSIDIAN", icon = "󰇈" },
-      { "<leader>ol", "<cmd>ObsidianFollowLink<CR>", desc = "link", icon = "" },
-      { "<leader>ob", "<cmd>ObsidianBacklinks<CR>", desc = "backlinks", icon = "" },
-      { "<leader>of", "<cmd>ObsidianSearch<CR>", desc = "search vault", icon = "" },
-      { "<leader>oo", "<cmd>ObsidianOpen<CR>", desc = "open filename", icon = "" },
-      { "<leader>ot", "<cmd>ObsidianTags<CR>", desc = "search tags", icon = "" },
-      { "<leader>or", "<cmd>ObsidianRename<CR>", desc = "rename", icon = "󰇂" },
+      { "<leader>ol", "<cmd>Obsidian follow_link<CR>", desc = "link", icon = "" },
+      { "<leader>ob", "<cmd>Obsidian backlinks<CR>", desc = "backlinks", icon = "" },
+      { "<leader>of", "<cmd>Obsidian search<CR>", desc = "search vault", icon = "" },
+      { "<leader>oo", "<cmd>Obsidian open<CR>", desc = "open filename", icon = "" },
+      { "<leader>ot", "<cmd>Obsidian tags<CR>", desc = "search tags", icon = "" },
+      { "<leader>or", "<cmd>Obsidian rename<CR>", desc = "rename", icon = "󰇂" },
       { "<leader>oc", "<cmd>lua _G.toggle_obsidian_completion()<CR>", desc = "toggle obsidian completion" },
 
 			-- PERSONA SWITCHING
@@ -268,6 +268,11 @@ return {
 			{ "<leader>pts", "<cmd>read ~/.config/nvim/templates/Screenplay.tex<CR>", desc = "screenplay" },
 			{ "<leader>ptc", "<cmd>read ~/.config/nvim/templates/CoachingAgreement.tex<CR>", desc = "coaching agreement" },
 			{ "<leader>ptj", "<cmd>read ~/.config/nvim/templates/TherapeuticJournal.md<CR>", desc = "therapeutic journal" },
+
+			-- SLIDEV
+			{ "<leader>ps", group = "SLIDEV" },
+			{ "<leader>psp", function() SlidevPresent() end, desc = "present" },
+			{ "<leader>pst", "<cmd>TermSelect<CR>", desc = "terminal select" },
 
 			-- RUN
 			{ "<leader>r", group = "RUN", icon = "󰜎" },

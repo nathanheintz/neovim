@@ -8,7 +8,9 @@
       "Bash(uv --version)",
       "Bash(pip3 --version)",
       "Bash(curl:*)",
-      "WebFetch(domain:neovim.io)"
+      "WebFetch(domain:neovim.io)",
+      "Read(//Applications/NotifiCLI.app/Contents/Apps/**)",
+      "Read(//Applications/NotifiCLI.app/Contents/MacOS/**)"
     ]
   }
 }
