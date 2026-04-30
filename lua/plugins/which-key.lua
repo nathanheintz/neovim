@@ -289,6 +289,7 @@ return {
 			{ "<leader>tp", "<cmd>TimerPause<CR>", desc = "pause timer" },
 			{ "<leader>tr", "<cmd>TimerResume<CR>", desc = "resume timer" },
 			{ "<leader>tx", "<cmd>TimerStop<CR>", desc = "stop timer" },
+      { "<leader>tb", "<cmd>TimerSession beastmode<CR>", desc = "beastmode (1.5h/3x)" },
 			{ "<leader>ts", "<cmd>TimerSession shorties<CR>", desc = "shorties (24m/6m/3x)" },
 			{ "<leader>tf", "<cmd>TimerSession forties<CR>", desc = "forties (40m)" },
 			{ "<leader>th", "<cmd>TimerSession hours<CR>", desc = "hours (50m)" },

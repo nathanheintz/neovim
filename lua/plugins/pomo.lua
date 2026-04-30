@@ -48,12 +48,16 @@ return {
           tick = function(self, time_left) end,
           stop = function(self) end,
           done = function(self)
-            local message
-            if self.timer.name == "Work" then
-              message = "Nice work! Now take a break. 🧘🏼‍♂️"
-            else
-              message = "Get to work! 💪🏼"
-            end
+            local messages = {
+              ["Focus"]       = "Nice work! Now let's tidy up! 🧹",
+              ["Work"]        = "Nice work! Now take a break! 🧘🏼‍♂️",
+              ["Clean"]       = "Nice work! Now let's get moving! 🏃🏼",
+              ["Move"]        = "Nice work! Now take a break! 🧘🏼‍♂️",
+              ["Break"]       = "Get to work! 💪🏼",
+              ["Short Break"] = "Get to work! 💪🏼",
+              ["Long Break"]  = "Get to work! 💪🏼",
+            }
+            local message = messages[self.timer.name] or "Timer done!"
             os.execute(string.format(
               "notificli -p -icon 'Clock' -title 'Hey, Nathan 🐬' -message '%s' -sound 'Submarine' -actions 'Fuck Yeah'",
               message
@@ -108,6 +112,21 @@ return {
       { name = "Work", duration = "60m" },
       { name = "Long Break", duration = "20m" },
     },
+    
+    beastmode = {
+      { name = "Focus", duration = "45m" },
+      { name = "Clean", duration = "10m" },
+      { name = "Move", duration = "15m" },
+      { name = "Break", duration = "20m" },
+      { name = "Focus", duration = "45m" },
+      { name = "Clean", duration = "10m" },
+      { name = "Move", duration = "15m" },
+      { name = "Break", duration = "20m" },
+      { name = "Focus", duration = "45m" },
+      { name = "Clean", duration = "10m" },
+      { name = "Move", duration = "15m" },
+      { name = "Break", duration = "20m" },
+    },  
   },
 }
 }
